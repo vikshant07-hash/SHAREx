@@ -116,7 +116,7 @@
         }
 
         /* ============================================================
-           NAVBAR - Consistent
+           NAVBAR
            ============================================================ */
         .navbar {
             background: var(--white);
@@ -154,9 +154,10 @@
             height: 100%;
             object-fit: contain;
             padding: 6px;
+            display: block;
         }
 
-        .navbar .brand .logo i {
+        .navbar .brand .logo .fallback-icon {
             font-size: 20px;
             color: var(--white);
         }
@@ -244,9 +245,10 @@
             height: 100%;
             object-fit: contain;
             padding: 14px;
+            display: block;
         }
 
-        .auth-brand .logo-big i {
+        .auth-brand .logo-big .fallback-icon {
             font-size: 32px;
             color: var(--white);
         }
@@ -328,9 +330,10 @@
             height: 100%;
             object-fit: contain;
             padding: 8px;
+            display: block;
         }
 
-        .auth-box .auth-header .icon i {
+        .auth-box .auth-header .icon .fallback-icon {
             font-size: 20px;
             color: var(--white);
         }
@@ -1632,13 +1635,6 @@
             display: none !important;
         }
 
-        .text-muted {
-            color: var(--gray-400);
-        }
-        .text-primary {
-            color: var(--primary);
-        }
-
         ::-webkit-scrollbar {
             width: 4px;
             height: 4px;
@@ -1666,9 +1662,9 @@
             <div class="navbar">
                 <div class="brand">
                     <div class="logo">
-                        <!-- Replace with your logo image -->
-                        <i class="fas fa-comet"></i>
-                        <!-- <img src="logo.png" alt="ChatX" /> -->
+                        <!-- === YOUR LOGO PNG === -->
+                        <img src="logo.png" alt="ChatX" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                        <span class="fallback-icon" style="display:none;"><i class="fas fa-comet"></i></span>
                     </div>
                     <span class="brand-text">Chat<span class="highlight">X</span></span>
                 </div>
@@ -1681,9 +1677,9 @@
             <div class="auth-container">
                 <div class="auth-brand">
                     <div class="logo-big">
-                        <!-- Replace with your logo image -->
-                        <i class="fas fa-comet"></i>
-                        <!-- <img src="logo.png" alt="ChatX" /> -->
+                        <!-- === YOUR LOGO PNG === -->
+                        <img src="logo.png" alt="ChatX" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                        <span class="fallback-icon" style="display:none;"><i class="fas fa-comet"></i></span>
                     </div>
                     <h1>Welcome to <span class="highlight">ChatX</span></h1>
                     <p>Secure, real-time messaging with end-to-end encryption. Connect with anyone, anywhere.</p>
@@ -1698,9 +1694,9 @@
                 <div class="auth-box">
                     <div class="auth-header">
                         <div class="icon">
-                            <!-- Replace with your logo image -->
-                            <i class="fas fa-comet"></i>
-                            <!-- <img src="logo.png" alt="ChatX" /> -->
+                            <!-- === YOUR LOGO PNG === -->
+                            <img src="logo.png" alt="ChatX" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                            <span class="fallback-icon" style="display:none;"><i class="fas fa-comet"></i></span>
                         </div>
                         <h2>Get Started</h2>
                         <p>Enter your details to join ChatX</p>
@@ -1753,8 +1749,9 @@
             <div class="navbar">
                 <div class="brand">
                     <div class="logo">
-                        <i class="fas fa-comet"></i>
-                        <!-- <img src="logo.png" alt="ChatX" /> -->
+                        <!-- === YOUR LOGO PNG === -->
+                        <img src="logo.png" alt="ChatX" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                        <span class="fallback-icon" style="display:none;"><i class="fas fa-comet"></i></span>
                     </div>
                     <span class="brand-text">Chat<span class="highlight">X</span></span>
                 </div>
