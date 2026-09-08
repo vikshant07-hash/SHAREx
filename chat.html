@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>WhatsApp Clone - Real Chat</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #0b141a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 480px;
+            height: 95vh;
+            max-height: 900px;
+            background: #111b21;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== SCREENS ===== */
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #111b21;
+            transition: opacity 0.2s;
+        }
+
+        .screen.active {
+            display: flex;
+            z-index: 10;
+        }
+
+        /* ===== AUTH SCREEN ===== */
+        #authScreen {
+            background: #0b141a;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 24px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .auth-box {
+            background: #1e2a32;
+            padding: 36px 28px;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-box h1 {
+            color: #e9edef;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-box .sub {
+            color: #8696a0;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .auth-box input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #2a3942;
+            border: none;
+            border-radius: 16px;
+            color: #e9edef;
+            font-size: 16px;
+            margin-bottom: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .auth-box input:focus {
+            background: #334652;
+            box-shadow: 0 0 0 2px #2b7a62;
+        }
+
+        .auth-box input::placeholder {
+            color: #667781;
+        }
+
+        .auth-box button {
+            width: 100%;
+            padding: 14px;
+            background: #005c4b;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 6px;
+        }
+
+        .auth-box button:hover {
+            background: #007a63;
+        }
+
+        .auth-box button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .otp-section {
+            margin-top: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .otp-section.show {
+            display: flex;
+        }
+
+        .otp-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .otp-row input {
+            flex: 1;
+            text-align: center;
+            letter-spacing: 4px;
+            font-size: 20px;
+            padding: 12px;
+        }
+
+        .otp-row button {
+            flex: 0 0 auto;
+            width: auto;
+            padding: 12px 20px;
+            margin-top: 0;
+        }
+
+        .resend-otp {
+            color: #53bdeb;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .resend-otp:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== MAIN APP (after auth) ===== */
+        #mainApp {
+            background: #111b21;
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #mainApp.active {
+            display: flex;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            background: #202c36;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #2a3942;
+            flex-shrink: 0;
+            min-height: 64px;
+        }
+
+        .app-header .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #2b7a62;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .app-header .info {
+            flex: 1;
+            color: #e9edef;
+        }
+
+        .app-header .info .name {
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .app-header .info .status {
+            font-size: 12px;
+            color: #8696a0;
+        }
+
+        .app-header .actions {
+            display: flex;
+            gap: 12px;
+            color: #aabac3;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .app-header .actions span {
+            padding: 4px 6px;
+            border-radius: 50%;
+            transition: 0.15s;
+        }
+
+        .app-header .actions span:hover {
+            background: #2a3942;
+        }
+
+        /* ===== CHAT LIST ===== */
+        #chatList {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+            background: #111b21;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px;
+            gap: 14px;
+            cursor: pointer;
+            transition: 0.1s;
+            border-bottom: 1px solid #1e2a32;
+        }
+
+        .chat-item:hover {
+            background: #1e2a32;
+        }
+
+        .chat-item .c-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #2b7a62;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .chat-item .c-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-item .c-info .c-name {
+            color: #e9edef;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .chat-item .c-info .c-last {
+            color: #8696a0;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item .c-meta {
+            text-align: right;
+            color: #8696a0;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .chat-item .c-meta .badge {
+            background: #005c4b;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .empty-chats {
+            color: #667781;
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 15px;
+        }
+
+        /* ===== CHAT WINDOW ===== */
+        #chatWindow {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            background: #0b141a;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 30;
+        }
+
+        #chatWindow.active {
+            display: flex;
+        }
+
+        .chat-window-header {
+            background: #202c36;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #2a3942;
+            flex-shrink: 0;
+            min-height: 60px;
+        }
+
+        .chat-window-header .back {
+            color: #aabac3;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: 0.15s;
+        }
+
+        .chat-window-header .back:hover {
+            background: #2a3942;
+        }
+
+        .chat-window-header .cw-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2b7a62;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .chat-window-header .cw-info {
+            flex: 1;
+            color: #e9edef;
+        }
+
+        .chat-window-header .cw-info .cw-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .chat-window-header .cw-info .cw-status {
+            font-size: 12px;
+            color: #8696a0;
+        }
+
+        /* ===== MESSAGES AREA ===== */
+        #messagesArea {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 18px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #0b141a;
+            scroll-behavior: smooth;
+        }
+
+        #messagesArea::-webkit-scrollbar {
+            width: 6px;
+        }
+        #messagesArea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #messagesArea::-webkit-scrollbar-thumb {
+            background: #3a4a56;
+            border-radius: 10px;
+        }
+
+        .msg {
+            max-width: 82%;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            animation: fadeIn 0.2s ease;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .msg.sent {
+            align-self: flex-end;
+            background: #005c4b;
+            color: #e1f0ee;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg.received {
+            align-self: flex-start;
+            background: #202c36;
+            color: #d1d9de;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg .msg-time {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+
+        .msg .msg-time .tick {
+            font-size: 14px;
+            margin-left: 2px;
+        }
+
+        .msg .msg-time .tick.read {
+            color: #53bdeb;
+        }
+
+        .msg .file-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .msg .file-name {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 2px;
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TYPING INDICATOR ===== */
+        #typingIndicator {
+            display: none;
+            align-self: flex-start;
+            background: #202c36;
+            padding: 8px 16px;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            color: #aabac3;
+            font-size: 13px;
+            gap: 6px;
+            align-items: center;
+            margin: 2px 0;
+        }
+
+        #typingIndicator.show {
+            display: flex;
+        }
+
+        .typing-dots span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #aabac3;
+            border-radius: 50%;
+            margin: 0 1px;
+            animation: typingBounce 1.4s infinite both;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* ===== INPUT AREA ===== */
+        .input-area {
+            background: #202c36;
+            padding: 8px 12px 12px;
+            border-top: 1px solid #2a3942;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .input-area .attach-btn {
+            background: none;
+            border: none;
+            color: #aabac3;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 6px 4px;
+            transition: 0.15s;
+            flex-shrink: 0;
+        }
+
+        .input-area .attach-btn:hover {
+            color: #e9edef;
+        }
+
+        .input-area input[type="text"] {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 20px;
+            background: #2a3942;
+            color: #e9edef;
+            font-size: 15px;
+            outline: none;
+            min-width: 60px;
+        }
+
+        .input-area input[type="text"]:focus {
+            background: #334652;
+        }
+
+        .input-area input[type="text"]::placeholder {
+            color: #667781;
+        }
+
+        .input-area .send-btn {
+            background: #005c4b;
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .input-area .send-btn:hover {
+            background: #007a63;
+        }
+
+        .input-area .send-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* file input hidden */
+        #fileInput {
+            display: none;
+        }
+
+        /* ===== CONNECT PEOPLE MODAL ===== */
+        #connectModal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        #connectModal.show {
+            display: flex;
+        }
+
+        .connect-box {
+            background: #1e2a32;
+            padding: 32px 28px;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .connect-box h2 {
+            color: #e9edef;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .connect-box .sub {
+            color: #8696a0;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .connect-box input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #2a3942;
+            border: none;
+            border-radius: 14px;
+            color: #e9edef;
+            font-size: 15px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .connect-box input:focus {
+            background: #334652;
+            box-shadow: 0 0 0 2px #2b7a62;
+        }
+
+        .connect-box .btn-group {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0 16px;
+        }
+
+        .connect-box .btn-group button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .connect-box .btn-group .primary {
+            background: #005c4b;
+            color: white;
+        }
+
+        .connect-box .btn-group .primary:hover {
+            background: #007a63;
+        }
+
+        .connect-box .btn-group .secondary {
+            background: #2a3942;
+            color: #e9edef;
+        }
+
+        .connect-box .btn-group .secondary:hover {
+            background: #3a4a56;
+        }
+
+        .connect-box .close-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid #3a4a56;
+            color: #aabac3;
+            border-radius: 14px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 4px;
+        }
+
+        .connect-box .close-btn:hover {
+            background: #2a3942;
+        }
+
+        .connect-box .generated-code {
+            background: #0b141a;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: 6px;
+            color: #53bdeb;
+            font-weight: 700;
+            margin: 10px 0;
+            border: 1px dashed #2b7a62;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            #app {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+                max-width: 100%;
+            }
+            .auth-box {
+                padding: 28px 20px;
+            }
+            .msg {
+                max-width: 88%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+
+        <!-- ===== AUTH SCREEN ===== -->
+        <div id="authScreen" class="screen active">
+            <div class="auth-box">
+                <h1>💬 Chat</h1>
+                <div class="sub">Enter your details to get started</div>
+
+                <input type="text" id="authName" placeholder="Your Name" maxlength="30" />
+                <input type="text" id="authPhone" placeholder="Mobile Number (e.g. 9876543210)" maxlength="15" />
+
+                <button id="sendOtpBtn">Send OTP</button>
+
+                <div class="otp-section" id="otpSection">
+                    <div class="otp-row">
+                        <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" inputmode="numeric" />
+                        <button id="verifyOtpBtn">Verify</button>
+                    </div>
+                    <div class="resend-otp" id="resendOtp">Resend OTP</div>
+                </div>
+
+                <div style="margin-top: 16px; color: #667781; font-size: 12px; text-align: center;">
+                    ⚡ Simulated OTP: <strong>123456</strong> (use this to verify)
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MAIN APP ===== -->
+        <div id="mainApp">
+            <!-- Header -->
+            <div class="app-header">
+                <div class="avatar" id="myAvatar">U</div>
+                <div class="info">
+                    <div class="name" id="myNameDisplay">User</div>
+                    <div class="status" id="myStatusDisplay">online</div>
+                </div>
+                <div class="actions">
+                    <span id="connectBtn" title="Connect People">👥</span>
+                    <span id="logoutBtn" title="Logout">🚪</span>
+                </div>
+            </div>
+
+            <!-- Chat List -->
+            <div id="chatList">
+                <div class="empty-chats" id="emptyChats">
+                    👋 No chats yet.<br />
+                    Tap <strong>👥</strong> to connect with people.
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CHAT WINDOW (overlay) ===== -->
+        <div id="chatWindow">
+            <div class="chat-window-header">
+                <span class="back" id="backBtn">←</span>
+                <div class="cw-avatar" id="cwAvatar">U</div>
+                <div class="cw-info">
+                    <div class="cw-name" id="cwName">Contact</div>
+                    <div class="cw-status" id="cwStatus">online</div>
+                </div>
+                <div style="color:#aabac3; font-size:18px; display:flex; gap:12px;">
+                    <span style="cursor:pointer;">📞</span>
+                </div>
+            </div>
+
+            <div id="messagesArea">
+                <!-- messages will render here -->
+            </div>
+
+            <div id="typingIndicator">
+                <span>typing</span>
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <button class="attach-btn" id="attachBtn">📎</button>
+                <input type="text" id="msgInput" placeholder="Type a message" />
+                <button class="send-btn" id="sendMsgBtn">➤</button>
+                <input type="file" id="fileInput" multiple />
+            </div>
+        </div>
+
+        <!-- ===== CONNECT MODAL ===== -->
+        <div id="connectModal">
+            <div class="connect-box">
+                <h2>👥 Connect People</h2>
+                <div class="sub">Share code or enter someone's code</div>
+
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <input type="text" id="connectCodeInput" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric" style="flex:1;" />
+                    <button id="joinCodeBtn" style="padding:12px 20px; background:#005c4b; color:white; border:none; border-radius:14px; font-weight:600; cursor:pointer;">Join</button>
+                </div>
+
+                <div class="btn-group">
+                    <button class="primary" id="generateCodeBtn">🔑 Generate My Code</button>
+                </div>
+
+                <div id="myCodeDisplay" class="generated-code" style="display:none;">------</div>
+
+                <div style="color:#8696a0; font-size:13px; margin:12px 0; text-align:center;">
+                    People who have your code can connect with you instantly.
+                </div>
+
+                <button class="close-btn" id="closeConnectModal">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        //  COMPLETE WHATSAPP CLONE - FRONTEND ONLY with localStorage
+        // ============================================================
+
+        (function() {
+            'use strict';
+
+            // ---------- DOM refs ----------
+            const authScreen = document.getElementById('authScreen');
+            const mainApp = document.getElementById('mainApp');
+            const chatWindow = document.getElementById('chatWindow');
+
+            const authName = document.getElementById('authName');
+            const authPhone = document.getElementById('authPhone');
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            const otpSection = document.getElementById('otpSection');
+            const otpInput = document.getElementById('otpInput');
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            const resendOtp = document.getElementById('resendOtp');
+
+            const myAvatar = document.getElementById('myAvatar');
+            const myNameDisplay = document.getElementById('myNameDisplay');
+            const myStatusDisplay = document.getElementById('myStatusDisplay');
+
+            const chatList = document.getElementById('chatList');
+            const emptyChats = document.getElementById('emptyChats');
+
+            const cwAvatar = document.getElementById('cwAvatar');
+            const cwName = document.getElementById('cwName');
+            const cwStatus = document.getElementById('cwStatus');
+            const messagesArea = document.getElementById('messagesArea');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const msgInput = document.getElementById('msgInput');
+            const sendMsgBtn = document.getElementById('sendMsgBtn');
+            const backBtn = document.getElementById('backBtn');
+            const attachBtn = document.getElementById('attachBtn');
+            const fileInput = document.getElementById('fileInput');
+
+            const connectBtn = document.getElementById('connectBtn');
+            const connectModal = document.getElementById('connectModal');
+            const closeConnectModal = document.getElementById('closeConnectModal');
+            const connectCodeInput = document.getElementById('connectCodeInput');
+            const joinCodeBtn = document.getElementById('joinCodeBtn');
+            const generateCodeBtn = document.getElementById('generateCodeBtn');
+            const myCodeDisplay = document.getElementById('myCodeDisplay');
+
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            // ---------- STATE ----------
+            let currentUser = null; // { name, phone, id, code }
+            let contacts = []; // array of { id, name, phone, code, lastMessage, unread, messages: [] }
+            let activeContactId = null;
+            let myCode = null;
+
+            // typing simulation timeout
+            let typingTimeout = null;
+            let simTimeout = null;
+
+            // ---------- STORAGE KEYS ----------
+            const STORAGE_KEY = 'whatsapp_clone_data';
+
+            // ---------- HELPERS ----------
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
+            }
+
+            function generateCode() {
+                return String(Math.floor(100000 + Math.random() * 900000));
+            }
+
+            function formatTime(date) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function getInitials(name) {
+                if (!name) return '?';
+                return name.charAt(0).toUpperCase();
+            }
+
+            function getStatusDisplay(contactId) {
+                // simulate online status - random
+                return Math.random() > 0.3 ? 'online' : 'last seen recently';
+            }
+
+            // ---------- STORAGE ----------
+            function saveData() {
+                const data = {
+                    currentUser: currentUser,
+                    contacts: contacts,
+                    myCode: myCode
+                };
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                } catch (e) { console.warn('Save error', e); }
+            }
+
+            function loadData() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return false;
+                    const data = JSON.parse(raw);
+                    currentUser = data.currentUser || null;
+                    contacts = data.contacts || [];
+                    myCode = data.myCode || null;
+                    return true;
+                } catch (e) { return false; }
+            }
+
+            // ---------- RENDER CHAT LIST ----------
+            function renderChatList() {
+                chatList.innerHTML = '';
+                if (!contacts || contacts.length === 0) {
+                    chatList.innerHTML = `<div class="empty-chats">👋 No chats yet.<br />Tap <strong>👥</strong> to connect with people.</div>`;
+                    return;
+                }
+
+                contacts.forEach(contact => {
+                    const div = document.createElement('div');
+                    div.className = 'chat-item';
+                    div.dataset.contactId = contact.id;
+
+                    const lastMsg = contact.messages && contact.messages.length > 0 ?
+                        contact.messages[contact.messages.length - 1] :
+                        null;
+
+                    const lastText = lastMsg ?
+                        (lastMsg.type === 'file' ? '📎 ' + lastMsg.fileName : lastMsg.text) :
+                        'No messages yet';
+
+                    const timeStr = lastMsg ? formatTime(new Date(lastMsg.timestamp)) : '';
+
+                    div.innerHTML = `
+                        <div class="c-avatar" style="background:${stringToColor(contact.name)}">${getInitials(contact.name)}</div>
+                        <div class="c-info">
+                            <div class="c-name">${escapeHtml(contact.name)}</div>
+                            <div class="c-last">${escapeHtml(lastText)}</div>
+                        </div>
+                        <div class="c-meta">
+                            ${timeStr ? `<div>${timeStr}</div>` : ''}
+                            ${contact.unread > 0 ? `<div class="badge">${contact.unread}</div>` : ''}
+                        </div>
+                    `;
+                    div.addEventListener('click', () => openChat(contact.id));
+                    chatList.appendChild(div);
+                });
+            }
+
+            function stringToColor(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const hue = Math.abs(hash % 360);
+                return `hsl(${hue}, 60%, 45%)`;
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ---------- RENDER MESSAGES ----------
+            function renderMessages(contactId) {
+                const contact = contacts.find(c => c.id === contactId);
+                if (!contact) return;
+
+                messagesArea.innerHTML = '';
+                if (!contact.messages || contact.messages.length === 0) {
+                    messagesArea.innerHTML =
+                        `<div style="text-align:center;color:#667781;padding:40px 0;font-size:14px;">No messages yet. Say hello! 👋</div>`;
+                    return;
+                }
+
+                contact.messages.forEach((msg, idx) => {
+                    const div = document.createElement('div');
+                    div.className = `msg ${msg.sender === currentUser?.id ? 'sent' : 'received'}`;
+
+                    let content = '';
+                    if (msg.type === 'file') {
+                        if (msg.fileType && msg.fileType.startsWith('image/')) {
+                            content =
+                                `<img src="${msg.fileData}" class="file-preview" alt="image" onclick="window.open('${msg.fileData}','_blank')" />`;
+                        } else {
+                            content = `📎 <a href="${msg.fileData}" target="_blank" style="color:#53bdeb;text-decoration:underline;">${escapeHtml(msg.fileName)}</a>`;
+                        }
+                        content += `<span style="display:block;font-size:12px;opacity:0.7;margin-top:2px;">${escapeHtml(msg.fileName)}</span>`;
+                    } else {
+                        content = escapeHtml(msg.text);
+                    }
+
+                    const isRead = msg.read || false;
+                    const tickIcon = msg.sender === currentUser?.id ?
+                        (isRead ? '✓✓' : '✓') :
+                        '';
+
+                    div.innerHTML = `
+                        ${content}
+                        <div class="msg-time">
+                            ${formatTime(new Date(msg.timestamp))}
+                            ${tickIcon ? `<span class="tick ${isRead ? 'read' : ''}">${tickIcon}</span>` : ''}
+                        </div>
+                    `;
+
+                    messagesArea.appendChild(div);
+                });
+
+                // Mark messages as read
+                let updated = false;
+                contact.messages.forEach(msg => {
+                    if (msg.sender !== currentUser?.id && !msg.read) {
+                        msg.read = true;
+                        updated = true;
+                    }
+                });
+                if (updated) {
+                    // update unread count
+                    contact.unread = 0;
+                    saveData();
+                    renderChatList();
+                }
+
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+
+            // ---------- OPEN CHAT ----------
+            function openChat(contactId) {
+                activeContactId = contactId;
+                const contact = contacts.find(c => c.id === contactId);
+                if (!contact) return;
+
+                chatWindow.classList.add('active');
+                cwAvatar.textContent = getInitials(contact.name);
+                cwAvatar.style.background = stringToColor(contact.name);
+                cwName.textContent = contact.name;
+                cwStatus.textContent = getStatusDisplay(contact.id);
+
+                // reset unread
+                contact.unread = 0;
+                renderMessages(contactId);
+                renderChatList();
+                saveData();
+
+                msgInput.focus();
+            }
+
+            // ---------- SEND MESSAGE ----------
+            function sendMessage(text, type = 'text', fileData = null, fileName = null, fileType = null) {
+                if (!activeContactId) return false;
+                const contact = contacts.find(c => c.id === activeContactId);
+                if (!contact) return false;
+
+                if (!text && type === 'text') return false;
+
+                const msg = {
+                    id: generateId(),
+                    sender: currentUser.id,
+                    text: text || '',
+                    type: type,
+                    timestamp: Date.now(),
+                    read: false,
+                    fileData: fileData,
+                    fileName: fileName,
+                    fileType: fileType
+                };
+
+                if (!contact.messages) contact.messages = [];
+                contact.messages.push(msg);
+                contact.lastMessage = text || '📎 ' + fileName;
+
+                // update unread for other side simulation
+                saveData();
+                renderMessages(activeContactId);
+                renderChatList();
+
+                // simulate reply if received
+                if (type === 'text' && text.trim().length > 0) {
+                    simulateReply(contact.id);
+                }
+
+                return true;
+            }
+
+            // ---------- SIMULATE REPLY (like real-time) ----------
+            function simulateReply(contactId) {
+                if (simTimeout) clearTimeout(simTimeout);
+                if (typingTimeout) clearTimeout(typingTimeout);
+
+                // show typing
+                typingIndicator.classList.add('show');
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+
+                const delay = 1500 + Math.random() * 3000;
+                typingTimeout = setTimeout(() => {
+                    typingIndicator.classList.remove('show');
+
+                    const contact = contacts.find(c => c.id === contactId);
+                    if (!contact) return;
+
+                    const replies = [
+                        "Haan, bilkul! 😄", "Accha, aap kaise ho?", "Mai bhi thik hoon.",
+                        "Kya haal chal?", "Bahut achha!", "Chalo fir se baat karte hain.",
+                        "real-time chat maza aa raha hai!", "👍👍", "Nice!",
+                        "Aapko kya lagta hai?", "Mai yahan hoon.", "Hello from other side 👋",
+                        "Bas thoda der laga", "Kya scene hai?", "Achha laga sunkar.",
+                        "Sahi hai!", "Mast 👍", "Chalo karte hain", "Waah!",
+                        "Kya baat hai?", "Mai bhi yahan hoon."
+                    ];
+                    const reply = replies[Math.floor(Math.random() * replies.length)];
+
+                    const msg = {
+                        id: generateId(),
+                        sender: contact.id,
+                        text: reply,
+                        type: 'text',
+                        timestamp: Date.now(),
+                        read: false,
+                        fileData: null,
+                        fileName: null,
+                        fileType: null
+                    };
+
+                    if (!contact.messages) contact.messages = [];
+                    contact.messages.push(msg);
+                    contact.lastMessage = reply;
+                    contact.unread = (contact.unread || 0) + 1;
+
+                    saveData();
+                    if (activeContactId === contactId) {
+                        renderMessages(contactId);
+                    }
+                    renderChatList();
+
+                }, delay);
+            }
+
+            // ---------- CONNECT WITH CODE ----------
+            function connectWithCode(code) {
+                if (!currentUser) return false;
+                if (code === myCode) {
+                    alert('You cannot connect with yourself!');
+                    return false;
+                }
+
+                // check if already connected
+                if (contacts.some(c => c.code === code)) {
+                    alert('Already connected with this user!');
+                    return false;
+                }
+
+                // In real app, we'd fetch from server. Here we simulate by creating a contact.
+                // Since we don't have other users in localStorage, we create a dummy contact
+                // but we also check if code matches any existing user in storage (simulated)
+                // We'll store a global "users" list in localStorage for discovery
+
+                let users = getUsersList();
+                const foundUser = users.find(u => u.code === code);
+                if (!foundUser) {
+                    // Create a new dummy user with this code
+                    const newUser = {
+                        id: generateId(),
+                        name: `User ${code}`,
+                        phone: '9999999999',
+                        code: code
+                    };
+                    users.push(newUser);
+                    saveUsersList(users);
+
+                    const contact = {
+                        id: newUser.id,
+                        name: newUser.name,
+                        phone: newUser.phone,
+                        code: code,
+                        messages: [],
+                        unread: 0,
+                        lastMessage: 'Connected!'
+                    };
+                    contacts.push(contact);
+                    saveData();
+                    renderChatList();
+                    alert(`✅ Connected with ${newUser.name}!`);
+                    return true;
+                } else {
+                    // found existing user
+                    if (contacts.some(c => c.id === foundUser.id)) {
+                        alert('Already connected!');
+                        return false;
+                    }
+                    const contact = {
+                        id: foundUser.id,
+                        name: foundUser.name,
+                        phone: foundUser.phone,
+                        code: foundUser.code,
+                        messages: [],
+                        unread: 0,
+                        lastMessage: 'Connected!'
+                    };
+                    contacts.push(contact);
+                    saveData();
+                    renderChatList();
+                    alert(`✅ Connected with ${foundUser.name}!`);
+                    return true;
+                }
+            }
+
+            // ---------- USERS LIST (simulated server) ----------
+            function getUsersList() {
+                try {
+                    const raw = localStorage.getItem('whatsapp_users');
+                    return raw ? JSON.parse(raw) : [];
+                } catch { return []; }
+            }
+
+            function saveUsersList(users) {
+                localStorage.setItem('whatsapp_users', JSON.stringify(users));
+            }
+
+            function registerUserInGlobal(user) {
+                let users = getUsersList();
+                if (!users.some(u => u.id === user.id)) {
+                    users.push(user);
+                    saveUsersList(users);
+                }
+            }
+
+            // ---------- AUTH FLOW ----------
+            function handleAuth(name, phone) {
+                if (!name.trim() || !phone.trim()) {
+                    alert('Please enter name and phone number');
+                    return;
+                }
+
+                // Show OTP section
+                otpSection.classList.add('show');
+                sendOtpBtn.disabled = true;
+                sendOtpBtn.textContent = 'OTP Sent';
+                otpInput.focus();
+
+                // Simulate OTP
+                window._simulatedOtp = '123456';
+                alert('📱 OTP sent to ' + phone + '\nUse OTP: 123456');
+            }
+
+            function verifyOtp(otp) {
+                if (otp === '123456' || otp === window._simulatedOtp) {
+                    // Auth success
+                    const name = authName.value.trim();
+                    const phone = authPhone.value.trim();
+
+                    const user = {
+                        id: generateId(),
+                        name: name,
+                        phone: phone,
+                        code: myCode || generateCode()
+                    };
+
+                    if (!myCode) {
+                        myCode = user.code;
+                    }
+
+                    currentUser = user;
+                    registerUserInGlobal(user);
+
+                    // Load existing contacts (if any) from storage
+                    loadData();
+                    if (!currentUser) {
+                        currentUser = user;
+                    }
+                    if (!myCode) {
+                        myCode = currentUser.code || generateCode();
+                    }
+
+                    // Ensure current user is in global list
+                    registerUserInGlobal(currentUser);
+
+                    saveData();
+
+                    // Switch to main app
+                    authScreen.classList.remove('active');
+                    mainApp.classList.add('active');
+
+                    // Update header
+                    myAvatar.textContent = getInitials(currentUser.name);
+                    myAvatar.style.background = stringToColor(currentUser.name);
+                    myNameDisplay.textContent = currentUser.name;
+                    myStatusDisplay.textContent = 'online';
+
+                    renderChatList();
+
+                    // Show my code in connect modal
+                    if (myCode) {
+                        myCodeDisplay.textContent = myCode;
+                        myCodeDisplay.style.display = 'block';
+                    }
+
+                    // Reset OTP UI
+                    otpSection.classList.remove('show');
+                    sendOtpBtn.disabled = false;
+                    sendOtpBtn.textContent = 'Send OTP';
+                    otpInput.value = '';
+
+                } else {
+                    alert('❌ Invalid OTP. Please try again.');
+                }
+            }
+
+            // ---------- INIT ----------
+            function init() {
+                // Load data
+                const loaded = loadData();
+
+                if (loaded && currentUser) {
+                    // Already logged in
+                    authScreen.classList.remove('active');
+                    mainApp.classList.add('active');
+
+                    myAvatar.textContent = getInitials(currentUser.name);
+                    myAvatar.style.background = stringToColor(currentUser.name);
+                    myNameDisplay.textContent = currentUser.name;
+                    myStatusDisplay.textContent = 'online';
+
+                    if (myCode) {
+                        myCodeDisplay.textContent = myCode;
+                        myCodeDisplay.style.display = 'block';
+                    }
+
+                    renderChatList();
+                } else {
+                    // Show auth
+                    authScreen.classList.add('active');
+                    mainApp.classList.remove('active');
+                }
+
+                // Ensure global users list has current user
+                if (currentUser) {
+                    registerUserInGlobal(currentUser);
+                }
+
+                // Event listeners
+                sendOtpBtn.addEventListener('click', () => {
+                    handleAuth(authName.value, authPhone.value);
+                });
+
+                verifyOtpBtn.addEventListener('click', () => {
+                    verifyOtp(otpInput.value.trim());
+                });
+
+                otpInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        verifyOtp(otpInput.value.trim());
+                    }
+                });
+
+                resendOtp.addEventListener('click', () => {
+                    window._simulatedOtp = '123456';
+                    alert('📱 New OTP sent: 123456');
+                    otpInput.value = '';
+                    otpInput.focus();
+                });
+
+                // Send message
+                sendMsgBtn.addEventListener('click', () => {
+                    const text = msgInput.value.trim();
+                    if (text) {
+                        sendMessage(text, 'text');
+                        msgInput.value = '';
+                        msgInput.focus();
+                    }
+                });
+
+                msgInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const text = msgInput.value.trim();
+                        if (text) {
+                            sendMessage(text, 'text');
+                            msgInput.value = '';
+                        }
+                    }
+                });
+
+                // Back button
+                backBtn.addEventListener('click', () => {
+                    chatWindow.classList.remove('active');
+                    activeContactId = null;
+                    renderChatList();
+                });
+
+                // Attach file
+                attachBtn.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    const files = e.target.files;
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const data = ev.target.result;
+                            sendMessage('', 'file', data, file.name, file.type);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                    fileInput.value = '';
+                });
+
+                // Connect modal
+                connectBtn.addEventListener('click', () => {
+                    connectModal.classList.add('show');
+                    if (myCode) {
+                        myCodeDisplay.textContent = myCode;
+                        myCodeDisplay.style.display = 'block';
+                    }
+                });
+
+                closeConnectModal.addEventListener('click', () => {
+                    connectModal.classList.remove('show');
+                });
+
+                connectModal.addEventListener('click', (e) => {
+                    if (e.target === connectModal) {
+                        connectModal.classList.remove('show');
+                    }
+                });
+
+                generateCodeBtn.addEventListener('click', () => {
+                    const newCode = generateCode();
+                    myCode = newCode;
+                    if (currentUser) {
+                        currentUser.code = newCode;
+                        // update in global list
+                        let users = getUsersList();
+                        const idx = users.findIndex(u => u.id === currentUser.id);
+                        if (idx >= 0) {
+                            users[idx].code = newCode;
+                            saveUsersList(users);
+                        }
+                        saveData();
+                    }
+                    myCodeDisplay.textContent = newCode;
+                    myCodeDisplay.style.display = 'block';
+                    alert('🔑 Your new connect code: ' + newCode);
+                });
+
+                joinCodeBtn.addEventListener('click', () => {
+                    const code = connectCodeInput.value.trim();
+                    if (code.length === 6) {
+                        connectWithCode(code);
+                        connectCodeInput.value = '';
+                        connectModal.classList.remove('show');
+                    } else {
+                        alert('Please enter a valid 6-digit code');
+                    }
+                });
+
+                connectCodeInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        joinCodeBtn.click();
+                    }
+                });
+
+                // Logout
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Logout?')) {
+                        localStorage.removeItem(STORAGE_KEY);
+                        currentUser = null;
+                        contacts = [];
+                        activeContactId = null;
+                        myCode = null;
+                        authScreen.classList.add('active');
+                        mainApp.classList.remove('active');
+                        chatWindow.classList.remove('active');
+                        otpSection.classList.remove('show');
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.textContent = 'Send OTP';
+                        authName.value = '';
+                        authPhone.value = '';
+                        otpInput.value = '';
+                        location.reload();
+                    }
+                });
+
+                // Auto-connect if code in URL (optional)
+                const urlParams = new URLSearchParams(window.location.search);
+                const inviteCode = urlParams.get('code');
+                if (inviteCode && inviteCode.length === 6 && currentUser) {
+                    setTimeout(() => {
+                        connectWithCode(inviteCode);
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }, 800);
+                }
+            }
+
+            // ---------- START ----------
+            document.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
+
+</body>
+</html>
