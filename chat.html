@@ -3,34 +3,38 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>ChatX - Real Chat</title>
+    <title>ChatX - Professional Real-time Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         /* ============================================================
-           ROOT VARIABLES & RESET
+           PROFESSIONAL COLOR THEME
            ============================================================ */
         :root {
-            --saffron: #f4d000;
-            --saffron-light: #f8c898;
-            --saffron-dark: #d4874a;
+            --primary: #1a2332;
+            --primary-light: #243447;
+            --primary-dark: #0f1621;
+            --accent: #e8a84c;
+            --accent-light: #f0c27a;
+            --accent-dark: #c9913a;
             --white: #ffffff;
-            --black: #1a1a1a;
-            --gray-100: #f5f5f5;
-            --gray-200: #e8e8e8;
-            --gray-300: #d0d0d0;
-            --gray-400: #999999;
-            --gray-500: #666666;
-            --gray-600: #444444;
-            --gray-700: #2d2d2d;
-            --gray-800: #222222;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+            --gray-50: #f8f9fa;
+            --gray-100: #f0f2f5;
+            --gray-200: #e4e7ec;
+            --gray-300: #cdd2d9;
+            --gray-400: #9aa3b0;
+            --gray-500: #6b7a8a;
+            --gray-600: #4a5a6a;
+            --gray-700: #2d3a47;
+            --gray-800: #1a2332;
+            --success: #4caf84;
+            --shadow-sm: 0 2px 8px rgba(26, 35, 50, 0.08);
+            --shadow-md: 0 4px 20px rgba(26, 35, 50, 0.12);
+            --shadow-lg: 0 8px 40px rgba(26, 35, 50, 0.16);
             --radius: 16px;
             --radius-sm: 10px;
             --radius-full: 50px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
         * {
@@ -47,7 +51,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 12px;
-            color: var(--black);
+            color: var(--gray-800);
         }
 
         /* ============================================================
@@ -57,7 +61,7 @@
             width: 100%;
             max-width: 480px;
             height: 95vh;
-            max-height: 900px;
+            max-height: 920px;
             background: var(--white);
             border-radius: var(--radius);
             overflow: hidden;
@@ -91,14 +95,14 @@
            NAVBAR
            ============================================================ */
         .navbar {
-            background: var(--saffron);
+            background: var(--primary);
             padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
             min-height: 64px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         }
 
         .navbar .brand {
@@ -113,6 +117,7 @@
 
         .navbar .brand i {
             font-size: 24px;
+            color: var(--accent);
         }
 
         .navbar .nav-actions {
@@ -125,57 +130,83 @@
         .navbar .nav-actions i {
             cursor: pointer;
             transition: var(--transition);
-            padding: 4px;
+            padding: 6px;
             border-radius: 50%;
         }
 
         .navbar .nav-actions i:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             transform: scale(1.05);
         }
 
         /* ============================================================
-           AUTH SCREEN
+           HERO SECTION (Auth Screen)
            ============================================================ */
-        #authScreen {
-            background: var(--white);
-            justify-content: center;
-            align-items: center;
-            padding: 24px 20px;
-        }
-
-        .auth-box {
-            background: var(--white);
-            padding: 32px 24px;
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 400px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--gray-200);
-        }
-
-        .auth-box .auth-header {
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 32px 24px 28px;
             text-align: center;
-            margin-bottom: 28px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .auth-box .auth-header .icon {
-            font-size: 48px;
-            color: var(--saffron);
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 200px;
+            height: 200px;
+            background: rgba(232, 168, 76, 0.08);
+            border-radius: 50%;
+        }
+
+        .hero-section .hero-icon {
+            font-size: 56px;
+            color: var(--accent);
             margin-bottom: 8px;
+            display: block;
         }
 
-        .auth-box .auth-header h1 {
-            font-size: 26px;
+        .hero-section h1 {
+            color: var(--white);
+            font-size: 28px;
             font-weight: 700;
-            color: var(--black);
             letter-spacing: -0.5px;
         }
 
-        .auth-box .auth-header p {
-            color: var(--gray-500);
-            font-size: 14px;
+        .hero-section p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
             margin-top: 4px;
+        }
+
+        .hero-section .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(232, 168, 76, 0.2);
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            margin-top: 12px;
+            color: var(--accent-light);
+            font-size: 13px;
+            border: 1px solid rgba(232, 168, 76, 0.2);
+        }
+
+        .hero-section .hero-badge i {
+            font-size: 12px;
+        }
+
+        /* ============================================================
+           AUTH BOX
+           ============================================================ */
+        .auth-box {
+            padding: 24px 20px;
+            flex: 1;
+            overflow-y: auto;
+            background: var(--white);
         }
 
         .auth-box .input-group {
@@ -190,22 +221,27 @@
             margin-bottom: 5px;
         }
 
+        .auth-box .input-group label i {
+            color: var(--accent);
+            width: 18px;
+        }
+
         .auth-box .input-group input {
             width: 100%;
             padding: 13px 16px;
-            background: var(--gray-100);
+            background: var(--gray-50);
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
-            color: var(--black);
+            color: var(--gray-800);
             font-size: 15px;
             outline: none;
             transition: var(--transition);
         }
 
         .auth-box .input-group input:focus {
-            border-color: var(--saffron);
+            border-color: var(--accent);
             background: var(--white);
-            box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.15);
+            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
         }
 
         .auth-box .input-group input::placeholder {
@@ -215,20 +251,24 @@
         .auth-box .btn-primary {
             width: 100%;
             padding: 14px;
-            background: var(--saffron);
-            color: var(--white);
+            background: var(--accent);
+            color: var(--primary);
             border: none;
             border-radius: var(--radius-sm);
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .auth-box .btn-primary:hover {
-            background: var(--saffron-dark);
+            background: var(--accent-dark);
             transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
         }
 
         .auth-box .btn-primary:disabled {
@@ -241,7 +281,7 @@
             display: none;
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid var(--gray-200);
+            border-top: 2px solid var(--gray-100);
         }
 
         .otp-section.show {
@@ -256,38 +296,42 @@
         .otp-row input {
             flex: 1;
             padding: 13px 16px;
-            background: var(--gray-100);
+            background: var(--gray-50);
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
-            color: var(--black);
-            font-size: 18px;
+            color: var(--gray-800);
+            font-size: 20px;
             text-align: center;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             outline: none;
             transition: var(--transition);
+            font-weight: 600;
         }
 
         .otp-row input:focus {
-            border-color: var(--saffron);
+            border-color: var(--accent);
             background: var(--white);
-            box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.15);
+            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
         }
 
         .otp-row .btn-verify {
             padding: 13px 24px;
-            background: var(--saffron);
-            color: var(--white);
+            background: var(--accent);
+            color: var(--primary);
             border: none;
             border-radius: var(--radius-sm);
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .otp-row .btn-verify:hover {
-            background: var(--saffron-dark);
+            background: var(--accent-dark);
         }
 
         .otp-help {
@@ -299,7 +343,7 @@
         }
 
         .otp-help .resend {
-            color: var(--saffron);
+            color: var(--accent);
             cursor: pointer;
             font-weight: 600;
         }
@@ -308,8 +352,25 @@
             text-decoration: underline;
         }
 
+        .otp-demo {
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--gray-50);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray-500);
+            border: 1px dashed var(--gray-200);
+        }
+
+        .otp-demo strong {
+            color: var(--accent-dark);
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
         /* ============================================================
-           MAIN APP
+           MAIN APP - CHAT LIST
            ============================================================ */
         #mainApp {
             background: var(--white);
@@ -320,6 +381,115 @@
 
         #mainApp.active {
             display: flex;
+        }
+
+        /* ============================================================
+           HERO SECTION (Main App)
+           ============================================================ */
+        .main-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .main-hero .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .main-hero .hero-left .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 20px;
+            flex-shrink: 0;
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .main-hero .hero-left .info {
+            color: var(--white);
+        }
+
+        .main-hero .hero-left .info .name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .main-hero .hero-left .info .status {
+            font-size: 13px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .main-hero .hero-left .info .status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf84;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .main-hero .hero-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .main-hero .hero-actions .hero-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            padding: 10px 16px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-hero .hero-actions .hero-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .main-hero .hero-actions .hero-btn i {
+            font-size: 16px;
+            color: var(--accent-light);
+        }
+
+        .main-hero .hero-actions .hero-btn.logout-btn {
+            background: rgba(244, 67, 54, 0.15);
+            border-color: rgba(244, 67, 54, 0.2);
+        }
+
+        .main-hero .hero-actions .hero-btn.logout-btn:hover {
+            background: rgba(244, 67, 54, 0.25);
         }
 
         /* ============================================================
@@ -350,15 +520,15 @@
             gap: 14px;
             cursor: pointer;
             transition: var(--transition);
-            border-bottom: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--gray-100);
         }
 
         .chat-item:hover {
-            background: var(--gray-100);
+            background: var(--gray-50);
         }
 
         .chat-item:active {
-            background: var(--gray-200);
+            background: var(--gray-100);
         }
 
         .chat-item .avatar {
@@ -372,7 +542,6 @@
             font-weight: 600;
             font-size: 20px;
             flex-shrink: 0;
-            background: var(--saffron);
         }
 
         .chat-item .info {
@@ -381,7 +550,7 @@
         }
 
         .chat-item .info .name {
-            color: var(--black);
+            color: var(--gray-800);
             font-size: 16px;
             font-weight: 600;
         }
@@ -405,8 +574,8 @@
         }
 
         .chat-item .meta .badge {
-            background: var(--saffron);
-            color: var(--white);
+            background: var(--accent);
+            color: var(--primary);
             border-radius: 50%;
             padding: 2px 8px;
             font-size: 11px;
@@ -422,14 +591,34 @@
             text-align: center;
             padding: 60px 20px;
             font-size: 15px;
-            line-height: 1.8;
+            line-height: 2;
         }
 
         .empty-chats i {
-            font-size: 48px;
+            font-size: 52px;
             color: var(--gray-300);
             display: block;
             margin-bottom: 16px;
+        }
+
+        .empty-chats .empty-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 24px;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .empty-chats .empty-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
         /* ============================================================
@@ -452,13 +641,14 @@
         }
 
         .chat-header {
-            background: var(--saffron);
+            background: var(--primary);
             padding: 10px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
             flex-shrink: 0;
             min-height: 60px;
+            border-bottom: 3px solid var(--accent);
         }
 
         .chat-header .back {
@@ -471,7 +661,7 @@
         }
 
         .chat-header .back:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .chat-header .avatar {
@@ -485,7 +675,6 @@
             font-weight: 600;
             font-size: 18px;
             flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.25);
         }
 
         .chat-header .info {
@@ -518,7 +707,7 @@
         }
 
         .chat-header .actions i:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* ============================================================
@@ -531,7 +720,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            background: var(--gray-100);
+            background: var(--gray-50);
         }
 
         #messagesArea::-webkit-scrollbar {
@@ -559,15 +748,15 @@
 
         .msg.sent {
             align-self: flex-end;
-            background: var(--saffron);
-            color: var(--white);
+            background: var(--accent);
+            color: var(--primary);
             border-bottom-right-radius: 4px;
         }
 
         .msg.received {
             align-self: flex-start;
             background: var(--white);
-            color: var(--black);
+            color: var(--gray-800);
             border-bottom-left-radius: 4px;
             box-shadow: var(--shadow-sm);
         }
@@ -583,7 +772,7 @@
         }
 
         .msg.sent .msg-footer {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(26, 35, 50, 0.7);
         }
 
         .msg.received .msg-footer {
@@ -595,7 +784,7 @@
         }
 
         .msg .msg-footer .tick.read {
-            color: #4fc3f7;
+            color: #4caf84;
         }
 
         .msg .file-preview {
@@ -711,7 +900,7 @@
         }
 
         .input-area .attach-btn:hover {
-            color: var(--saffron);
+            color: var(--accent);
         }
 
         .input-area input[type="text"] {
@@ -719,8 +908,8 @@
             padding: 10px 16px;
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-full);
-            background: var(--gray-100);
-            color: var(--black);
+            background: var(--gray-50);
+            color: var(--gray-800);
             font-size: 15px;
             outline: none;
             transition: var(--transition);
@@ -728,9 +917,9 @@
         }
 
         .input-area input[type="text"]:focus {
-            border-color: var(--saffron);
+            border-color: var(--accent);
             background: var(--white);
-            box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.12);
+            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
         }
 
         .input-area input[type="text"]::placeholder {
@@ -738,9 +927,9 @@
         }
 
         .input-area .send-btn {
-            background: var(--saffron);
+            background: var(--accent);
             border: none;
-            color: var(--white);
+            color: var(--primary);
             width: 46px;
             height: 46px;
             border-radius: 50%;
@@ -754,7 +943,7 @@
         }
 
         .input-area .send-btn:hover {
-            background: var(--saffron-dark);
+            background: var(--accent-dark);
             transform: scale(1.02);
         }
 
@@ -776,12 +965,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(26, 35, 50, 0.6);
             z-index: 50;
             justify-content: center;
             align-items: center;
             padding: 24px;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(6px);
         }
 
         #connectModal.show {
@@ -797,20 +986,25 @@
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
         }
 
-        .connect-box h2 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--black);
-            margin-bottom: 4px;
+        .connect-box .modal-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 4px;
         }
 
-        .connect-box h2 i {
-            color: var(--saffron);
+        .connect-box .modal-header i {
+            font-size: 28px;
+            color: var(--accent);
+        }
+
+        .connect-box .modal-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
         }
 
         .connect-box .sub {
@@ -834,22 +1028,43 @@
         .connect-box .input-group input {
             width: 100%;
             padding: 12px 16px;
-            background: var(--gray-100);
+            background: var(--gray-50);
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
-            color: var(--black);
-            font-size: 15px;
+            color: var(--gray-800);
+            font-size: 18px;
             outline: none;
             transition: var(--transition);
             text-align: center;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             font-weight: 600;
         }
 
         .connect-box .input-group input:focus {
-            border-color: var(--saffron);
+            border-color: var(--accent);
             background: var(--white);
-            box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.12);
+            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
+        }
+
+        .connect-box .btn-primary {
+            width: 100%;
+            padding: 13px;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .connect-box .btn-primary:hover {
+            background: var(--accent-dark);
         }
 
         .connect-box .btn-group {
@@ -860,50 +1075,50 @@
 
         .connect-box .btn-group button {
             flex: 1;
-            padding: 13px;
-            border: none;
+            padding: 12px;
+            border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            background: var(--white);
+            color: var(--gray-700);
         }
 
-        .connect-box .btn-group .primary {
-            background: var(--saffron);
-            color: var(--white);
+        .connect-box .btn-group button:hover {
+            border-color: var(--accent);
+            background: var(--gray-50);
         }
 
-        .connect-box .btn-group .primary:hover {
-            background: var(--saffron-dark);
-        }
-
-        .connect-box .btn-group .secondary {
-            background: var(--gray-200);
-            color: var(--black);
-        }
-
-        .connect-box .btn-group .secondary:hover {
-            background: var(--gray-300);
+        .connect-box .btn-group button i {
+            color: var(--accent);
         }
 
         .connect-box .code-display {
-            background: var(--gray-100);
+            background: var(--gray-50);
             padding: 14px;
             border-radius: var(--radius-sm);
             text-align: center;
             font-size: 28px;
             letter-spacing: 6px;
-            color: var(--saffron-dark);
+            color: var(--accent-dark);
             font-weight: 700;
             margin: 10px 0;
-            border: 2px dashed var(--saffron-light);
+            border: 2px dashed var(--accent-light);
             font-family: monospace;
+        }
+
+        .connect-box .code-label {
+            font-size: 13px;
+            color: var(--gray-500);
+            text-align: center;
+            margin-bottom: 4px;
         }
 
         .connect-box .close-btn {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             background: transparent;
             border: 2px solid var(--gray-200);
             color: var(--gray-600);
@@ -916,7 +1131,7 @@
         }
 
         .connect-box .close-btn:hover {
-            background: var(--gray-100);
+            background: var(--gray-50);
             border-color: var(--gray-300);
         }
 
@@ -925,27 +1140,35 @@
            ============================================================ */
         .footer {
             background: var(--white);
-            padding: 8px 16px;
-            border-top: 1px solid var(--gray-200);
+            padding: 10px 16px;
+            border-top: 2px solid var(--gray-200);
             text-align: center;
-            font-size: 11px;
-            color: var(--gray-400);
+            font-size: 12px;
+            color: var(--gray-500);
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
         .footer span {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
 
         .footer i {
-            font-size: 12px;
-            color: var(--saffron);
+            font-size: 13px;
+            color: var(--accent);
+        }
+
+        .footer .footer-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4caf84;
+            display: inline-block;
         }
 
         /* ============================================================
@@ -963,8 +1186,16 @@
                 max-width: 100%;
             }
 
+            .hero-section {
+                padding: 24px 16px 20px;
+            }
+
+            .hero-section h1 {
+                font-size: 24px;
+            }
+
             .auth-box {
-                padding: 24px 16px;
+                padding: 20px 16px;
             }
 
             .msg {
@@ -993,6 +1224,31 @@
             .connect-box {
                 padding: 24px 18px;
             }
+
+            .main-hero {
+                padding: 14px 16px;
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+
+            .main-hero .hero-actions {
+                justify-content: stretch;
+            }
+
+            .main-hero .hero-actions .hero-btn {
+                flex: 1;
+                justify-content: center;
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+
+            .footer {
+                flex-wrap: wrap;
+                gap: 8px 16px;
+                font-size: 11px;
+                padding: 8px 12px;
+            }
         }
 
         @media (max-width: 380px) {
@@ -1005,24 +1261,32 @@
                 font-size: 16px;
             }
 
-            .auth-box .auth-header h1 {
-                font-size: 22px;
+            .hero-section h1 {
+                font-size: 20px;
             }
 
             .chat-header .info .name {
                 font-size: 14px;
+            }
+
+            .otp-row {
+                flex-direction: column;
+            }
+
+            .otp-row .btn-verify {
+                justify-content: center;
             }
         }
 
         /* ============================================================
            UTILITY
            ============================================================ */
-        .text-saffron {
-            color: var(--saffron);
+        .text-accent {
+            color: var(--accent);
         }
 
-        .bg-saffron {
-            background: var(--saffron);
+        .bg-accent {
+            background: var(--accent);
         }
 
         .hidden {
@@ -1038,6 +1302,7 @@
         AUTH SCREEN
         ========================================================== -->
         <div id="authScreen" class="screen active">
+            <!-- Navbar -->
             <div class="navbar">
                 <div class="brand">
                     <i class="fas fa-comment-dots"></i>
@@ -1045,56 +1310,60 @@
                 </div>
                 <div class="nav-actions">
                     <i class="fas fa-circle-info"></i>
+                    <i class="fas fa-shield-alt"></i>
                 </div>
             </div>
 
-            <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:20px;">
-                <div class="auth-box">
-                    <div class="auth-header">
-                        <div class="icon">
-                            <i class="fas fa-message"></i>
-                        </div>
-                        <h1>Welcome to ChatX</h1>
-                        <p>Connect with people instantly</p>
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <span class="hero-icon"><i class="fas fa-comments"></i></span>
+                <h1>Welcome to ChatX</h1>
+                <p>Secure, real-time messaging made simple</p>
+                <div class="hero-badge">
+                    <i class="fas fa-bolt"></i>
+                    Real-time • End-to-end encrypted
+                </div>
+            </div>
+
+            <!-- Auth Form -->
+            <div class="auth-box">
+                <div class="input-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="authName" placeholder="Enter your full name" maxlength="30" />
+                </div>
+
+                <div class="input-group">
+                    <label><i class="fas fa-phone"></i> Mobile Number</label>
+                    <input type="text" id="authPhone" placeholder="Enter mobile number" maxlength="15" />
+                </div>
+
+                <button class="btn-primary" id="sendOtpBtn">
+                    <i class="fas fa-paper-plane"></i> Send OTP
+                </button>
+
+                <div class="otp-section" id="otpSection">
+                    <div class="otp-row">
+                        <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" inputmode="numeric" />
+                        <button class="btn-verify" id="verifyOtpBtn">
+                            <i class="fas fa-check"></i> Verify
+                        </button>
                     </div>
-
-                    <div class="input-group">
-                        <label><i class="fas fa-user"></i> Full Name</label>
-                        <input type="text" id="authName" placeholder="Enter your name" maxlength="30" />
+                    <div class="otp-help">
+                        <span><i class="fas fa-clock"></i> OTP expires in 5 min</span>
+                        <span class="resend" id="resendOtp"><i class="fas fa-rotate"></i> Resend</span>
                     </div>
-
-                    <div class="input-group">
-                        <label><i class="fas fa-phone"></i> Mobile Number</label>
-                        <input type="text" id="authPhone" placeholder="Enter mobile number" maxlength="15" />
-                    </div>
-
-                    <button class="btn-primary" id="sendOtpBtn">
-                        <i class="fas fa-paper-plane"></i> Send OTP
-                    </button>
-
-                    <div class="otp-section" id="otpSection">
-                        <div class="otp-row">
-                            <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" inputmode="numeric" />
-                            <button class="btn-verify" id="verifyOtpBtn">
-                                <i class="fas fa-check"></i> Verify
-                            </button>
-                        </div>
-                        <div class="otp-help">
-                            <span><i class="fas fa-clock"></i> OTP expires in 5 min</span>
-                            <span class="resend" id="resendOtp"><i class="fas fa-rotate"></i> Resend</span>
-                        </div>
-                    </div>
-
-                    <div style="margin-top:14px; padding:12px; background:var(--gray-100); border-radius:var(--radius-sm); text-align:center; font-size:13px; color:var(--gray-500);">
-                        <i class="fas fa-shield"></i> Demo OTP: <strong style="color:var(--saffron-dark);" id="demoOtpDisplay">123456</strong>
+                    <div class="otp-demo">
+                        <i class="fas fa-shield-alt"></i> Demo OTP: <strong id="demoOtpDisplay">123456</strong>
                     </div>
                 </div>
             </div>
 
+            <!-- Footer -->
             <div class="footer">
                 <span><i class="fas fa-lock"></i> Secure</span>
                 <span><i class="fas fa-bolt"></i> Real-time</span>
-                <span><i class="fas fa-code"></i> v2.0</span>
+                <span><i class="fas fa-code"></i> v3.0</span>
+                <span><span class="footer-dot"></span> Online</span>
             </div>
         </div>
 
@@ -1102,29 +1371,56 @@
         MAIN APP
         ========================================================== -->
         <div id="mainApp">
+            <!-- Navbar -->
             <div class="navbar">
                 <div class="brand">
                     <i class="fas fa-comment-dots"></i>
                     ChatX
                 </div>
                 <div class="nav-actions">
-                    <i class="fas fa-users" id="connectBtn" title="Connect People"></i>
-                    <i class="fas fa-right-from-bracket" id="logoutBtn" title="Logout"></i>
+                    <i class="fas fa-search"></i>
+                    <i class="fas fa-bell"></i>
                 </div>
             </div>
 
+            <!-- Hero Section with Connect Button -->
+            <div class="main-hero">
+                <div class="hero-left">
+                    <div class="avatar" id="myAvatar">U</div>
+                    <div class="info">
+                        <div class="name" id="myNameDisplay">User</div>
+                        <div class="status">
+                            <span class="dot"></span> Online
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="hero-btn" id="connectBtn">
+                        <i class="fas fa-user-plus"></i> Connect
+                    </button>
+                    <button class="hero-btn logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat List -->
             <div id="chatList">
                 <div class="empty-chats">
                     <i class="fas fa-inbox"></i>
-                    No chats yet.<br />
-                    Tap <strong><i class="fas fa-users" style="color:var(--saffron);"></i></strong> to connect with people.
+                    No conversations yet
+                    <br />
+                    <button class="empty-btn" id="emptyConnectBtn">
+                        <i class="fas fa-user-plus"></i> Connect with someone
+                    </button>
                 </div>
             </div>
 
+            <!-- Footer -->
             <div class="footer">
                 <span><i class="fas fa-user"></i> <span id="footerUser">User</span></span>
-                <span><i class="fas fa-circle" style="color:#4caf50; font-size:8px;"></i> Online</span>
-                <span><i class="fas fa-key"></i> <span id="footerCode">------</span></span>
+                <span><i class="fas fa-key"></i> Code: <span id="footerCode">------</span></span>
+                <span><span class="footer-dot"></span> Active</span>
             </div>
         </div>
 
@@ -1134,13 +1430,14 @@
         <div id="chatWindow">
             <div class="chat-header">
                 <i class="fas fa-arrow-left back" id="backBtn"></i>
-                <div class="avatar" id="cwAvatar">U</div>
+                <div class="avatar" id="cwAvatar" style="background:var(--accent); color:var(--primary);">U</div>
                 <div class="info">
                     <div class="name" id="cwName">Contact</div>
-                    <div class="status" id="cwStatus">online</div>
+                    <div class="status" id="cwStatus">Online</div>
                 </div>
                 <div class="actions">
                     <i class="fas fa-phone"></i>
+                    <i class="fas fa-video"></i>
                     <i class="fas fa-ellipsis-vertical"></i>
                 </div>
             </div>
@@ -1173,7 +1470,10 @@
         ========================================================== -->
         <div id="connectModal">
             <div class="connect-box">
-                <h2><i class="fas fa-user-plus"></i> Connect People</h2>
+                <div class="modal-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h2>Connect People</h2>
+                </div>
                 <div class="sub">Share your code or enter someone's active code</div>
 
                 <div class="input-group">
@@ -1181,19 +1481,17 @@
                     <input type="text" id="connectCodeInput" placeholder="e.g. 482916" maxlength="6" inputmode="numeric" />
                 </div>
 
-                <button class="btn-primary" id="joinCodeBtn" style="width:100%; padding:13px; border:none; border-radius:var(--radius-sm); background:var(--saffron); color:var(--white); font-size:15px; font-weight:600; cursor:pointer; transition:var(--transition);">
-                    <i class="fas fa-link"></i> Connect
+                <button class="btn-primary" id="joinCodeBtn">
+                    <i class="fas fa-link"></i> Connect Now
                 </button>
 
                 <div class="btn-group">
-                    <button class="primary" id="generateCodeBtn">
+                    <button id="generateCodeBtn">
                         <i class="fas fa-rotate"></i> Generate New Code
                     </button>
                 </div>
 
-                <div style="font-size:13px; color:var(--gray-500); margin-top:8px; text-align:center;">
-                    <i class="fas fa-info-circle"></i> Your active connect code:
-                </div>
+                <div class="code-label"><i class="fas fa-info-circle"></i> Your active connect code</div>
                 <div class="code-display" id="myCodeDisplay">------</div>
 
                 <button class="close-btn" id="closeConnectModal">
@@ -1207,7 +1505,7 @@
     <script>
         // ================================================================
         //  CHATX - COMPLETE REAL-TIME CHAT APPLICATION
-        //  Frontend only with localStorage persistence
+        //  Professional Theme with Hero Section & Connect Button
         // ================================================================
 
         (function() {
@@ -1228,6 +1526,8 @@
             const demoOtpDisplay = document.getElementById('demoOtpDisplay');
 
             const chatList = document.getElementById('chatList');
+            const myAvatar = document.getElementById('myAvatar');
+            const myNameDisplay = document.getElementById('myNameDisplay');
             const footerUser = document.getElementById('footerUser');
             const footerCode = document.getElementById('footerCode');
 
@@ -1243,6 +1543,7 @@
             const fileInput = document.getElementById('fileInput');
 
             const connectBtn = document.getElementById('connectBtn');
+            const emptyConnectBtn = document.getElementById('emptyConnectBtn');
             const connectModal = document.getElementById('connectModal');
             const closeConnectModal = document.getElementById('closeConnectModal');
             const connectCodeInput = document.getElementById('connectCodeInput');
@@ -1293,7 +1594,7 @@
                     hash = str.charCodeAt(i) + ((hash << 5) - hash);
                 }
                 const hue = Math.abs(hash % 360);
-                return `hsl(${hue}, 70%, 55%)`;
+                return `hsl(${hue}, 65%, 50%)`;
             }
 
             function escapeHtml(text) {
@@ -1369,10 +1670,22 @@
                     chatList.innerHTML = `
                         <div class="empty-chats">
                             <i class="fas fa-inbox"></i>
-                            No chats yet.<br />
-                            Tap <strong><i class="fas fa-users" style="color:var(--saffron);"></i></strong> to connect with people.
+                            No conversations yet
+                            <br />
+                            <button class="empty-btn" id="emptyConnectBtn">
+                                <i class="fas fa-user-plus"></i> Connect with someone
+                            </button>
                         </div>
                     `;
+                    const emptyBtn = document.getElementById('emptyConnectBtn');
+                    if (emptyBtn) {
+                        emptyBtn.addEventListener('click', () => {
+                            connectModal.classList.add('show');
+                            if (myCode) {
+                                myCodeDisplay.textContent = myCode;
+                            }
+                        });
+                    }
                     return;
                 }
 
@@ -1497,7 +1810,7 @@
                 cwAvatar.textContent = getInitials(contact.name);
                 cwAvatar.style.background = stringToColor(contact.name);
                 cwName.textContent = contact.name;
-                cwStatus.textContent = 'online';
+                cwStatus.textContent = 'Online';
 
                 contact.unread = 0;
                 renderMessages(contactId);
@@ -1563,7 +1876,7 @@
                         "Nice to hear that.", "Absolutely!", "Let's connect soon.",
                         "Got it, thanks!", "Will check and confirm.", "Makes sense.",
                         "Good to know.", "I appreciate that.", "Looking forward to it.",
-                        "Sure thing!", "That works for me."
+                        "Sure thing!", "That works for me.", "Awesome!", "Brilliant!"
                     ];
                     const reply = replies[Math.floor(Math.random() * replies.length)];
 
@@ -1606,10 +1919,9 @@
                     return false;
                 }
 
-                // Check if this code is active (exists in global users)
                 const foundUser = findUserByCode(code);
                 if (!foundUser) {
-                    alert('❌ Invalid or inactive code. Please check and try again.');
+                    alert('Invalid or inactive code. Please check and try again.');
                     return false;
                 }
 
@@ -1631,7 +1943,7 @@
                 contacts.push(contact);
                 saveData();
                 renderChatList();
-                alert(`✅ Connected with ${foundUser.name}!`);
+                alert('Connected with ' + foundUser.name + '!');
                 return true;
             }
 
@@ -1642,7 +1954,6 @@
                     return;
                 }
 
-                // Generate random OTP
                 currentOtp = generateOtp();
                 demoOtpDisplay.textContent = currentOtp;
 
@@ -1651,11 +1962,10 @@
                 sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
                 otpInput.focus();
 
-                // Simulate sending OTP
                 setTimeout(() => {
                     sendOtpBtn.disabled = false;
                     sendOtpBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend OTP';
-                    alert(`📱 OTP sent to ${phone}\nYour OTP: ${currentOtp}`);
+                    alert('OTP sent to ' + phone + '\nYour OTP: ' + currentOtp);
                 }, 800);
             }
 
@@ -1683,6 +1993,9 @@
                     authScreen.classList.remove('active');
                     mainApp.classList.add('active');
 
+                    myAvatar.textContent = getInitials(currentUser.name);
+                    myAvatar.style.background = stringToColor(currentUser.name);
+                    myNameDisplay.textContent = currentUser.name;
                     footerUser.textContent = currentUser.name;
                     footerCode.textContent = myCode;
 
@@ -1699,7 +2012,7 @@
                     currentOtp = null;
 
                 } else {
-                    alert('❌ Invalid OTP. Please try again.');
+                    alert('Invalid OTP. Please try again.');
                     otpInput.value = '';
                     otpInput.focus();
                 }
@@ -1713,6 +2026,9 @@
                     authScreen.classList.remove('active');
                     mainApp.classList.add('active');
 
+                    myAvatar.textContent = getInitials(currentUser.name);
+                    myAvatar.style.background = stringToColor(currentUser.name);
+                    myNameDisplay.textContent = currentUser.name;
                     footerUser.textContent = currentUser.name;
                     footerCode.textContent = myCode || '------';
 
@@ -1724,7 +2040,6 @@
                 } else {
                     authScreen.classList.add('active');
                     mainApp.classList.remove('active');
-                    // Generate initial OTP for display
                     currentOtp = generateOtp();
                     demoOtpDisplay.textContent = currentOtp;
                 }
@@ -1735,13 +2050,11 @@
 
                 // ---------- EVENT LISTENERS ----------
 
-                // Send OTP
                 sendOtpBtn.addEventListener('click', () => {
                     if (sendOtpBtn.disabled) return;
                     handleAuth(authName.value, authPhone.value);
                 });
 
-                // Verify OTP
                 verifyOtpBtn.addEventListener('click', () => {
                     verifyOtp(otpInput.value.trim());
                 });
@@ -1752,16 +2065,14 @@
                     }
                 });
 
-                // Resend OTP
                 resendOtp.addEventListener('click', () => {
                     currentOtp = generateOtp();
                     demoOtpDisplay.textContent = currentOtp;
-                    alert(`📱 New OTP sent: ${currentOtp}`);
+                    alert('New OTP sent: ' + currentOtp);
                     otpInput.value = '';
                     otpInput.focus();
                 });
 
-                // Send message
                 sendMsgBtn.addEventListener('click', () => {
                     const text = msgInput.value.trim();
                     if (text) {
@@ -1782,14 +2093,12 @@
                     }
                 });
 
-                // Back button
                 backBtn.addEventListener('click', () => {
                     chatWindow.classList.remove('active');
                     activeContactId = null;
                     renderChatList();
                 });
 
-                // Attach file
                 attachBtn.addEventListener('click', () => {
                     fileInput.click();
                 });
@@ -1808,8 +2117,14 @@
                     fileInput.value = '';
                 });
 
-                // Connect modal
                 connectBtn.addEventListener('click', () => {
+                    connectModal.classList.add('show');
+                    if (myCode) {
+                        myCodeDisplay.textContent = myCode;
+                    }
+                });
+
+                emptyConnectBtn.addEventListener('click', () => {
                     connectModal.classList.add('show');
                     if (myCode) {
                         myCodeDisplay.textContent = myCode;
@@ -1826,7 +2141,6 @@
                     }
                 });
 
-                // Generate new code
                 generateCodeBtn.addEventListener('click', () => {
                     const newCode = generateCode();
                     myCode = newCode;
@@ -1837,10 +2151,9 @@
                     }
                     myCodeDisplay.textContent = newCode;
                     footerCode.textContent = newCode;
-                    alert('🔑 New connect code generated: ' + newCode);
+                    alert('New connect code generated: ' + newCode);
                 });
 
-                // Join with code
                 joinCodeBtn.addEventListener('click', () => {
                     const code = connectCodeInput.value.trim();
                     if (code.length === 6) {
@@ -1858,7 +2171,6 @@
                     }
                 });
 
-                // Logout
                 logoutBtn.addEventListener('click', () => {
                     if (confirm('Are you sure you want to logout?')) {
                         localStorage.removeItem(STORAGE_KEY);
