@@ -438,6 +438,14 @@
             text-overflow: ellipsis;
         }
 
+        .main-hero .hero-left .info .phone {
+            font-size: 12px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         .main-hero .hero-left .info .status {
             font-size: 13px;
             opacity: 0.8;
@@ -589,6 +597,11 @@
             font-weight: 600;
         }
 
+        .chat-item .info .phone {
+            color: var(--gray-400);
+            font-size: 12px;
+        }
+
         .chat-item .info .last-msg {
             color: var(--gray-500);
             font-size: 14px;
@@ -721,6 +734,11 @@
             font-weight: 600;
         }
 
+        .chat-header .info .phone {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
         .chat-header .info .status {
             font-size: 12px;
             opacity: 0.8;
@@ -819,6 +837,29 @@
 
         .msg .msg-footer .tick.read {
             color: #4caf84;
+        }
+
+        .msg .file-preview {
+            max-width: 200px;
+            max-height: 160px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            display: block;
+            cursor: pointer;
+            border: 1px solid var(--gray-200);
+        }
+
+        .msg .file-name {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .msg .file-link {
+            color: inherit;
+            text-decoration: underline;
+            opacity: 0.9;
         }
 
         @keyframes fadeIn {
@@ -1062,6 +1103,7 @@
             letter-spacing: 8px;
             font-weight: 700;
             font-family: monospace;
+            text-transform: uppercase;
         }
 
         .connect-box .input-group input:focus {
@@ -1142,7 +1184,7 @@
             color: var(--accent);
         }
 
-        .connect-box .code-display {
+        .connect-box .peer-display {
             background: var(--gray-50);
             padding: 14px;
             border-radius: var(--radius-sm);
@@ -1154,9 +1196,10 @@
             margin: 8px 0;
             border: 2px dashed var(--accent-light);
             font-family: monospace;
+            text-transform: uppercase;
         }
 
-        .connect-box .code-label {
+        .connect-box .peer-label {
             font-size: 13px;
             color: var(--gray-500);
             text-align: center;
@@ -1167,7 +1210,7 @@
             gap: 6px;
         }
 
-        .connect-box .code-label i {
+        .connect-box .peer-label i {
             color: var(--accent);
         }
 
@@ -1210,6 +1253,13 @@
             background: #ffebee;
             color: #c62828;
             border: 1px solid #ef9a9a;
+        }
+
+        .connect-box .status-msg.info {
+            display: block;
+            background: #e3f2fd;
+            color: #0d47a1;
+            border: 1px solid #90caf9;
         }
 
         /* ============================================================
@@ -1453,6 +1503,7 @@
                     <div class="avatar" id="myAvatar">U</div>
                     <div class="info">
                         <div class="name" id="myNameDisplay">User</div>
+                        <div class="phone" id="myPhoneDisplay"><i class="fas fa-phone"></i> <span id="myPhoneText">+91</span></div>
                         <div class="status">
                             <span class="dot"></span> Online
                         </div>
@@ -1495,6 +1546,7 @@
                 <div class="avatar" id="cwAvatar" style="background:var(--accent); color:var(--primary);">U</div>
                 <div class="info">
                     <div class="name" id="cwName">Contact</div>
+                    <div class="phone" id="cwPhone"><i class="fas fa-phone"></i> <span id="cwPhoneText">+91</span></div>
                     <div class="status" id="cwStatus">Online</div>
                 </div>
                 <div class="actions">
@@ -1534,13 +1586,13 @@
                     <i class="fas fa-user-plus"></i>
                     <h2>Connect People</h2>
                 </div>
-                <div class="sub">Share your Peer ID or enter someone's ID</div>
+                <div class="sub">Share your Peer ID or enter someone's ID to connect</div>
 
                 <div id="statusMessage" class="status-msg"></div>
 
                 <div class="input-group">
-                    <label><i class="fas fa-qrcode"></i> Enter Peer ID</label>
-                    <input type="text" id="connectPeerInput" placeholder="e.g. 123456" style="letter-spacing:4px;" />
+                    <label><i class="fas fa-qrcode"></i> Enter Peer ID (6 characters)</label>
+                    <input type="text" id="connectPeerInput" placeholder="e.g. X7K2M9" maxlength="6" style="text-transform:uppercase; letter-spacing:8px;" />
                 </div>
 
                 <button class="btn-primary" id="joinPeerBtn">
@@ -1549,8 +1601,8 @@
 
                 <div class="divider">or</div>
 
-                <div class="code-label"><i class="fas fa-info-circle"></i> Your Peer ID</div>
-                <div class="code-display" id="myPeerDisplay">------</div>
+                <div class="peer-label"><i class="fas fa-info-circle"></i> Your Peer ID</div>
+                <div class="peer-display" id="myPeerDisplay">------</div>
 
                 <button class="btn btn-primary" id="copyPeerBtn" style="width:100%; padding:12px; background:var(--accent); color:var(--primary); border:none; border-radius:var(--radius-sm); font-size:14px; font-weight:700; cursor:pointer; transition:var(--transition); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="fas fa-copy"></i> Copy Peer ID
@@ -1567,7 +1619,7 @@
     <script>
         // ================================================================
         //  CHATX - COMPLETE REAL-TIME CHAT USING PEERJS
-        //  Based on SHAREx Tool's P2P technology
+        //  With Phone Number & Name based history
         // ================================================================
 
         (function() {
@@ -1590,11 +1642,13 @@
             const chatList = document.getElementById('chatList');
             const myAvatar = document.getElementById('myAvatar');
             const myNameDisplay = document.getElementById('myNameDisplay');
+            const myPhoneText = document.getElementById('myPhoneText');
             const footerUser = document.getElementById('footerUser');
             const footerPeerId = document.getElementById('footerPeerId');
 
             const cwAvatar = document.getElementById('cwAvatar');
             const cwName = document.getElementById('cwName');
+            const cwPhoneText = document.getElementById('cwPhoneText');
             const cwStatus = document.getElementById('cwStatus');
             const messagesArea = document.getElementById('messagesArea');
             const typingIndicator = document.getElementById('typingIndicator');
@@ -1626,10 +1680,10 @@
             let currentOtp = null;
             let typingTimeout = null;
             let deviceUsernameMap = {};
-            let isHost = false;
+            let devicePhoneMap = {};
 
             // ---------- STORAGE KEYS ----------
-            const STORAGE_KEY = 'chatx_data_peerjs';
+            const STORAGE_KEY = 'chatx_data_v4';
 
             // ---------- HELPERS ----------
             function generateId() {
@@ -1638,6 +1692,15 @@
 
             function generateOtp() {
                 return String(Math.floor(100000 + Math.random() * 900000));
+            }
+
+            function generatePeerId() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let id = '';
+                for (let i = 0; i < 6; i++) {
+                    id += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return id;
             }
 
             function formatTime(date) {
@@ -1662,6 +1725,12 @@
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
+            }
+
+            function formatPhone(phone) {
+                if (!phone) return 'Unknown';
+                // Remove spaces and format
+                return phone.trim();
             }
 
             // ---------- STORAGE ----------
@@ -1724,7 +1793,7 @@
 
                     let lastText = 'No messages yet';
                     if (lastMsg) {
-                        lastText = lastMsg.text || '';
+                        lastText = lastMsg.text || '📎 ' + (lastMsg.fileName || 'File');
                     }
 
                     const timeStr = lastMsg ? formatTime(new Date(lastMsg.timestamp)) : '';
@@ -1733,6 +1802,7 @@
                         <div class="avatar" style="background:${stringToColor(contact.name)}">${getInitials(contact.name)}</div>
                         <div class="info">
                             <div class="name">${escapeHtml(contact.name)}</div>
+                            <div class="phone"><i class="fas fa-phone"></i> ${escapeHtml(contact.phone || 'Unknown')}</div>
                             <div class="last-msg">${escapeHtml(lastText)}</div>
                         </div>
                         <div class="meta">
@@ -1766,7 +1836,23 @@
                     const isSent = msg.sender === currentUser?.id;
                     div.className = `msg ${isSent ? 'sent' : 'received'}`;
 
-                    let content = escapeHtml(msg.text);
+                    let content = '';
+                    if (msg.type === 'file') {
+                        if (msg.fileType && msg.fileType.startsWith('image/')) {
+                            content = `
+                                <img src="${msg.fileData}" class="file-preview" alt="image" 
+                                     onclick="window.open('${msg.fileData}','_blank')" />
+                            `;
+                        } else {
+                            content = `
+                                <i class="fas fa-file"></i>
+                                <a href="${msg.fileData}" target="_blank" class="file-link">${escapeHtml(msg.fileName)}</a>
+                            `;
+                        }
+                        content += `<span class="file-name">${escapeHtml(msg.fileName)}</span>`;
+                    } else {
+                        content = escapeHtml(msg.text);
+                    }
 
                     const isRead = msg.read || false;
                     let tickHtml = '';
@@ -1814,6 +1900,7 @@
                 cwAvatar.textContent = getInitials(contact.name);
                 cwAvatar.style.background = stringToColor(contact.name);
                 cwName.textContent = contact.name;
+                cwPhoneText.textContent = contact.phone || 'Unknown';
                 cwStatus.textContent = 'Online';
 
                 contact.unread = 0;
@@ -1824,8 +1911,18 @@
                 msgInput.focus();
             }
 
+            // ---------- FIND CONTACT BY PEER ID ----------
+            function findContactByPeerId(peerId) {
+                return contacts.find(c => c.peerId === peerId);
+            }
+
+            // ---------- FIND CONTACT BY PHONE ----------
+            function findContactByPhone(phone) {
+                return contacts.find(c => c.phone === phone);
+            }
+
             // ---------- SEND MESSAGE VIA PEER ----------
-            function sendMessageToPeer(peerId, message) {
+            function sendMessageToPeer(peerId, message, type = 'text', fileData = null, fileName = null, fileType = null) {
                 const conn = connections.find(c => c.peer === peerId && c.open);
                 if (!conn) {
                     setStatus('Connection lost. Please reconnect.', 'error');
@@ -1833,15 +1930,19 @@
                 }
                 try {
                     conn.send({
-                        type: 'message',
-                        text: message,
+                        type: type,
+                        text: message || '',
                         sender: currentUser.id,
                         senderName: currentUser.name,
-                        timestamp: Date.now()
+                        senderPhone: currentUser.phone,
+                        timestamp: Date.now(),
+                        fileData: fileData,
+                        fileName: fileName,
+                        fileType: fileType
                     });
                     return true;
                 } catch (e) {
-                    setStatus('Failed to send message: ' + e.message, 'error');
+                    setStatus('Failed to send: ' + e.message, 'error');
                     return false;
                 }
             }
@@ -1853,13 +1954,16 @@
                 if (!contact) return false;
                 if (!text.trim()) return false;
 
-                // Save locally first
                 const msg = {
                     id: generateId(),
                     sender: currentUser.id,
                     text: text.trim(),
+                    type: 'text',
                     timestamp: Date.now(),
-                    read: false
+                    read: false,
+                    fileData: null,
+                    fileName: null,
+                    fileType: null
                 };
 
                 if (!contact.messages) contact.messages = [];
@@ -1872,66 +1976,46 @@
                 // Send via PeerJS
                 const sent = sendMessageToPeer(contact.peerId, text.trim());
 
-                // Simulate reply for demo
-                if (sent) {
-                    setTimeout(() => {
-                        simulateReply(contact.id);
-                    }, 1500 + Math.random() * 2000);
-                }
-
                 return true;
             }
 
-            // ---------- SIMULATE REPLY ----------
-            function simulateReply(contactId) {
-                if (typingTimeout) clearTimeout(typingTimeout);
+            // ---------- SEND FILE ----------
+            function sendFile(file) {
+                if (!activeContactId) return false;
+                const contact = contacts.find(c => c.id === activeContactId);
+                if (!contact) return false;
 
-                typingIndicator.classList.add('show');
-                messagesArea.scrollTop = messagesArea.scrollHeight;
-
-                const delay = 1200 + Math.random() * 2800;
-                typingTimeout = setTimeout(() => {
-                    typingIndicator.classList.remove('show');
-
-                    const contact = contacts.find(c => c.id === contactId);
-                    if (!contact) return;
-
-                    const replies = [
-                        "That's great!", "I agree with you.", "Interesting point!",
-                        "Tell me more about it.", "Sure, let's do that.", "Perfect!",
-                        "I'll get back to you.", "Sounds good.", "Alright then.",
-                        "Nice to hear that.", "Absolutely!", "Let's connect soon.",
-                        "Got it, thanks!", "Will check and confirm.", "Makes sense.",
-                        "Good to know.", "I appreciate that.", "Looking forward to it.",
-                        "Sure thing!", "That works for me.", "Awesome!", "Brilliant!"
-                    ];
-                    const reply = replies[Math.floor(Math.random() * replies.length)];
-
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = e.target.result;
                     const msg = {
                         id: generateId(),
-                        sender: 'simulated',
-                        text: reply,
+                        sender: currentUser.id,
+                        text: '',
+                        type: 'file',
                         timestamp: Date.now(),
-                        read: true
+                        read: false,
+                        fileData: data,
+                        fileName: file.name,
+                        fileType: file.type
                     };
 
                     if (!contact.messages) contact.messages = [];
                     contact.messages.push(msg);
-                    contact.lastMessage = reply;
-                    contact.unread = (contact.unread || 0) + 1;
-
+                    contact.lastMessage = '📎 ' + file.name;
                     saveData();
-                    if (activeContactId === contactId) {
-                        renderMessages(contactId);
-                    }
+                    renderMessages(activeContactId);
                     renderChatList();
 
-                }, delay);
+                    sendMessageToPeer(contact.peerId, '', 'file', data, file.name, file.type);
+                    setStatus('File sent: ' + file.name, 'success');
+                };
+                reader.readAsDataURL(file);
+                return true;
             }
 
             // ---------- STATUS MESSAGE ----------
             function setStatus(message, type) {
-                // Use the existing status from auth screen or create one
                 const statusBox = document.querySelector('.status-box');
                 if (statusBox) {
                     const statusMsg = statusBox.querySelector('#statusMessage');
@@ -1974,7 +2058,10 @@
                         peer = null;
                     }
 
-                    peer = new Peer({
+                    // Generate 6-character alphanumeric ID
+                    const peerId = generatePeerId();
+
+                    peer = new Peer(peerId, {
                         debug: 0,
                         config: {
                             iceServers: [
@@ -1995,12 +2082,19 @@
 
                     peer.on('error', function(err) {
                         console.error('Peer error:', err);
-                        setStatus('Error: ' + err.message, 'error');
-                        reject(err);
+                        // If ID already taken, try with a new one
+                        if (err.message.includes('ID taken')) {
+                            const newId = generatePeerId();
+                            peer.destroy();
+                            peer = null;
+                            initPeer().then(resolve).catch(reject);
+                        } else {
+                            setStatus('Error: ' + err.message, 'error');
+                            reject(err);
+                        }
                     });
 
                     peer.on('connection', function(conn) {
-                        // Handle incoming connection
                         const existing = connections.find(c => c.peer === conn.peer);
                         if (existing) {
                             conn.close();
@@ -2027,12 +2121,13 @@
 
             function setupConnection(conn) {
                 conn.on('open', function() {
-                    // Send username on connect
+                    // Send user info on connect
                     try {
                         conn.send({
-                            type: 'username',
+                            type: 'userinfo',
                             username: currentUser.name,
-                            userId: currentUser.id
+                            userId: currentUser.id,
+                            phone: currentUser.phone
                         });
                     } catch (e) { /* ignore */ }
                     setStatus('Connected! Ready to chat.', 'success');
@@ -2040,55 +2135,62 @@
                 });
 
                 conn.on('data', function(data) {
-                    if (data.type === 'username') {
+                    if (data.type === 'userinfo') {
                         deviceUsernameMap[conn.peer] = data.username;
-                        // Create contact if not exists
-                        const existingContact = contacts.find(c => c.peerId === conn.peer);
-                        if (!existingContact) {
-                            const newContact = {
+                        devicePhoneMap[conn.peer] = data.phone;
+
+                        // Check if contact exists by phone
+                        let contact = findContactByPhone(data.phone);
+                        if (!contact) {
+                            // Create new contact
+                            contact = {
                                 id: generateId(),
                                 name: data.username,
+                                phone: data.phone,
                                 peerId: conn.peer,
                                 messages: [],
                                 unread: 0,
                                 lastMessage: 'Connected!'
                             };
-                            contacts.push(newContact);
+                            contacts.push(contact);
                             saveData();
                             renderChatList();
-                            setStatus('New contact connected: ' + data.username, 'success');
+                            setStatus('New contact: ' + data.username, 'success');
+                        } else {
+                            // Update existing contact's peer ID
+                            contact.peerId = conn.peer;
+                            saveData();
+                            renderChatList();
                         }
                         updateConnectionUI();
                         return;
                     }
 
-                    if (data.type === 'message') {
+                    if (data.type === 'text' || data.type === 'message') {
                         // Handle incoming message
-                        const contact = contacts.find(c => c.peerId === conn.peer);
+                        const contact = findContactByPeerId(conn.peer);
                         if (contact) {
                             const msg = {
                                 id: generateId(),
                                 sender: data.sender || conn.peer,
-                                text: data.text,
+                                text: data.text || '',
+                                type: 'text',
                                 timestamp: data.timestamp || Date.now(),
-                                read: false
+                                read: false,
+                                fileData: null,
+                                fileName: null,
+                                fileType: null
                             };
                             if (!contact.messages) contact.messages = [];
                             contact.messages.push(msg);
-                            contact.lastMessage = data.text;
+                            contact.lastMessage = data.text || '';
                             contact.unread = (contact.unread || 0) + 1;
                             saveData();
 
-                            // Update UI if this chat is open
                             if (activeContactId === contact.id) {
                                 renderMessages(contact.id);
                             }
                             renderChatList();
-
-                            // Auto-reply for demo
-                            setTimeout(() => {
-                                simulateReply(contact.id);
-                            }, 1500 + Math.random() * 2000);
 
                             // Send read receipt
                             try {
@@ -2101,9 +2203,37 @@
                         return;
                     }
 
+                    if (data.type === 'file') {
+                        const contact = findContactByPeerId(conn.peer);
+                        if (contact) {
+                            const msg = {
+                                id: generateId(),
+                                sender: data.sender || conn.peer,
+                                text: '',
+                                type: 'file',
+                                timestamp: data.timestamp || Date.now(),
+                                read: false,
+                                fileData: data.fileData,
+                                fileName: data.fileName,
+                                fileType: data.fileType
+                            };
+                            if (!contact.messages) contact.messages = [];
+                            contact.messages.push(msg);
+                            contact.lastMessage = '📎 ' + data.fileName;
+                            contact.unread = (contact.unread || 0) + 1;
+                            saveData();
+
+                            if (activeContactId === contact.id) {
+                                renderMessages(contact.id);
+                            }
+                            renderChatList();
+                            setStatus('File received: ' + data.fileName, 'success');
+                        }
+                        return;
+                    }
+
                     if (data.type === 'read_receipt') {
-                        // Mark messages as read
-                        const contact = contacts.find(c => c.peerId === conn.peer);
+                        const contact = findContactByPeerId(conn.peer);
                         if (contact && contact.messages) {
                             contact.messages.forEach(msg => {
                                 if (msg.sender === currentUser.id && !msg.read) {
@@ -2119,8 +2249,7 @@
                     }
 
                     if (data.type === 'typing') {
-                        // Show typing indicator
-                        const contact = contacts.find(c => c.peerId === conn.peer);
+                        const contact = findContactByPeerId(conn.peer);
                         if (contact && activeContactId === contact.id) {
                             typingIndicator.classList.add('show');
                             clearTimeout(typingTimeout);
@@ -2137,6 +2266,7 @@
                     if (index > -1) {
                         const peerId = conn.peer;
                         delete deviceUsernameMap[peerId];
+                        delete devicePhoneMap[peerId];
                         connections.splice(index, 1);
                     }
                     setStatus('A device disconnected', 'warning');
@@ -2152,7 +2282,7 @@
             // ---------- CONNECT TO PEER ----------
             function connectToPeer(peerId) {
                 if (!peer) {
-                    setStatus('Please initialize peer first.', 'error');
+                    setStatus('Please wait for peer initialization.', 'error');
                     return false;
                 }
 
@@ -2188,7 +2318,6 @@
             function updateConnectionUI() {
                 const activeConnections = connections.filter(c => c.open);
                 const count = activeConnections.length;
-                // Update any connection status displays
                 if (count > 0) {
                     setStatus('Connected to ' + count + ' device(s)', 'success');
                 } else {
@@ -2223,6 +2352,12 @@
                     const name = authName.value.trim();
                     const phone = authPhone.value.trim();
 
+                    // Check if user already exists with this phone
+                    const existingUser = loadData();
+                    if (existingUser && currentUser && currentUser.phone === phone) {
+                        // User exists, use existing data
+                    }
+
                     const user = {
                         id: generateId(),
                         name: name,
@@ -2238,6 +2373,7 @@
                     myAvatar.textContent = getInitials(currentUser.name);
                     myAvatar.style.background = stringToColor(currentUser.name);
                     myNameDisplay.textContent = currentUser.name;
+                    myPhoneText.textContent = currentUser.phone;
                     footerUser.textContent = currentUser.name;
 
                     // Initialize PeerJS
@@ -2272,6 +2408,7 @@
                     myAvatar.textContent = getInitials(currentUser.name);
                     myAvatar.style.background = stringToColor(currentUser.name);
                     myNameDisplay.textContent = currentUser.name;
+                    myPhoneText.textContent = currentUser.phone;
                     footerUser.textContent = currentUser.name;
 
                     initPeer().then(() => {
@@ -2332,7 +2469,6 @@
                 });
 
                 msgInput.addEventListener('input', () => {
-                    // Send typing indicator
                     if (activeContactId) {
                         const contact = contacts.find(c => c.id === activeContactId);
                         if (contact) {
@@ -2358,36 +2494,8 @@
 
                 fileInput.addEventListener('change', (e) => {
                     const files = e.target.files;
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            const data = ev.target.result;
-                            // Send file as message with data URL
-                            if (activeContactId) {
-                                const contact = contacts.find(c => c.id === activeContactId);
-                                if (contact) {
-                                    const conn = connections.find(c => c.peer === contact.peerId && c.open);
-                                    if (conn) {
-                                        try {
-                                            conn.send({
-                                                type: 'file',
-                                                fileName: file.name,
-                                                fileType: file.type,
-                                                fileData: data,
-                                                sender: currentUser.id,
-                                                senderName: currentUser.name,
-                                                timestamp: Date.now()
-                                            });
-                                            setStatus('File sent: ' + file.name, 'success');
-                                        } catch (err) {
-                                            setStatus('Failed to send file: ' + err.message, 'error');
-                                        }
-                                    }
-                                }
-                            }
-                        };
-                        reader.readAsDataURL(file);
+                    if (files.length > 0) {
+                        sendFile(files[0]);
                     }
                     fileInput.value = '';
                 });
@@ -2450,9 +2558,13 @@
                 }
 
                 joinPeerBtn.addEventListener('click', () => {
-                    const peerId = connectPeerInput.value.trim();
+                    const peerId = connectPeerInput.value.trim().toUpperCase();
                     if (!peerId) {
                         showStatus('error', 'Please enter a Peer ID');
+                        return;
+                    }
+                    if (peerId.length !== 6) {
+                        showStatus('error', 'Peer ID must be 6 characters');
                         return;
                     }
                     const success = connectToPeer(peerId);
@@ -2471,7 +2583,6 @@
 
                 logoutBtn.addEventListener('click', () => {
                     if (confirm('Are you sure you want to logout?')) {
-                        // Close all connections
                         connections.forEach(conn => {
                             try { conn.close(); } catch (e) {}
                         });
