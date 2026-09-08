@@ -1836,6 +1836,83 @@
         </div>
     </section>
 
+    <!-- Explore Chat Button Section Starts -->
+<div class="chat-btn-wrapper">
+    <!-- HTML Element -->
+    <button class="explore-chat-btn" id="chatBtn">
+        Explore Chat <span class="new-badge">new!</span>
+    </button>
+
+    <!-- CSS Styling -->
+    <style>
+        .chat-btn-wrapper {
+            display: inline-block; /* इसे आप अपने हिसाब से flex या block कर सकते हैं */
+        }
+        
+        .explore-chat-btn {
+            background: linear-gradient(135deg, #FF9933 0%, #FF6600 100%); /* Saffron Gradient */
+            color: #FFFFFF; /* White Text */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 26px;
+            border: 2px solid #FFFFFF; /* White Border */
+            border-radius: 50px; /* Rounded Pill Shape */
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+        }
+
+        /* Hover Effect */
+        .explore-chat-btn:hover {
+            background: #FFFFFF; /* White Background */
+            color: #000000; /* Black Text */
+            border-color: #FF9933; /* Saffron Border */
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Click Effect */
+        .explore-chat-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* "new!" Badge Style */
+        .explore-chat-btn .new-badge {
+            background-color: #000000; /* Black Background */
+            color: #FF9933; /* Saffron Text */
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            text-transform: uppercase;
+            border: 1px solid #FF9933;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect on Badge */
+        .explore-chat-btn:hover .new-badge {
+            background-color: #FF9933; /* Saffron Background */
+            color: #FFFFFF; /* White Text */
+            border-color: #FF9933;
+        }
+    </style>
+
+    <!-- JavaScript Functionality -->
+    <script>
+        document.getElementById('chatBtn').addEventListener('click', function() {
+            window.open('chat.html', '_blank'); // Redirect to chat.html in a new tab
+        });
+    </script>
+</div>
+<!-- Explore Chat Button Section Ends -->
+
+
     <!-- ============================================================
     FOOTER
     ============================================================ -->
