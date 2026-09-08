@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>ChatX - Professional Real-time Chat</title>
+    <title>ChatX - Complete Real-time Chat</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js">
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         /* ============================================================
-           PROFESSIONAL COLOR THEME
+           COMPLETE PROFESSIONAL THEME
            ============================================================ */
         :root {
-            --primary: #1a2332;
-            --primary-light: #243447;
-            --primary-dark: #0f1621;
-            --accent: #e8a84c;
-            --accent-light: #f0c27a;
-            --accent-dark: #c9913a;
+            --primary: #075e54;
+            --primary-dark: #054740;
+            --primary-light: #128c7e;
+            --accent: #25d366;
+            --accent-dark: #1ebe5a;
+            --whatsapp-bg: #ece5dd;
+            --whatsapp-pattern: rgba(0, 0, 0, 0.05);
             --white: #ffffff;
             --gray-50: #f8f9fa;
             --gray-100: #f0f2f5;
@@ -28,15 +29,15 @@
             --gray-600: #4a5a6a;
             --gray-700: #2d3a47;
             --gray-800: #1a2332;
-            --success: #4caf84;
-            --danger: #ef5350;
-            --shadow-sm: 0 2px 8px rgba(26, 35, 50, 0.08);
-            --shadow-md: 0 4px 20px rgba(26, 35, 50, 0.12);
-            --shadow-lg: 0 8px 40px rgba(26, 35, 50, 0.16);
-            --radius: 16px;
-            --radius-sm: 10px;
+            --sent-bg: #dcf8c6;
+            --received-bg: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --radius-sm: 8px;
             --radius-full: 50px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
@@ -48,12 +49,12 @@
 
         body {
             font-family: var(--font);
-            background: var(--gray-100);
+            background: var(--whatsapp-bg);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 12px;
+            padding: 0;
             color: var(--gray-800);
         }
 
@@ -63,15 +64,26 @@
         #app {
             width: 100%;
             max-width: 480px;
-            height: 95vh;
-            max-height: 920px;
+            height: 100vh;
+            max-height: 100vh;
             background: var(--white);
-            border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
             position: relative;
+        }
+
+        @media (min-width: 521px) {
+            body {
+                padding: 12px;
+                background: var(--gray-100);
+            }
+            #app {
+                border-radius: var(--radius);
+                height: 95vh;
+                max-height: 920px;
+                box-shadow: var(--shadow-lg);
+            }
         }
 
         /* ============================================================
@@ -99,13 +111,13 @@
            ============================================================ */
         .navbar {
             background: var(--primary);
-            padding: 14px 20px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
-            min-height: 64px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            min-height: 60px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
 
         .navbar .brand {
@@ -113,19 +125,18 @@
             align-items: center;
             gap: 10px;
             color: var(--white);
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             letter-spacing: -0.3px;
         }
 
         .navbar .brand i {
-            font-size: 24px;
-            color: var(--accent);
+            font-size: 22px;
         }
 
         .navbar .nav-actions {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             color: var(--white);
             font-size: 18px;
         }
@@ -133,83 +144,54 @@
         .navbar .nav-actions i {
             cursor: pointer;
             transition: var(--transition);
-            padding: 6px;
+            padding: 4px;
             border-radius: 50%;
         }
 
         .navbar .nav-actions i:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* ============================================================
-           HERO SECTION (Auth Screen)
+           AUTH SCREEN
            ============================================================ */
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            padding: 32px 24px 28px;
-            text-align: center;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            bottom: -40px;
-            right: -40px;
-            width: 200px;
-            height: 200px;
-            background: rgba(232, 168, 76, 0.08);
-            border-radius: 50%;
-        }
-
-        .hero-section .hero-icon {
-            font-size: 56px;
-            color: var(--accent);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .hero-section h1 {
-            color: var(--white);
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .hero-section p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 15px;
-            margin-top: 4px;
-        }
-
-        .hero-section .hero-badge {
-            display: inline-flex;
+        #authScreen {
+            background: var(--whatsapp-bg);
+            justify-content: center;
             align-items: center;
-            gap: 8px;
-            background: rgba(232, 168, 76, 0.2);
-            padding: 6px 16px;
-            border-radius: var(--radius-full);
-            margin-top: 12px;
-            color: var(--accent-light);
-            font-size: 13px;
-            border: 1px solid rgba(232, 168, 76, 0.2);
+            padding: 20px;
         }
 
-        .hero-section .hero-badge i {
-            font-size: 12px;
-        }
-
-        /* ============================================================
-           AUTH BOX
-           ============================================================ */
         .auth-box {
-            padding: 24px 20px;
-            flex: 1;
-            overflow-y: auto;
             background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .auth-box .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-box .auth-header .icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .auth-box .auth-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .auth-box .auth-header p {
+            color: var(--gray-500);
+            font-size: 14px;
+            margin-top: 4px;
         }
 
         .auth-box .input-group {
@@ -218,20 +200,15 @@
 
         .auth-box .input-group label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--gray-600);
-            margin-bottom: 5px;
-        }
-
-        .auth-box .input-group label i {
-            color: var(--accent);
-            width: 18px;
+            margin-bottom: 4px;
         }
 
         .auth-box .input-group input {
             width: 100%;
-            padding: 13px 16px;
+            padding: 12px 16px;
             background: var(--gray-50);
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
@@ -242,34 +219,26 @@
         }
 
         .auth-box .input-group input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
-        }
-
-        .auth-box .input-group input::placeholder {
-            color: var(--gray-400);
+            box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.1);
         }
 
         .auth-box .btn-primary {
             width: 100%;
             padding: 14px;
-            background: var(--accent);
-            color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
             border: none;
             border-radius: var(--radius-sm);
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
         .auth-box .btn-primary:hover {
-            background: var(--accent-dark);
+            background: var(--primary-dark);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
@@ -298,7 +267,7 @@
 
         .otp-row input {
             flex: 1;
-            padding: 13px 16px;
+            padding: 12px 16px;
             background: var(--gray-50);
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
@@ -312,41 +281,38 @@
         }
 
         .otp-row input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
+            box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.1);
         }
 
         .otp-row .btn-verify {
-            padding: 13px 24px;
-            background: var(--accent);
-            color: var(--primary);
+            padding: 12px 20px;
+            background: var(--primary);
+            color: var(--white);
             border: none;
             border-radius: var(--radius-sm);
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .otp-row .btn-verify:hover {
-            background: var(--accent-dark);
+            background: var(--primary-dark);
         }
 
         .otp-help {
             margin-top: 10px;
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--gray-500);
         }
 
         .otp-help .resend {
-            color: var(--accent);
+            color: var(--primary);
             cursor: pointer;
             font-weight: 600;
         }
@@ -367,13 +333,13 @@
         }
 
         .otp-demo strong {
-            color: var(--accent-dark);
+            color: var(--primary);
             font-size: 16px;
             letter-spacing: 2px;
         }
 
         /* ============================================================
-           MAIN APP - CHAT LIST
+           MAIN APP
            ============================================================ */
         #mainApp {
             background: var(--white);
@@ -387,42 +353,40 @@
         }
 
         /* ============================================================
-           HERO SECTION (Main App) - PROFESSIONAL
+           MAIN HERO
            ============================================================ */
         .main-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            padding: 16px 20px;
+            background: var(--primary);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
-            border-bottom: 3px solid var(--accent);
-            gap: 12px;
-            flex-wrap: wrap;
+            min-height: 60px;
+            gap: 10px;
         }
 
         .main-hero .hero-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             flex: 1;
             min-width: 0;
         }
 
         .main-hero .hero-left .avatar {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
             flex-shrink: 0;
             background: var(--accent);
             color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .main-hero .hero-left .info {
@@ -431,7 +395,7 @@
         }
 
         .main-hero .hero-left .info .name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
@@ -439,99 +403,46 @@
         }
 
         .main-hero .hero-left .info .phone {
-            font-size: 12px;
-            opacity: 0.7;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .main-hero .hero-left .info .status {
-            font-size: 13px;
+            font-size: 11px;
             opacity: 0.8;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .main-hero .hero-left .info .status .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4caf84;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.4;
-            }
         }
 
         .main-hero .hero-actions {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .main-hero .hero-actions .hero-btn {
             background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: none;
             color: var(--white);
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: var(--radius-full);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             white-space: nowrap;
         }
 
         .main-hero .hero-actions .hero-btn:hover {
             background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .main-hero .hero-actions .hero-btn:active {
-            transform: scale(0.96);
-        }
-
-        .main-hero .hero-actions .hero-btn i {
-            font-size: 15px;
-            color: var(--accent-light);
         }
 
         .main-hero .hero-actions .hero-btn.connect-btn {
             background: var(--accent);
-            border-color: var(--accent);
             color: var(--primary);
         }
 
         .main-hero .hero-actions .hero-btn.connect-btn:hover {
             background: var(--accent-dark);
-            border-color: var(--accent-dark);
-        }
-
-        .main-hero .hero-actions .hero-btn.connect-btn i {
-            color: var(--primary);
-        }
-
-        .main-hero .hero-actions .hero-btn.logout-btn {
-            background: rgba(239, 83, 80, 0.15);
-            border-color: rgba(239, 83, 80, 0.2);
         }
 
         .main-hero .hero-actions .hero-btn.logout-btn:hover {
-            background: rgba(239, 83, 80, 0.25);
+            background: rgba(239, 83, 80, 0.3);
         }
 
         /* ============================================================
@@ -540,15 +451,11 @@
         #chatList {
             flex: 1;
             overflow-y: auto;
-            padding: 0;
-            background: var(--white);
+            background: var(--gray-50);
         }
 
         #chatList::-webkit-scrollbar {
             width: 4px;
-        }
-        #chatList::-webkit-scrollbar-track {
-            background: transparent;
         }
         #chatList::-webkit-scrollbar-thumb {
             background: var(--gray-300);
@@ -558,31 +465,28 @@
         .chat-item {
             display: flex;
             align-items: center;
-            padding: 14px 18px;
+            padding: 12px 16px;
             gap: 14px;
             cursor: pointer;
             transition: var(--transition);
-            border-bottom: 1px solid var(--gray-100);
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .chat-item:hover {
             background: var(--gray-50);
         }
 
-        .chat-item:active {
-            background: var(--gray-100);
-        }
-
         .chat-item .avatar {
-            width: 52px;
-            height: 52px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
             font-weight: 600;
-            font-size: 20px;
+            font-size: 18px;
             flex-shrink: 0;
         }
 
@@ -593,21 +497,21 @@
 
         .chat-item .info .name {
             color: var(--gray-800);
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-        }
-
-        .chat-item .info .phone {
-            color: var(--gray-400);
-            font-size: 12px;
         }
 
         .chat-item .info .last-msg {
             color: var(--gray-500);
-            font-size: 14px;
+            font-size: 13px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .chat-item .info .last-msg .deleted {
+            font-style: italic;
+            color: var(--gray-400);
         }
 
         .chat-item .meta {
@@ -621,8 +525,8 @@
         }
 
         .chat-item .meta .badge {
-            background: var(--accent);
-            color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
             border-radius: 50%;
             padding: 2px 8px;
             font-size: 11px;
@@ -642,7 +546,7 @@
         }
 
         .empty-chats i {
-            font-size: 52px;
+            font-size: 48px;
             color: var(--gray-300);
             display: block;
             margin-bottom: 16px;
@@ -651,19 +555,19 @@
         .empty-chats .empty-btn {
             display: inline-block;
             margin-top: 12px;
-            padding: 12px 28px;
-            background: var(--accent);
-            color: var(--primary);
+            padding: 10px 24px;
+            background: var(--primary);
+            color: var(--white);
             border: none;
             border-radius: var(--radius-full);
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             font-size: 14px;
         }
 
         .empty-chats .empty-btn:hover {
-            background: var(--accent-dark);
+            background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
@@ -689,64 +593,62 @@
 
         .chat-header {
             background: var(--primary);
-            padding: 10px 16px;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-shrink: 0;
-            min-height: 60px;
-            border-bottom: 3px solid var(--accent);
+            min-height: 56px;
         }
 
         .chat-header .back {
             color: var(--white);
             font-size: 20px;
             cursor: pointer;
-            padding: 4px 8px;
+            padding: 4px;
             border-radius: 50%;
             transition: var(--transition);
         }
 
         .chat-header .back:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .chat-header .avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
             font-weight: 600;
-            font-size: 18px;
+            font-size: 16px;
             flex-shrink: 0;
         }
 
         .chat-header .info {
             flex: 1;
             color: var(--white);
+            min-width: 0;
         }
 
         .chat-header .info .name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-        }
-
-        .chat-header .info .phone {
-            font-size: 11px;
-            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-header .info .status {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.8;
         }
 
         .chat-header .actions {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             color: var(--white);
             font-size: 18px;
         }
@@ -759,7 +661,7 @@
         }
 
         .chat-header .actions i:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* ============================================================
@@ -768,18 +670,16 @@
         #messagesArea {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 18px 10px;
+            padding: 12px 14px 8px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            background: var(--gray-50);
+            gap: 2px;
+            background: var(--whatsapp-bg);
+            background-image: var(--whatsapp-pattern);
         }
 
         #messagesArea::-webkit-scrollbar {
             width: 4px;
-        }
-        #messagesArea::-webkit-scrollbar-track {
-            background: transparent;
         }
         #messagesArea::-webkit-scrollbar-thumb {
             background: var(--gray-300);
@@ -787,30 +687,30 @@
         }
 
         .msg {
-            max-width: 78%;
-            padding: 10px 16px;
-            border-radius: 14px;
-            font-size: 14.5px;
+            max-width: 80%;
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            font-size: 14px;
             line-height: 1.5;
             word-wrap: break-word;
             animation: fadeIn 0.2s ease;
             position: relative;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2px;
         }
 
         .msg.sent {
             align-self: flex-end;
-            background: var(--accent);
-            color: var(--primary);
+            background: var(--sent-bg);
+            color: var(--gray-800);
             border-bottom-right-radius: 4px;
         }
 
         .msg.received {
             align-self: flex-start;
-            background: var(--white);
+            background: var(--received-bg);
             color: var(--gray-800);
             border-bottom-left-radius: 4px;
-            box-shadow: var(--shadow-sm);
         }
 
         .msg .msg-footer {
@@ -824,7 +724,7 @@
         }
 
         .msg.sent .msg-footer {
-            color: rgba(26, 35, 50, 0.7);
+            color: var(--gray-600);
         }
 
         .msg.received .msg-footer {
@@ -832,16 +732,22 @@
         }
 
         .msg .msg-footer .tick {
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .msg .msg-footer .tick.read {
-            color: #4caf84;
+            color: #4fc3f7;
+        }
+
+        .msg .msg-footer .deleted-label {
+            font-style: italic;
+            font-size: 11px;
+            color: var(--gray-400);
         }
 
         .msg .file-preview {
             max-width: 200px;
-            max-height: 160px;
+            max-height: 150px;
             border-radius: 8px;
             margin-bottom: 4px;
             display: block;
@@ -856,10 +762,66 @@
             display: block;
         }
 
+        .msg .file-size {
+            font-size: 11px;
+            opacity: 0.6;
+            display: block;
+        }
+
         .msg .file-link {
-            color: inherit;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .msg .file-link:hover {
             text-decoration: underline;
-            opacity: 0.9;
+        }
+
+        .msg .deleted-text {
+            font-style: italic;
+            color: var(--gray-400);
+        }
+
+        .msg .msg-actions {
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-md);
+            display: none;
+            padding: 4px;
+            gap: 4px;
+            z-index: 5;
+        }
+
+        .msg:hover .msg-actions {
+            display: flex;
+        }
+
+        .msg .msg-actions button {
+            background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--gray-600);
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .msg .msg-actions button:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .msg .msg-actions button.delete-everyone {
+            color: #e53935;
+        }
+
+        .msg .msg-actions button.delete-everyone:hover {
+            background: #ffebee;
         }
 
         @keyframes fadeIn {
@@ -879,9 +841,9 @@
         #typingIndicator {
             display: none;
             align-self: flex-start;
-            background: var(--white);
-            padding: 8px 16px;
-            border-radius: 16px;
+            background: var(--received-bg);
+            padding: 6px 16px;
+            border-radius: var(--radius);
             border-bottom-left-radius: 4px;
             color: var(--gray-500);
             font-size: 13px;
@@ -932,7 +894,7 @@
            ============================================================ */
         .input-area {
             background: var(--white);
-            padding: 8px 14px 12px;
+            padding: 6px 12px 10px;
             border-top: 1px solid var(--gray-200);
             display: flex;
             gap: 8px;
@@ -952,7 +914,7 @@
         }
 
         .input-area .attach-btn:hover {
-            color: var(--accent);
+            color: var(--primary);
         }
 
         .input-area input[type="text"] {
@@ -969,9 +931,9 @@
         }
 
         .input-area input[type="text"]:focus {
-            border-color: var(--accent);
+            border-color: var(--primary);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
+            box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.08);
         }
 
         .input-area input[type="text"]::placeholder {
@@ -979,11 +941,11 @@
         }
 
         .input-area .send-btn {
-            background: var(--accent);
+            background: var(--primary);
             border: none;
-            color: var(--primary);
-            width: 46px;
-            height: 46px;
+            color: var(--white);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             font-size: 18px;
             cursor: pointer;
@@ -995,7 +957,7 @@
         }
 
         .input-area .send-btn:hover {
-            background: var(--accent-dark);
+            background: var(--primary-dark);
             transform: scale(1.02);
         }
 
@@ -1003,12 +965,18 @@
             transform: scale(0.94);
         }
 
+        .input-area .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         #fileInput {
             display: none;
         }
 
         /* ============================================================
-           CONNECT MODAL - PROFESSIONAL
+           CONNECT MODAL
            ============================================================ */
         #connectModal {
             display: none;
@@ -1017,12 +985,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(26, 35, 50, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 50;
             justify-content: center;
             align-items: center;
-            padding: 24px;
-            backdrop-filter: blur(8px);
+            padding: 20px;
+            backdrop-filter: blur(4px);
         }
 
         #connectModal.show {
@@ -1031,14 +999,13 @@
 
         .connect-box {
             background: var(--white);
-            padding: 32px 28px;
+            padding: 28px 24px;
             border-radius: var(--radius);
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
-            border: 1px solid var(--gray-200);
             animation: modalIn 0.3s ease;
         }
 
@@ -1056,25 +1023,25 @@
         .connect-box .modal-header {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 4px;
         }
 
         .connect-box .modal-header i {
-            font-size: 28px;
-            color: var(--accent);
+            font-size: 24px;
+            color: var(--primary);
         }
 
         .connect-box .modal-header h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary);
         }
 
         .connect-box .sub {
             color: var(--gray-500);
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 16px;
         }
 
         .connect-box .input-group {
@@ -1083,7 +1050,7 @@
 
         .connect-box .input-group label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--gray-600);
             margin-bottom: 4px;
@@ -1107,32 +1074,26 @@
         }
 
         .connect-box .input-group input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(232, 168, 76, 0.1);
+            box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.1);
         }
 
         .connect-box .btn-primary {
             width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            color: var(--primary);
+            padding: 12px;
+            background: var(--primary);
+            color: var(--white);
             border: none;
             border-radius: var(--radius-sm);
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
         .connect-box .btn-primary:hover {
-            background: var(--accent-dark);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+            background: var(--primary-dark);
         }
 
         .connect-box .divider {
@@ -1141,7 +1102,7 @@
             gap: 12px;
             margin: 16px 0;
             color: var(--gray-400);
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .connect-box .divider::before,
@@ -1152,66 +1113,58 @@
             background: var(--gray-200);
         }
 
-        .connect-box .btn-group {
-            display: flex;
-            gap: 10px;
-            margin: 0 0 16px;
-        }
-
-        .connect-box .btn-group button {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid var(--gray-200);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            background: var(--white);
-            color: var(--gray-700);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .connect-box .btn-group button:hover {
-            border-color: var(--accent);
-            background: var(--gray-50);
-        }
-
-        .connect-box .btn-group button i {
-            color: var(--accent);
-        }
-
         .connect-box .peer-display {
             background: var(--gray-50);
-            padding: 14px;
+            padding: 12px;
             border-radius: var(--radius-sm);
             text-align: center;
-            font-size: 28px;
+            font-size: 24px;
             letter-spacing: 8px;
-            color: var(--accent-dark);
+            color: var(--primary);
             font-weight: 700;
             margin: 8px 0;
-            border: 2px dashed var(--accent-light);
+            border: 2px dashed var(--gray-300);
             font-family: monospace;
             text-transform: uppercase;
         }
 
         .connect-box .peer-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--gray-500);
             text-align: center;
             margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
 
         .connect-box .peer-label i {
-            color: var(--accent);
+            color: var(--primary);
+        }
+
+        .connect-box .btn-group {
+            display: flex;
+            gap: 8px;
+            margin: 0 0 12px;
+        }
+
+        .connect-box .btn-group button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--gray-700);
+        }
+
+        .connect-box .btn-group button:hover {
+            border-color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .connect-box .btn-group button i {
+            color: var(--primary);
         }
 
         .connect-box .close-btn {
@@ -1267,27 +1220,27 @@
            ============================================================ */
         .footer {
             background: var(--white);
-            padding: 10px 16px;
-            border-top: 2px solid var(--gray-200);
+            padding: 8px 16px;
+            border-top: 1px solid var(--gray-200);
             text-align: center;
-            font-size: 12px;
-            color: var(--gray-500);
+            font-size: 11px;
+            color: var(--gray-400);
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
         }
 
         .footer span {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         .footer i {
-            font-size: 13px;
-            color: var(--accent);
+            font-size: 12px;
+            color: var(--primary);
         }
 
         .footer .footer-dot {
@@ -1302,83 +1255,52 @@
            RESPONSIVE
            ============================================================ */
         @media (max-width: 520px) {
-            body {
-                padding: 0;
-            }
-
             #app {
-                height: 100vh;
-                max-height: 100vh;
                 border-radius: 0;
                 max-width: 100%;
+                height: 100vh;
             }
-
-            .hero-section {
-                padding: 24px 16px 20px;
-            }
-
-            .hero-section h1 {
-                font-size: 24px;
-            }
-
-            .auth-box {
-                padding: 20px 16px;
-            }
-
             .msg {
                 max-width: 88%;
             }
-
-            .navbar {
-                padding: 12px 16px;
-                min-height: 56px;
-            }
-
-            .navbar .brand {
-                font-size: 18px;
-            }
-
             .chat-item {
-                padding: 12px 14px;
+                padding: 10px 14px;
             }
-
             .chat-item .avatar {
-                width: 46px;
-                height: 46px;
-                font-size: 18px;
-            }
-
-            .connect-box {
-                padding: 24px 18px;
-            }
-
-            .main-hero {
-                padding: 12px 14px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-
-            .main-hero .hero-left .info .name {
+                width: 40px;
+                height: 40px;
                 font-size: 16px;
             }
-
-            .main-hero .hero-actions {
-                justify-content: stretch;
+            .main-hero {
+                padding: 10px 14px;
+                min-height: 52px;
             }
-
+            .main-hero .hero-left .avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            .main-hero .hero-left .info .name {
+                font-size: 14px;
+            }
             .main-hero .hero-actions .hero-btn {
-                flex: 1;
-                justify-content: center;
-                font-size: 12px;
-                padding: 8px 12px;
+                font-size: 11px;
+                padding: 4px 10px;
             }
-
-            .footer {
-                flex-wrap: wrap;
-                gap: 6px 12px;
-                font-size: 10px;
-                padding: 8px 12px;
+            .connect-box {
+                padding: 20px 16px;
+            }
+            .auth-box {
+                padding: 24px 16px;
+            }
+            .msg .msg-actions {
+                top: -6px;
+                right: 4px;
+                padding: 2px;
+            }
+            .msg .msg-actions button {
+                font-size: 11px;
+                padding: 2px 6px;
             }
         }
 
@@ -1386,31 +1308,64 @@
             .navbar .brand {
                 font-size: 16px;
             }
-
-            .navbar .nav-actions {
-                gap: 10px;
-                font-size: 16px;
+            .main-hero .hero-left .info .name {
+                font-size: 13px;
             }
-
-            .hero-section h1 {
-                font-size: 20px;
+            .main-hero .hero-actions .hero-btn {
+                font-size: 10px;
+                padding: 3px 8px;
             }
+            .input-area input[type="text"] {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+            .input-area .send-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            .msg {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
 
-            .chat-header .info .name {
+        @media (min-width: 521px) and (max-height: 700px) {
+            #app {
+                height: 98vh;
+            }
+            .main-hero {
+                min-height: 48px;
+                padding: 8px 16px;
+            }
+            .main-hero .hero-left .avatar {
+                width: 32px;
+                height: 32px;
                 font-size: 14px;
             }
-
-            .otp-row {
-                flex-direction: column;
+            .chat-header {
+                min-height: 48px;
             }
+        }
 
-            .otp-row .btn-verify {
-                justify-content: center;
-            }
+        /* ============================================================
+           UTILITY
+           ============================================================ */
+        .hidden {
+            display: none !important;
+        }
 
-            .connect-box .btn-group {
-                flex-direction: column;
-            }
+        .text-muted {
+            color: var(--gray-400);
+        }
+        .text-primary {
+            color: var(--primary);
+        }
+        .bg-primary {
+            background: var(--primary);
+        }
+        .text-accent {
+            color: var(--accent);
         }
     </style>
 </head>
@@ -1424,7 +1379,7 @@
         <div id="authScreen" class="screen active">
             <div class="navbar">
                 <div class="brand">
-                    <i class="fas fa-comment-dots"></i>
+                    <i class="fab fa-whatsapp"></i>
                     ChatX
                 </div>
                 <div class="nav-actions">
@@ -1433,17 +1388,13 @@
                 </div>
             </div>
 
-            <div class="hero-section">
-                <span class="hero-icon"><i class="fas fa-comments"></i></span>
-                <h1>Welcome to ChatX</h1>
-                <p>Secure, real-time messaging made simple</p>
-                <div class="hero-badge">
-                    <i class="fas fa-bolt"></i>
-                    Real-time • P2P Encrypted
-                </div>
-            </div>
-
             <div class="auth-box">
+                <div class="auth-header">
+                    <div class="icon"><i class="fab fa-whatsapp"></i></div>
+                    <h1>ChatX</h1>
+                    <p>Secure, real-time messaging</p>
+                </div>
+
                 <div class="input-group">
                     <label><i class="fas fa-user"></i> Full Name</label>
                     <input type="text" id="authName" placeholder="Enter your full name" maxlength="30" />
@@ -1460,17 +1411,17 @@
 
                 <div class="otp-section" id="otpSection">
                     <div class="otp-row">
-                        <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" inputmode="numeric" />
+                        <input type="text" id="otpInput" placeholder="OTP" maxlength="6" inputmode="numeric" />
                         <button class="btn-verify" id="verifyOtpBtn">
                             <i class="fas fa-check"></i> Verify
                         </button>
                     </div>
                     <div class="otp-help">
-                        <span><i class="fas fa-clock"></i> OTP expires in 5 min</span>
+                        <span><i class="fas fa-clock"></i> Expires in 5 min</span>
                         <span class="resend" id="resendOtp"><i class="fas fa-rotate"></i> Resend</span>
                     </div>
                     <div class="otp-demo">
-                        <i class="fas fa-shield-alt"></i> Demo OTP: <strong id="demoOtpDisplay">123456</strong>
+                        <i class="fas fa-shield-alt"></i> OTP: <strong id="demoOtpDisplay">123456</strong>
                     </div>
                 </div>
             </div>
@@ -1478,7 +1429,7 @@
             <div class="footer">
                 <span><i class="fas fa-lock"></i> Secure</span>
                 <span><i class="fas fa-bolt"></i> Real-time</span>
-                <span><i class="fas fa-code"></i> v4.0</span>
+                <span><i class="fas fa-code"></i> v5.0</span>
                 <span><span class="footer-dot"></span> Online</span>
             </div>
         </div>
@@ -1489,7 +1440,7 @@
         <div id="mainApp">
             <div class="navbar">
                 <div class="brand">
-                    <i class="fas fa-comment-dots"></i>
+                    <i class="fab fa-whatsapp"></i>
                     ChatX
                 </div>
                 <div class="nav-actions">
@@ -1504,9 +1455,6 @@
                     <div class="info">
                         <div class="name" id="myNameDisplay">User</div>
                         <div class="phone" id="myPhoneDisplay"><i class="fas fa-phone"></i> <span id="myPhoneText">+91</span></div>
-                        <div class="status">
-                            <span class="dot"></span> Online
-                        </div>
                     </div>
                 </div>
                 <div class="hero-actions">
@@ -1546,7 +1494,6 @@
                 <div class="avatar" id="cwAvatar" style="background:var(--accent); color:var(--primary);">U</div>
                 <div class="info">
                     <div class="name" id="cwName">Contact</div>
-                    <div class="phone" id="cwPhone"><i class="fas fa-phone"></i> <span id="cwPhoneText">+91</span></div>
                     <div class="status" id="cwStatus">Online</div>
                 </div>
                 <div class="actions">
@@ -1591,7 +1538,7 @@
                 <div id="statusMessage" class="status-msg"></div>
 
                 <div class="input-group">
-                    <label><i class="fas fa-qrcode"></i> Enter Peer ID (6 characters)</label>
+                    <label><i class="fas fa-qrcode"></i> Peer ID (6 characters)</label>
                     <input type="text" id="connectPeerInput" placeholder="e.g. X7K2M9" maxlength="6" style="text-transform:uppercase; letter-spacing:8px;" />
                 </div>
 
@@ -1604,7 +1551,7 @@
                 <div class="peer-label"><i class="fas fa-info-circle"></i> Your Peer ID</div>
                 <div class="peer-display" id="myPeerDisplay">------</div>
 
-                <button class="btn btn-primary" id="copyPeerBtn" style="width:100%; padding:12px; background:var(--accent); color:var(--primary); border:none; border-radius:var(--radius-sm); font-size:14px; font-weight:700; cursor:pointer; transition:var(--transition); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <button class="btn btn-primary" id="copyPeerBtn" style="width:100%; padding:12px; background:var(--primary); color:var(--white); border:none; border-radius:var(--radius-sm); font-size:14px; font-weight:600; cursor:pointer; transition:var(--transition); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="fas fa-copy"></i> Copy Peer ID
                 </button>
 
@@ -1618,8 +1565,8 @@
 
     <script>
         // ================================================================
-        //  CHATX - COMPLETE REAL-TIME CHAT USING PEERJS
-        //  With Phone Number & Name based history
+        //  CHATX - COMPLETE WHATSAPP-LIKE CHAT
+        //  With Delete, Typing, File Icons, Persistent Connection
         // ================================================================
 
         (function() {
@@ -1648,7 +1595,6 @@
 
             const cwAvatar = document.getElementById('cwAvatar');
             const cwName = document.getElementById('cwName');
-            const cwPhoneText = document.getElementById('cwPhoneText');
             const cwStatus = document.getElementById('cwStatus');
             const messagesArea = document.getElementById('messagesArea');
             const typingIndicator = document.getElementById('typingIndicator');
@@ -1681,9 +1627,13 @@
             let typingTimeout = null;
             let deviceUsernameMap = {};
             let devicePhoneMap = {};
+            let isReconnecting = false;
+            let reconnectAttempts = 0;
+            const MAX_RECONNECT_ATTEMPTS = 5;
 
             // ---------- STORAGE KEYS ----------
-            const STORAGE_KEY = 'chatx_data_v4';
+            const STORAGE_KEY = 'chatx_data_v5';
+            const PEER_ID_KEY = 'chatx_peer_id';
 
             // ---------- HELPERS ----------
             function generateId() {
@@ -1707,6 +1657,51 @@
                 return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             }
 
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
+                return (bytes / 1073741824).toFixed(1) + ' GB';
+            }
+
+            function getFileIcon(fileName, fileType) {
+                if (fileType && fileType.startsWith('image/')) return 'fa-image';
+                if (fileType && fileType.startsWith('video/')) return 'fa-video';
+                if (fileType && fileType.startsWith('audio/')) return 'fa-music';
+                
+                const ext = fileName.split('.').pop().toLowerCase();
+                const map = {
+                    'pdf': 'fa-file-pdf',
+                    'doc': 'fa-file-word',
+                    'docx': 'fa-file-word',
+                    'xls': 'fa-file-excel',
+                    'xlsx': 'fa-file-excel',
+                    'ppt': 'fa-file-powerpoint',
+                    'pptx': 'fa-file-powerpoint',
+                    'jpg': 'fa-image',
+                    'jpeg': 'fa-image',
+                    'png': 'fa-image',
+                    'gif': 'fa-image',
+                    'svg': 'fa-image',
+                    'mp4': 'fa-video',
+                    'mkv': 'fa-video',
+                    'avi': 'fa-video',
+                    'mp3': 'fa-music',
+                    'wav': 'fa-music',
+                    'zip': 'fa-file-archive',
+                    'rar': 'fa-file-archive',
+                    '7z': 'fa-file-archive',
+                    'js': 'fa-file-code',
+                    'html': 'fa-file-code',
+                    'css': 'fa-file-code',
+                    'json': 'fa-file-code',
+                    'txt': 'fa-file-alt',
+                    'exe': 'fa-file',
+                    'apk': 'fa-file',
+                };
+                return map[ext] || 'fa-file';
+            }
+
             function getInitials(name) {
                 if (!name) return '?';
                 return name.charAt(0).toUpperCase();
@@ -1725,12 +1720,6 @@
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
-            }
-
-            function formatPhone(phone) {
-                if (!phone) return 'Unknown';
-                // Remove spaces and format
-                return phone.trim();
             }
 
             // ---------- STORAGE ----------
@@ -1753,6 +1742,18 @@
                     contacts = data.contacts || [];
                     return true;
                 } catch (e) { return false; }
+            }
+
+            function savePeerId(id) {
+                try {
+                    localStorage.setItem(PEER_ID_KEY, id);
+                } catch (e) {}
+            }
+
+            function getSavedPeerId() {
+                try {
+                    return localStorage.getItem(PEER_ID_KEY) || null;
+                } catch (e) { return null; }
             }
 
             // ---------- RENDER CHAT LIST ----------
@@ -1793,7 +1794,14 @@
 
                     let lastText = 'No messages yet';
                     if (lastMsg) {
-                        lastText = lastMsg.text || '📎 ' + (lastMsg.fileName || 'File');
+                        if (lastMsg.deleted) {
+                            lastText = '🗑️ This message was deleted';
+                        } else if (lastMsg.type === 'file') {
+                            const icon = getFileIcon(lastMsg.fileName, lastMsg.fileType);
+                            lastText = '📎 ' + lastMsg.fileName;
+                        } else {
+                            lastText = lastMsg.text || '';
+                        }
                     }
 
                     const timeStr = lastMsg ? formatTime(new Date(lastMsg.timestamp)) : '';
@@ -1802,7 +1810,6 @@
                         <div class="avatar" style="background:${stringToColor(contact.name)}">${getInitials(contact.name)}</div>
                         <div class="info">
                             <div class="name">${escapeHtml(contact.name)}</div>
-                            <div class="phone"><i class="fas fa-phone"></i> ${escapeHtml(contact.phone || 'Unknown')}</div>
                             <div class="last-msg">${escapeHtml(lastText)}</div>
                         </div>
                         <div class="meta">
@@ -1831,13 +1838,20 @@
                     return;
                 }
 
-                contact.messages.forEach((msg) => {
+                contact.messages.forEach((msg, index) => {
                     const div = document.createElement('div');
                     const isSent = msg.sender === currentUser?.id;
                     div.className = `msg ${isSent ? 'sent' : 'received'}`;
+                    div.dataset.msgId = msg.id;
 
                     let content = '';
-                    if (msg.type === 'file') {
+                    let footerExtra = '';
+
+                    if (msg.deleted) {
+                        content = `<span class="deleted-text"><i class="fas fa-trash-alt"></i> This message was deleted</span>`;
+                        footerExtra = `<span class="deleted-label">deleted</span>`;
+                    } else if (msg.type === 'file') {
+                        const icon = getFileIcon(msg.fileName, msg.fileType);
                         if (msg.fileType && msg.fileType.startsWith('image/')) {
                             content = `
                                 <img src="${msg.fileData}" class="file-preview" alt="image" 
@@ -1845,27 +1859,47 @@
                             `;
                         } else {
                             content = `
-                                <i class="fas fa-file"></i>
+                                <i class="fas ${icon}" style="font-size:18px;margin-right:6px;"></i>
                                 <a href="${msg.fileData}" target="_blank" class="file-link">${escapeHtml(msg.fileName)}</a>
                             `;
                         }
-                        content += `<span class="file-name">${escapeHtml(msg.fileName)}</span>`;
+                        content += `
+                            <span class="file-size">${formatFileSize(msg.fileSize)}</span>
+                            <span class="file-name">${escapeHtml(msg.fileName)}</span>
+                        `;
                     } else {
                         content = escapeHtml(msg.text);
                     }
 
                     const isRead = msg.read || false;
                     let tickHtml = '';
-                    if (isSent) {
+                    if (isSent && !msg.deleted) {
                         tickHtml = `<span class="tick ${isRead ? 'read' : ''}">
                             <i class="fas ${isRead ? 'fa-check-double' : 'fa-check'}"></i>
                         </span>`;
                     }
 
+                    // Message actions (delete for me / delete for everyone)
+                    let actionsHtml = '';
+                    if (!msg.deleted) {
+                        actionsHtml = `
+                            <div class="msg-actions">
+                                <button class="delete-me" title="Delete for me" onclick="window.deleteMessageForMe('${contactId}','${msg.id}')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                ${isSent ? `<button class="delete-everyone" title="Delete for everyone" onclick="window.deleteMessageForEveryone('${contactId}','${msg.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>` : ''}
+                            </div>
+                        `;
+                    }
+
                     div.innerHTML = `
+                        ${actionsHtml}
                         ${content}
                         <div class="msg-footer">
                             ${formatTime(new Date(msg.timestamp))}
+                            ${footerExtra}
                             ${tickHtml}
                         </div>
                     `;
@@ -1876,7 +1910,7 @@
                 // Mark messages as read
                 let updated = false;
                 contact.messages.forEach(msg => {
-                    if (msg.sender !== currentUser?.id && !msg.read) {
+                    if (msg.sender !== currentUser?.id && !msg.read && !msg.deleted) {
                         msg.read = true;
                         updated = true;
                     }
@@ -1890,6 +1924,53 @@
                 messagesArea.scrollTop = messagesArea.scrollHeight;
             }
 
+            // ---------- DELETE MESSAGES ----------
+            window.deleteMessageForMe = function(contactId, msgId) {
+                const contact = contacts.find(c => c.id === contactId);
+                if (!contact) return;
+                const msgIndex = contact.messages.findIndex(m => m.id === msgId);
+                if (msgIndex === -1) return;
+                
+                // Mark as deleted for me (hide content)
+                contact.messages[msgIndex].deleted = true;
+                contact.messages[msgIndex].text = 'This message was deleted';
+                contact.messages[msgIndex].deletedForMe = true;
+                saveData();
+                renderMessages(contactId);
+                renderChatList();
+            };
+
+            window.deleteMessageForEveryone = function(contactId, msgId) {
+                const contact = contacts.find(c => c.id === contactId);
+                if (!contact) return;
+                const msgIndex = contact.messages.findIndex(m => m.id === msgId);
+                if (msgIndex === -1) return;
+                
+                // Mark as deleted for everyone
+                const msg = contact.messages[msgIndex];
+                msg.deleted = true;
+                msg.text = 'This message was deleted';
+                msg.deletedForEveryone = true;
+                saveData();
+                renderMessages(contactId);
+                renderChatList();
+
+                // Send delete command to peer
+                const peerId = contact.peerId;
+                if (peerId) {
+                    const conn = connections.find(c => c.peer === peerId && c.open);
+                    if (conn) {
+                        try {
+                            conn.send({
+                                type: 'delete_message',
+                                messageId: msgId,
+                                contactId: contactId
+                            });
+                        } catch (e) { /* ignore */ }
+                    }
+                }
+            };
+
             // ---------- OPEN CHAT ----------
             function openChat(contactId) {
                 activeContactId = contactId;
@@ -1900,7 +1981,6 @@
                 cwAvatar.textContent = getInitials(contact.name);
                 cwAvatar.style.background = stringToColor(contact.name);
                 cwName.textContent = contact.name;
-                cwPhoneText.textContent = contact.phone || 'Unknown';
                 cwStatus.textContent = 'Online';
 
                 contact.unread = 0;
@@ -1911,43 +1991,29 @@
                 msgInput.focus();
             }
 
-            // ---------- FIND CONTACT BY PEER ID ----------
+            // ---------- FIND CONTACT ----------
             function findContactByPeerId(peerId) {
                 return contacts.find(c => c.peerId === peerId);
             }
 
-            // ---------- FIND CONTACT BY PHONE ----------
             function findContactByPhone(phone) {
                 return contacts.find(c => c.phone === phone);
             }
 
-            // ---------- SEND MESSAGE VIA PEER ----------
-            function sendMessageToPeer(peerId, message, type = 'text', fileData = null, fileName = null, fileType = null) {
+            // ---------- SEND MESSAGE ----------
+            function sendMessageToPeer(peerId, data) {
                 const conn = connections.find(c => c.peer === peerId && c.open);
                 if (!conn) {
-                    setStatus('Connection lost. Please reconnect.', 'error');
                     return false;
                 }
                 try {
-                    conn.send({
-                        type: type,
-                        text: message || '',
-                        sender: currentUser.id,
-                        senderName: currentUser.name,
-                        senderPhone: currentUser.phone,
-                        timestamp: Date.now(),
-                        fileData: fileData,
-                        fileName: fileName,
-                        fileType: fileType
-                    });
+                    conn.send(data);
                     return true;
                 } catch (e) {
-                    setStatus('Failed to send: ' + e.message, 'error');
                     return false;
                 }
             }
 
-            // ---------- SEND MESSAGE TO CONTACT ----------
             function sendMessage(text) {
                 if (!activeContactId) return false;
                 const contact = contacts.find(c => c.id === activeContactId);
@@ -1961,9 +2027,11 @@
                     type: 'text',
                     timestamp: Date.now(),
                     read: false,
+                    deleted: false,
                     fileData: null,
                     fileName: null,
-                    fileType: null
+                    fileType: null,
+                    fileSize: null
                 };
 
                 if (!contact.messages) contact.messages = [];
@@ -1974,8 +2042,12 @@
                 renderChatList();
 
                 // Send via PeerJS
-                const sent = sendMessageToPeer(contact.peerId, text.trim());
+                sendMessageToPeer(contact.peerId, {
+                    type: 'message',
+                    message: msg
+                });
 
+                msgInput.value = '';
                 return true;
             }
 
@@ -1995,9 +2067,11 @@
                         type: 'file',
                         timestamp: Date.now(),
                         read: false,
+                        deleted: false,
                         fileData: data,
                         fileName: file.name,
-                        fileType: file.type
+                        fileType: file.type,
+                        fileSize: file.size
                     };
 
                     if (!contact.messages) contact.messages = [];
@@ -2007,38 +2081,16 @@
                     renderMessages(activeContactId);
                     renderChatList();
 
-                    sendMessageToPeer(contact.peerId, '', 'file', data, file.name, file.type);
-                    setStatus('File sent: ' + file.name, 'success');
+                    sendMessageToPeer(contact.peerId, {
+                        type: 'file',
+                        message: msg
+                    });
                 };
                 reader.readAsDataURL(file);
                 return true;
             }
 
-            // ---------- STATUS MESSAGE ----------
-            function setStatus(message, type) {
-                const statusBox = document.querySelector('.status-box');
-                if (statusBox) {
-                    const statusMsg = statusBox.querySelector('#statusMessage');
-                    if (statusMsg) {
-                        statusMsg.textContent = message;
-                        statusBox.className = 'status-box';
-                        const icon = statusBox.querySelector('.icon');
-                        if (type === 'success') {
-                            statusBox.classList.add('success');
-                            icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-                        } else if (type === 'error') {
-                            statusBox.classList.add('error');
-                            icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                        } else if (type === 'info') {
-                            statusBox.classList.add('info');
-                            icon.innerHTML = '<i class="fas fa-info-circle"></i>';
-                        } else {
-                            icon.innerHTML = '<i class="fas fa-lightbulb"></i>';
-                        }
-                    }
-                }
-            }
-
+            // ---------- STATUS ----------
             function showStatus(type, message) {
                 statusMessage.className = 'status-msg ' + type;
                 statusMessage.textContent = message;
@@ -2050,7 +2102,7 @@
                 statusMessage.className = 'status-msg';
             }
 
-            // ---------- PEERJS SETUP ----------
+            // ---------- PEERJS SETUP (Persistent) ----------
             function initPeer() {
                 return new Promise((resolve, reject) => {
                     if (peer) {
@@ -2058,8 +2110,12 @@
                         peer = null;
                     }
 
-                    // Generate 6-character alphanumeric ID
-                    const peerId = generatePeerId();
+                    // Try to use saved peer ID, or generate new one
+                    let peerId = getSavedPeerId();
+                    if (!peerId) {
+                        peerId = generatePeerId();
+                        savePeerId(peerId);
+                    }
 
                     peer = new Peer(peerId, {
                         debug: 0,
@@ -2076,20 +2132,31 @@
                         myPeerId = id;
                         myPeerDisplay.textContent = id;
                         footerPeerId.textContent = id;
-                        setStatus('Peer ready! Share your ID to connect.', 'success');
+                        isReconnecting = false;
+                        reconnectAttempts = 0;
                         resolve(id);
                     });
 
                     peer.on('error', function(err) {
                         console.error('Peer error:', err);
-                        // If ID already taken, try with a new one
+                        // Try to reconnect with new ID if ID taken
                         if (err.message.includes('ID taken')) {
                             const newId = generatePeerId();
+                            savePeerId(newId);
                             peer.destroy();
                             peer = null;
                             initPeer().then(resolve).catch(reject);
+                        } else if (err.message.includes('Server error')) {
+                            // Attempt reconnect
+                            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                                reconnectAttempts++;
+                                setTimeout(() => {
+                                    initPeer().then(resolve).catch(reject);
+                                }, 2000 * reconnectAttempts);
+                            } else {
+                                reject(err);
+                            }
                         } else {
-                            setStatus('Error: ' + err.message, 'error');
                             reject(err);
                         }
                     });
@@ -2102,15 +2169,17 @@
                         }
                         connections.push(conn);
                         setupConnection(conn);
-                        setStatus('New device connected!', 'success');
                         updateConnectionUI();
                     });
 
                     peer.on('disconnected', function() {
-                        setStatus('Lost connection to signaling server, reconnecting...', 'warning');
-                        try { peer.reconnect(); } catch (e) { /* ignore */ }
-                        connections = connections.filter(c => c.open);
-                        updateConnectionUI();
+                        // Attempt to reconnect
+                        if (!isReconnecting) {
+                            isReconnecting = true;
+                            setTimeout(() => {
+                                try { peer.reconnect(); } catch (e) {}
+                            }, 2000);
+                        }
                     });
 
                     setTimeout(() => {
@@ -2121,7 +2190,7 @@
 
             function setupConnection(conn) {
                 conn.on('open', function() {
-                    // Send user info on connect
+                    // Send user info
                     try {
                         conn.send({
                             type: 'userinfo',
@@ -2130,7 +2199,6 @@
                             phone: currentUser.phone
                         });
                     } catch (e) { /* ignore */ }
-                    setStatus('Connected! Ready to chat.', 'success');
                     updateConnectionUI();
                 });
 
@@ -2139,10 +2207,8 @@
                         deviceUsernameMap[conn.peer] = data.username;
                         devicePhoneMap[conn.peer] = data.phone;
 
-                        // Check if contact exists by phone
                         let contact = findContactByPhone(data.phone);
                         if (!contact) {
-                            // Create new contact
                             contact = {
                                 id: generateId(),
                                 name: data.username,
@@ -2155,9 +2221,7 @@
                             contacts.push(contact);
                             saveData();
                             renderChatList();
-                            setStatus('New contact: ' + data.username, 'success');
                         } else {
-                            // Update existing contact's peer ID
                             contact.peerId = conn.peer;
                             saveData();
                             renderChatList();
@@ -2166,24 +2230,18 @@
                         return;
                     }
 
-                    if (data.type === 'text' || data.type === 'message') {
-                        // Handle incoming message
+                    if (data.type === 'message') {
+                        const msg = data.message;
                         const contact = findContactByPeerId(conn.peer);
                         if (contact) {
-                            const msg = {
-                                id: generateId(),
-                                sender: data.sender || conn.peer,
-                                text: data.text || '',
-                                type: 'text',
-                                timestamp: data.timestamp || Date.now(),
-                                read: false,
-                                fileData: null,
-                                fileName: null,
-                                fileType: null
+                            const newMsg = {
+                                ...msg,
+                                sender: msg.sender || conn.peer,
+                                read: false
                             };
                             if (!contact.messages) contact.messages = [];
-                            contact.messages.push(msg);
-                            contact.lastMessage = data.text || '';
+                            contact.messages.push(newMsg);
+                            contact.lastMessage = msg.text || '📎 ' + (msg.fileName || 'File');
                             contact.unread = (contact.unread || 0) + 1;
                             saveData();
 
@@ -2204,22 +2262,17 @@
                     }
 
                     if (data.type === 'file') {
+                        const msg = data.message;
                         const contact = findContactByPeerId(conn.peer);
                         if (contact) {
-                            const msg = {
-                                id: generateId(),
-                                sender: data.sender || conn.peer,
-                                text: '',
-                                type: 'file',
-                                timestamp: data.timestamp || Date.now(),
-                                read: false,
-                                fileData: data.fileData,
-                                fileName: data.fileName,
-                                fileType: data.fileType
+                            const newMsg = {
+                                ...msg,
+                                sender: msg.sender || conn.peer,
+                                read: false
                             };
                             if (!contact.messages) contact.messages = [];
-                            contact.messages.push(msg);
-                            contact.lastMessage = '📎 ' + data.fileName;
+                            contact.messages.push(newMsg);
+                            contact.lastMessage = '📎 ' + msg.fileName;
                             contact.unread = (contact.unread || 0) + 1;
                             saveData();
 
@@ -2227,7 +2280,6 @@
                                 renderMessages(contact.id);
                             }
                             renderChatList();
-                            setStatus('File received: ' + data.fileName, 'success');
                         }
                         return;
                     }
@@ -2236,7 +2288,7 @@
                         const contact = findContactByPeerId(conn.peer);
                         if (contact && contact.messages) {
                             contact.messages.forEach(msg => {
-                                if (msg.sender === currentUser.id && !msg.read) {
+                                if (msg.sender === currentUser.id && !msg.read && msg.id === data.messageId) {
                                     msg.read = true;
                                 }
                             });
@@ -2259,6 +2311,24 @@
                         }
                         return;
                     }
+
+                    if (data.type === 'delete_message') {
+                        const contact = findContactByPeerId(conn.peer);
+                        if (contact && contact.messages) {
+                            const msg = contact.messages.find(m => m.id === data.messageId);
+                            if (msg && !msg.deleted) {
+                                msg.deleted = true;
+                                msg.text = 'This message was deleted';
+                                msg.deletedForEveryone = true;
+                                saveData();
+                                if (activeContactId === contact.id) {
+                                    renderMessages(contact.id);
+                                }
+                                renderChatList();
+                            }
+                        }
+                        return;
+                    }
                 });
 
                 conn.on('close', function() {
@@ -2269,20 +2339,18 @@
                         delete devicePhoneMap[peerId];
                         connections.splice(index, 1);
                     }
-                    setStatus('A device disconnected', 'warning');
                     updateConnectionUI();
                 });
 
                 conn.on('error', function(err) {
                     console.error('Connection error:', err);
-                    setStatus('Connection error: ' + err.message, 'error');
                 });
             }
 
             // ---------- CONNECT TO PEER ----------
             function connectToPeer(peerId) {
                 if (!peer) {
-                    setStatus('Please wait for peer initialization.', 'error');
+                    showStatus('error', 'Please wait for peer initialization.');
                     return false;
                 }
 
@@ -2305,7 +2373,11 @@
                     }
                     connections.push(conn);
                     setupConnection(conn);
-                    setStatus('Connecting to ' + peerId + '...', 'info');
+                    showStatus('success', 'Connected successfully!');
+                    setTimeout(() => {
+                        connectModal.classList.remove('show');
+                        hideStatus();
+                    }, 1500);
                     updateConnectionUI();
                     return true;
                 } catch (err) {
@@ -2318,11 +2390,7 @@
             function updateConnectionUI() {
                 const activeConnections = connections.filter(c => c.open);
                 const count = activeConnections.length;
-                if (count > 0) {
-                    setStatus('Connected to ' + count + ' device(s)', 'success');
-                } else {
-                    setStatus('Ready to connect. Share your Peer ID.', 'info');
-                }
+                // Update any connection status displays
             }
 
             // ---------- AUTH FLOW ----------
@@ -2352,12 +2420,6 @@
                     const name = authName.value.trim();
                     const phone = authPhone.value.trim();
 
-                    // Check if user already exists with this phone
-                    const existingUser = loadData();
-                    if (existingUser && currentUser && currentUser.phone === phone) {
-                        // User exists, use existing data
-                    }
-
                     const user = {
                         id: generateId(),
                         name: name,
@@ -2376,12 +2438,18 @@
                     myPhoneText.textContent = currentUser.phone;
                     footerUser.textContent = currentUser.name;
 
-                    // Initialize PeerJS
                     initPeer().then(() => {
                         renderChatList();
+                        // Reconnect to existing contacts
+                        contacts.forEach(contact => {
+                            if (contact.peerId) {
+                                setTimeout(() => {
+                                    connectToPeer(contact.peerId);
+                                }, 1000);
+                            }
+                        });
                     }).catch(err => {
                         console.error('Peer init error:', err);
-                        setStatus('Failed to initialize peer: ' + err.message, 'error');
                     });
 
                     otpSection.classList.remove('show');
@@ -2413,6 +2481,14 @@
 
                     initPeer().then(() => {
                         renderChatList();
+                        // Reconnect to existing contacts
+                        contacts.forEach(contact => {
+                            if (contact.peerId) {
+                                setTimeout(() => {
+                                    connectToPeer(contact.peerId);
+                                }, 1500);
+                            }
+                        });
                     }).catch(err => {
                         console.error('Peer init error:', err);
                     });
@@ -2452,8 +2528,6 @@
                     const text = msgInput.value.trim();
                     if (text) {
                         sendMessage(text);
-                        msgInput.value = '';
-                        msgInput.focus();
                     }
                 });
 
@@ -2463,7 +2537,6 @@
                         const text = msgInput.value.trim();
                         if (text) {
                             sendMessage(text);
-                            msgInput.value = '';
                         }
                     }
                 });
@@ -2567,12 +2640,8 @@
                         showStatus('error', 'Peer ID must be 6 characters');
                         return;
                     }
-                    const success = connectToPeer(peerId);
-                    if (success) {
-                        connectPeerInput.value = '';
-                        connectModal.classList.remove('show');
-                        hideStatus();
-                    }
+                    connectToPeer(peerId);
+                    connectPeerInput.value = '';
                 });
 
                 connectPeerInput.addEventListener('keypress', (e) => {
@@ -2592,6 +2661,7 @@
                             peer = null;
                         }
                         localStorage.removeItem(STORAGE_KEY);
+                        localStorage.removeItem(PEER_ID_KEY);
                         currentUser = null;
                         contacts = [];
                         activeContactId = null;
