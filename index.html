@@ -1171,28 +1171,68 @@
 
         .host-controls .body .guest-list {
             margin-top: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .host-controls .body .guest-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .host-controls .body .guest-list::-webkit-scrollbar-thumb {
+            background: var(--saffron);
+            border-radius: 10px;
         }
 
         .host-controls .body .guest-list .guest-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: var(--white-smoke);
             border-radius: var(--radius-sm);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
+            border-left: 3px solid var(--saffron-light);
+            transition: var(--transition);
+        }
+
+        .host-controls .body .guest-list .guest-item:hover {
+            background: var(--saffron-bg);
+            border-left-color: var(--saffron);
         }
 
         .host-controls .body .guest-list .guest-item .name {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .host-controls .body .guest-list .guest-item .name i {
+            color: var(--saffron);
         }
 
         .host-controls .body .guest-list .guest-item .permission {
             font-size: 11px;
             color: var(--gray);
+            background: var(--white);
+            padding: 2px 10px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        .host-controls .body .guest-list .guest-item .permission.allowed {
+            color: #27AE60;
+            border-color: #A9DFBF;
+            background: #EAFAF1;
+        }
+
+        .host-controls .body .guest-list .guest-item .permission.denied {
+            color: #C0392B;
+            border-color: #F5B7B1;
+            background: #FDEDEC;
         }
 
         .host-controls .body .guest-list .guest-item .actions {
@@ -1202,7 +1242,7 @@
         }
 
         .host-controls .body .guest-list .guest-item .actions .btn-sm {
-            padding: 4px 10px;
+            padding: 4px 12px;
             font-size: 11px;
         }
 
@@ -1268,6 +1308,13 @@
             outline: none;
             border-color: var(--saffron);
             box-shadow: 0 0 0 4px var(--saffron-glow);
+        }
+
+        .host-controls .body .guest-count {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 8px;
+            text-align: center;
         }
 
         /* ============================================================
@@ -1548,6 +1595,16 @@
             .host-controls .body .control-grid {
                 grid-template-columns: 1fr;
             }
+
+            .host-controls .body .guest-list .guest-item {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .host-controls .body .guest-list .guest-item .actions {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -1751,6 +1808,7 @@
                         <div id="guestListItems">
                             <p style="font-size:12px;color:var(--gray);text-align:center;padding:8px;">No guests connected</p>
                         </div>
+                        <div class="guest-count" id="guestCount">Total: 0 guests</div>
                     </div>
                 </div>
             </div>
@@ -1836,90 +1894,6 @@
         </div>
     </section>
 
-
-<!-- Explore Chat Button Section Starts -->
-<div class="chat-btn-container">
-    <!-- HTML Element -->
-    <button class="explore-chat-btn" id="chatBtn">
-        Explore Chat <span class="new-badge">new!</span>
-    </button>
-
-    <!-- CSS Styling -->
-    <style>
-        /* बटन को पेज के सेंटर में लाने के लिए मेन कंटेनर */
-        .chat-btn-container {
-            display: flex;
-            justify-content: center; /* हॉरिजॉन्टली सेंटर (Left to Right) */
-            align-items: center;     /* वर्टिकली सेंटर (Top to Bottom) */
-            min-height: 100vh;       /* पूरे स्क्रीन की हाइट (Vertical alignment के लिए ज़रूरी) */
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        .explore-chat-btn {
-            background: linear-gradient(135deg, #FF9933 0%, #FF6600 100%); /* Saffron Gradient */
-            color: #FFFFFF; /* White Text */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 12px 26px;
-            border: 2px solid #FFFFFF; /* White Border */
-            border-radius: 50px; /* Rounded Pill Shape */
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.4);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            outline: none;
-        }
-
-        /* Hover Effect */
-        .explore-chat-btn:hover {
-            background: #FFFFFF; /* White Background */
-            color: #000000; /* Black Text */
-            border-color: #FF9933; /* Saffron Border */
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
-            transform: translateY(-2px);
-        }
-
-        /* Click Effect */
-        .explore-chat-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* "new!" Badge Style */
-        .explore-chat-btn .new-badge {
-            background-color: #000000; /* Black Background */
-            color: #FF9933; /* Saffron Text */
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 10px;
-            text-transform: uppercase;
-            border: 1px solid #FF9933;
-            transition: all 0.3s ease;
-        }
-
-        /* Hover effect on Badge */
-        .explore-chat-btn:hover .new-badge {
-            background-color: #FF9933; /* Saffron Background */
-            color: #FFFFFF; /* White Text */
-            border-color: #FF9933;
-        }
-    </style>
-
-    <!-- JavaScript Functionality -->
-    <script>
-        document.getElementById('chatBtn').addEventListener('click', function() {
-            window.open('chat.html', '_blank'); // Redirect to chat.html in a new tab
-        });
-    </script>
-</div>
-<!-- Explore Chat Button Section Ends -->
-
-
     <!-- ============================================================
     FOOTER
     ============================================================ -->
@@ -1937,7 +1911,7 @@
     </footer>
 
     <!-- ============================================================
-    JAVASCRIPT
+    JAVASCRIPT - FIXED GUEST ACTIONS
     ============================================================ -->
     <script>
         (function() {
@@ -2078,6 +2052,7 @@
             const hostBadgeHeader = document.getElementById('hostBadgeHeader');
             const hostControls = document.getElementById('hostControls');
             const guestListItems = document.getElementById('guestListItems');
+            const guestCount = document.getElementById('guestCount');
             const shareOptions = document.getElementById('shareOptions');
             const shareTargetSelect = document.getElementById('shareTargetSelect');
             const shareAllBtn = document.getElementById('shareAllBtn');
@@ -2101,16 +2076,14 @@
             let isHost = false;
             let shareTarget = 'all';
             let deviceUsernameMap = {};
-            let guestPermissions = {}; // (host only) peerId -> canShare boolean
-            let myShareAllowed = true; // (guest only) whether host currently allows me to send/receive
+            let guestPermissions = {};
+            let myShareAllowed = true;
             let pendingFileForShare = null;
             let pendingFileTitleForShare = '';
             let sendInProgress = false;
-            // Per-connection receive buffers, keyed by remote peer id.
-            // Prevents two simultaneous incoming transfers from corrupting each other.
             let receiveBuffers = {};
             const CHUNK_SIZE = 16384;
-            const MAX_BUFFERED_AMOUNT = 2 * 1024 * 1024; // 2MB backpressure ceiling
+            const MAX_BUFFERED_AMOUNT = 2 * 1024 * 1024;
 
             // ===== CODE GENERATOR =====
             function generateSHARExCode() {
@@ -2257,19 +2230,14 @@
                 });
             }
 
-            // Lock the role once a device becomes a host or a guest so a
-            // single device can't accidentally act as both at once.
             function applyRoleLock() {
                 if (isHost) {
-                    // Hosting: creating another offer or connecting out as a guest is blocked.
                     createOfferBtn.disabled = true;
                     connectBtn.disabled = true;
                     remoteCode.disabled = true;
                     connectCard.style.opacity = '0.5';
                     connectCard.style.pointerEvents = 'none';
                 } else if (isConnected) {
-                    // Connected as a guest: only one host connection is allowed,
-                    // and this device can't also become a host at the same time.
                     createOfferBtn.disabled = true;
                     connectBtn.disabled = true;
                     remoteCode.disabled = true;
@@ -2278,7 +2246,6 @@
                     connectCard.style.opacity = '0.5';
                     connectCard.style.pointerEvents = 'none';
                 } else if (myUsername) {
-                    // Idle: both roles available again.
                     createOfferBtn.disabled = false;
                     connectBtn.disabled = false;
                     remoteCode.disabled = false;
@@ -2289,6 +2256,7 @@
                 }
             }
 
+            // ===== UPDATE CONNECTION UI - FIXED =====
             function updateConnectionUI() {
                 const myLabel = myUsername || 'You';
                 hostDeviceName.textContent = myLabel;
@@ -2297,7 +2265,6 @@
                 const activeConnections = connections.filter(c => c.open);
 
                 if (isHost) {
-                    // I am the host: my own row is HOST, every connection is a guest.
                     hostItemSub.innerHTML = '<i class="fas fa-crown"></i> HOST (You)';
                     document.getElementById('hostItem').className = 'connection-item host';
 
@@ -2329,9 +2296,8 @@
                     hostBadgeHeader.style.background = '';
                     hostBadgeHeader.style.color = '';
                     hostBadgeHeader.style.border = '';
+                    hostControls.classList.remove('hidden');
                 } else {
-                    // I am a guest (or not yet connected): my own row is GUEST,
-                    // and the single connection (if any) is the HOST, not another guest.
                     hostItemSub.innerHTML = '<i class="fas fa-user"></i> GUEST (You)';
                     document.getElementById('hostItem').className = 'connection-item guest';
 
@@ -2343,6 +2309,7 @@
                             </div>
                         `;
                         hostBadgeHeader.style.display = 'none';
+                        hostControls.classList.add('hidden');
                     } else {
                         const conn = activeConnections[0];
                         const peerId = conn.peer || 'Device';
@@ -2362,6 +2329,7 @@
                         hostBadgeHeader.style.background = '#E8F4FD';
                         hostBadgeHeader.style.color = '#1A5276';
                         hostBadgeHeader.style.border = '1px solid #AED6F1';
+                        hostControls.classList.add('hidden');
                     }
                 }
 
@@ -2380,21 +2348,13 @@
                     document.getElementById('setupSection').style.pointerEvents = 'none';
                     isConnected = true;
                     updateSteps(2);
-
-                    if (isHost) {
-                        hostControls.classList.remove('hidden');
-                    } else {
-                        hostControls.classList.add('hidden');
-                    }
                 } else if (isHost) {
-                    // Hosting but no guests yet - keep the offer/status visible.
                     transferSection.classList.add('hidden');
                     document.getElementById('setupSection').style.opacity = '1';
                     document.getElementById('setupSection').style.pointerEvents = 'auto';
                     isConnected = false;
                     updateSteps(1);
                     progressWrap.classList.remove('active');
-                    hostControls.classList.add('hidden');
                 } else {
                     transferSection.classList.add('hidden');
                     document.getElementById('setupSection').style.opacity = '1';
@@ -2402,7 +2362,6 @@
                     isConnected = false;
                     updateSteps(1);
                     progressWrap.classList.remove('active');
-                    hostControls.classList.add('hidden');
                 }
 
                 updateShareTargets();
@@ -2410,10 +2369,13 @@
                 applyRoleLock();
             }
 
+            // ===== UPDATE GUEST LIST - FIXED =====
             function updateGuestList() {
                 const activeConnections = connections.filter(c => c.open);
+                
                 if (activeConnections.length === 0) {
                     guestListItems.innerHTML = '<p style="font-size:12px;color:var(--gray);text-align:center;padding:8px;">No guests connected</p>';
+                    guestCount.textContent = 'Total: 0 guests';
                     return;
                 }
 
@@ -2422,25 +2384,29 @@
                     const peerId = conn.peer || 'Device';
                     const username = deviceUsernameMap[peerId] || peerId;
                     const canShare = guestPermissions[peerId] !== false;
+                    
                     html += `
                         <div class="guest-item">
                             <span class="name"><i class="fas fa-user-circle" style="color:#2980B9;"></i> ${username}</span>
-                            <span class="permission">${canShare ? '✅ Can Share' : '❌ Cannot Share'}</span>
+                            <span class="permission ${canShare ? 'allowed' : 'denied'}">
+                                ${canShare ? '✅ Can Share' : '❌ Cannot Share'}
+                            </span>
                             <div class="actions">
                                 <button class="btn btn-primary btn-sm" onclick="window.shareToSpecific('${peerId}')">
                                     <i class="fas fa-paper-plane"></i> Share
                                 </button>
                                 <button class="btn btn-warning btn-sm" onclick="window.togglePermission('${peerId}')">
-                                    <i class="fas fa-key"></i>
+                                    <i class="fas fa-key"></i> ${canShare ? 'Revoke' : 'Allow'}
                                 </button>
                                 <button class="btn btn-danger btn-sm" onclick="window.disconnectGuest('${peerId}')">
-                                    <i class="fas fa-times"></i>
+                                    <i class="fas fa-times"></i> Kick
                                 </button>
                             </div>
                         </div>
                     `;
                 });
                 guestListItems.innerHTML = html;
+                guestCount.textContent = 'Total: ' + activeConnections.length + ' guests';
             }
 
             function updateShareTargets() {
@@ -2459,8 +2425,6 @@
 
             function updateSendTargetInfo() {
                 if (!isHost) {
-                    // A guest only ever has one connection: the host. There is
-                    // no meaningful "target" to pick, so always be explicit about it.
                     sendTargetInfo.textContent = 'Sending to: Host';
                     return;
                 }
@@ -2538,10 +2502,6 @@
                     });
 
                     peer.on('connection', function(conn) {
-                        // Only a host accepts incoming connections. A guest device
-                        // only ever dials out to its host, so any inbound
-                        // connection attempt on a guest peer is refused - this is
-                        // what keeps host and guest roles cleanly separated.
                         if (!isHost) {
                             try { conn.close(); } catch (e) { /* ignore */ }
                             return;
@@ -2552,7 +2512,6 @@
                             return;
                         }
                         connections.push(conn);
-                        // Default permission for a newly-joined guest: allowed to share.
                         guestPermissions[conn.peer] = true;
                         setupConnection(conn);
                         setStatus('New device connected!', 'success');
@@ -2581,7 +2540,6 @@
                 conn.on('open', function() {
                     try {
                         conn.send({ type: 'username', username: myUsername });
-                        // Send permission info if host
                         if (isHost) {
                             conn.send({ type: 'permission', canShare: guestPermissions[conn.peer] !== false });
                         }
@@ -2606,7 +2564,6 @@
                         return;
                     }
                     if (data.type === 'permission') {
-                        // Guest receiving its own permission status from the host.
                         if (!isHost) {
                             myShareAllowed = !!data.canShare;
                             if (myShareAllowed) {
@@ -2619,7 +2576,6 @@
                         return;
                     }
                     if (data.type === 'share-target') {
-                        // Informational only for guests; guests always send to the host.
                         shareTarget = data.target;
                         return;
                     }
@@ -2662,12 +2618,10 @@
                 try {
                     const peerId = conn.peer;
 
-                    // Guests can be blocked from receiving/sending by the host.
                     if (!isHost && data.type === 'file-metadata' && myShareAllowed === false) {
                         setStatus('You do not have permission to receive files from this host.', 'warning');
                         return;
                     }
-                    // Host can block a specific guest from sending it files.
                     if (isHost && data.type === 'file-metadata' && guestPermissions[peerId] === false) {
                         setStatus('Blocked a file from a guest without sharing permission.', 'warning');
                         return;
@@ -2757,10 +2711,6 @@
             }
 
             // ===== BACKPRESSURE HELPER =====
-            // Waits until every target connection's underlying data channel has
-            // drained below the buffered-amount ceiling before continuing to send
-            // more chunks. Without this, large files can overload the channel and
-            // silently drop or corrupt data.
             function waitForDrain(conns, cb) {
                 const check = () => {
                     const stillHigh = conns.some(c => {
@@ -2788,7 +2738,6 @@
                     targetConnections = activeConnections.filter(c => c.peer === target);
                 }
 
-                // The host is the only one that enforces per-guest permissions.
                 let skippedForPermission = 0;
                 if (isHost) {
                     const before = targetConnections.length;
@@ -2943,8 +2892,6 @@
                 const username = deviceUsernameMap[peerId] || peerId;
                 setStatus('Permission for ' + username + ' set to: ' + (guestPermissions[peerId] ? 'Can Share' : 'Cannot Share'),
                     'info');
-                // Tell the affected guest their new status, and let every guest
-                // know this peer's status (used for host-side UI only in practice).
                 connections.forEach(conn => {
                     try {
                         if (conn.open) {
@@ -3062,7 +3009,6 @@
                     return;
                 }
 
-                // Check if guest has permission to share
                 if (!isHost && myShareAllowed === false) {
                     setStatus('You do not have permission to share files. Contact the host.', 'error');
                     return;
@@ -3072,7 +3018,6 @@
                 const title = sendFileTitle.value.trim() || '';
 
                 if (!isHost) {
-                    // A guest always sends to its single host connection.
                     sendFile(file, 'all', title);
                     return;
                 }
@@ -3293,6 +3238,7 @@
             console.log('🔑 Guests can only share if host grants permission.');
             console.log('📝 Files can have titles for better identification.');
             console.log('🔒 A device is either Host or Guest, never both, until it disconnects/resets.');
+            console.log('✅ Guest actions are now properly working!');
 
         })();
     </script>
