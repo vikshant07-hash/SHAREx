@@ -1836,8 +1836,9 @@
         </div>
     </section>
 
-    <!-- Explore Chat Button Section Starts -->
-<div class="chat-btn-wrapper">
+
+<!-- Explore Chat Button Section Starts -->
+<div class="chat-btn-container">
     <!-- HTML Element -->
     <button class="explore-chat-btn" id="chatBtn">
         Explore Chat <span class="new-badge">new!</span>
@@ -1845,8 +1846,14 @@
 
     <!-- CSS Styling -->
     <style>
-        .chat-btn-wrapper {
-            display: inline-block; /* इसे आप अपने हिसाब से flex या block कर सकते हैं */
+        /* बटन को पेज के सेंटर में लाने के लिए मेन कंटेनर */
+        .chat-btn-container {
+            display: flex;
+            justify-content: center; /* हॉरिजॉन्टली सेंटर (Left to Right) */
+            align-items: center;     /* वर्टिकली सेंटर (Top to Bottom) */
+            min-height: 100vh;       /* पूरे स्क्रीन की हाइट (Vertical alignment के लिए ज़रूरी) */
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .explore-chat-btn {
