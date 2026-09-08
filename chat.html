@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ChatX - Professional Real-time Chat</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js">
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         /* ============================================================
@@ -819,29 +821,6 @@
             color: #4caf84;
         }
 
-        .msg .file-preview {
-            max-width: 200px;
-            max-height: 160px;
-            border-radius: 8px;
-            margin-bottom: 4px;
-            display: block;
-            cursor: pointer;
-            border: 1px solid var(--gray-200);
-        }
-
-        .msg .file-name {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 2px;
-            display: block;
-        }
-
-        .msg .file-link {
-            color: inherit;
-            text-decoration: underline;
-            opacity: 0.9;
-        }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1410,7 +1389,7 @@
                 <p>Secure, real-time messaging made simple</p>
                 <div class="hero-badge">
                     <i class="fas fa-bolt"></i>
-                    Real-time • End-to-end encrypted
+                    Real-time • P2P Encrypted
                 </div>
             </div>
 
@@ -1449,7 +1428,7 @@
             <div class="footer">
                 <span><i class="fas fa-lock"></i> Secure</span>
                 <span><i class="fas fa-bolt"></i> Real-time</span>
-                <span><i class="fas fa-code"></i> v3.0</span>
+                <span><i class="fas fa-code"></i> v4.0</span>
                 <span><span class="footer-dot"></span> Online</span>
             </div>
         </div>
@@ -1502,7 +1481,7 @@
 
             <div class="footer">
                 <span><i class="fas fa-user"></i> <span id="footerUser">User</span></span>
-                <span><i class="fas fa-key"></i> Code: <span id="footerCode">------</span></span>
+                <span><i class="fas fa-id-card"></i> ID: <span id="footerPeerId">------</span></span>
                 <span><span class="footer-dot"></span> Active</span>
             </div>
         </div>
@@ -1547,7 +1526,7 @@
         </div>
 
         <!-- ==========================================================
-        CONNECT MODAL - PROFESSIONAL
+        CONNECT MODAL
         ========================================================== -->
         <div id="connectModal">
             <div class="connect-box">
@@ -1555,29 +1534,27 @@
                     <i class="fas fa-user-plus"></i>
                     <h2>Connect People</h2>
                 </div>
-                <div class="sub">Share your code or enter someone's active code</div>
+                <div class="sub">Share your Peer ID or enter someone's ID</div>
 
                 <div id="statusMessage" class="status-msg"></div>
 
                 <div class="input-group">
-                    <label><i class="fas fa-qrcode"></i> Enter 6-digit Code</label>
-                    <input type="text" id="connectCodeInput" placeholder="e.g. 482916" maxlength="6" inputmode="numeric" />
+                    <label><i class="fas fa-qrcode"></i> Enter Peer ID</label>
+                    <input type="text" id="connectPeerInput" placeholder="e.g. 123456" style="letter-spacing:4px;" />
                 </div>
 
-                <button class="btn-primary" id="joinCodeBtn">
+                <button class="btn-primary" id="joinPeerBtn">
                     <i class="fas fa-link"></i> Connect Now
                 </button>
 
                 <div class="divider">or</div>
 
-                <div class="code-label"><i class="fas fa-info-circle"></i> Your active connect code</div>
-                <div class="code-display" id="myCodeDisplay">------</div>
+                <div class="code-label"><i class="fas fa-info-circle"></i> Your Peer ID</div>
+                <div class="code-display" id="myPeerDisplay">------</div>
 
-                <div class="btn-group">
-                    <button id="generateCodeBtn">
-                        <i class="fas fa-rotate"></i> Generate New Code
-                    </button>
-                </div>
+                <button class="btn btn-primary" id="copyPeerBtn" style="width:100%; padding:12px; background:var(--accent); color:var(--primary); border:none; border-radius:var(--radius-sm); font-size:14px; font-weight:700; cursor:pointer; transition:var(--transition); margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i class="fas fa-copy"></i> Copy Peer ID
+                </button>
 
                 <button class="close-btn" id="closeConnectModal">
                     <i class="fas fa-times"></i> Close
@@ -1589,8 +1566,8 @@
 
     <script>
         // ================================================================
-        //  CHATX - COMPLETE REAL-TIME CHAT APPLICATION
-        //  FIXED: Multi-device code connection
+        //  CHATX - COMPLETE REAL-TIME CHAT USING PEERJS
+        //  Based on SHAREx Tool's P2P technology
         // ================================================================
 
         (function() {
@@ -1614,7 +1591,7 @@
             const myAvatar = document.getElementById('myAvatar');
             const myNameDisplay = document.getElementById('myNameDisplay');
             const footerUser = document.getElementById('footerUser');
-            const footerCode = document.getElementById('footerCode');
+            const footerPeerId = document.getElementById('footerPeerId');
 
             const cwAvatar = document.getElementById('cwAvatar');
             const cwName = document.getElementById('cwName');
@@ -1631,10 +1608,10 @@
             const emptyConnectBtn = document.getElementById('emptyConnectBtn');
             const connectModal = document.getElementById('connectModal');
             const closeConnectModal = document.getElementById('closeConnectModal');
-            const connectCodeInput = document.getElementById('connectCodeInput');
-            const joinCodeBtn = document.getElementById('joinCodeBtn');
-            const generateCodeBtn = document.getElementById('generateCodeBtn');
-            const myCodeDisplay = document.getElementById('myCodeDisplay');
+            const connectPeerInput = document.getElementById('connectPeerInput');
+            const joinPeerBtn = document.getElementById('joinPeerBtn');
+            const myPeerDisplay = document.getElementById('myPeerDisplay');
+            const copyPeerBtn = document.getElementById('copyPeerBtn');
             const statusMessage = document.getElementById('statusMessage');
 
             const logoutBtn = document.getElementById('logoutBtn');
@@ -1643,22 +1620,20 @@
             let currentUser = null;
             let contacts = [];
             let activeContactId = null;
-            let myCode = null;
+            let peer = null;
+            let connections = [];
+            let myPeerId = null;
             let currentOtp = null;
             let typingTimeout = null;
-            let simTimeout = null;
+            let deviceUsernameMap = {};
+            let isHost = false;
 
             // ---------- STORAGE KEYS ----------
-            const STORAGE_KEY = 'chatx_data';
-            const USERS_KEY = 'chatx_users';
+            const STORAGE_KEY = 'chatx_data_peerjs';
 
             // ---------- HELPERS ----------
             function generateId() {
                 return Date.now().toString(36) + Math.random().toString(36).substr(2, 6);
-            }
-
-            function generateCode() {
-                return String(Math.floor(100000 + Math.random() * 900000));
             }
 
             function generateOtp() {
@@ -1689,62 +1664,11 @@
                 return div.innerHTML;
             }
 
-            // ---------- GLOBAL USERS MANAGEMENT (Shared across devices) ----------
-            function getUsersList() {
-                try {
-                    const raw = localStorage.getItem(USERS_KEY);
-                    return raw ? JSON.parse(raw) : [];
-                } catch (e) {
-                    console.warn('Error reading users list:', e);
-                    return [];
-                }
-            }
-
-            function saveUsersList(users) {
-                try {
-                    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-                } catch (e) {
-                    console.warn('Error saving users list:', e);
-                }
-            }
-
-            function registerUserInGlobal(user) {
-                let users = getUsersList();
-                const existingIndex = users.findIndex(u => u.id === user.id);
-                if (existingIndex >= 0) {
-                    users[existingIndex] = user;
-                } else {
-                    users.push(user);
-                }
-                saveUsersList(users);
-                console.log('✅ User registered:', user.name, 'Code:', user.code);
-                console.log('📋 All users:', users);
-                return true;
-            }
-
-            function findUserByCode(code) {
-                const users = getUsersList();
-                const found = users.find(u => u.code === code);
-                console.log('🔍 Searching for code:', code);
-                console.log('📋 Found:', found || 'Not found');
-                return found || null;
-            }
-
-            function getAllActiveUsers() {
-                return getUsersList();
-            }
-
-            function getAllActiveCodes() {
-                const users = getUsersList();
-                return users.map(u => u.code).filter(c => c);
-            }
-
             // ---------- STORAGE ----------
             function saveData() {
                 const data = {
                     currentUser: currentUser,
-                    contacts: contacts,
-                    myCode: myCode
+                    contacts: contacts
                 };
                 try {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -1758,7 +1682,6 @@
                     const data = JSON.parse(raw);
                     currentUser = data.currentUser || null;
                     contacts = data.contacts || [];
-                    myCode = data.myCode || null;
                     return true;
                 } catch (e) { return false; }
             }
@@ -1781,8 +1704,8 @@
                     if (emptyBtn) {
                         emptyBtn.addEventListener('click', () => {
                             connectModal.classList.add('show');
-                            if (myCode) {
-                                myCodeDisplay.textContent = myCode;
+                            if (myPeerId) {
+                                myPeerDisplay.textContent = myPeerId;
                             }
                             hideStatus();
                         });
@@ -1801,11 +1724,7 @@
 
                     let lastText = 'No messages yet';
                     if (lastMsg) {
-                        if (lastMsg.type === 'file') {
-                            lastText = '📎 ' + lastMsg.fileName;
-                        } else {
-                            lastText = lastMsg.text || '';
-                        }
+                        lastText = lastMsg.text || '';
                     }
 
                     const timeStr = lastMsg ? formatTime(new Date(lastMsg.timestamp)) : '';
@@ -1847,23 +1766,7 @@
                     const isSent = msg.sender === currentUser?.id;
                     div.className = `msg ${isSent ? 'sent' : 'received'}`;
 
-                    let content = '';
-                    if (msg.type === 'file') {
-                        if (msg.fileType && msg.fileType.startsWith('image/')) {
-                            content = `
-                                <img src="${msg.fileData}" class="file-preview" alt="image" 
-                                     onclick="window.open('${msg.fileData}','_blank')" />
-                            `;
-                        } else {
-                            content = `
-                                <i class="fas fa-file"></i>
-                                <a href="${msg.fileData}" target="_blank" class="file-link">${escapeHtml(msg.fileName)}</a>
-                            `;
-                        }
-                        content += `<span class="file-name">${escapeHtml(msg.fileName)}</span>`;
-                    } else {
-                        content = escapeHtml(msg.text);
-                    }
+                    let content = escapeHtml(msg.text);
 
                     const isRead = msg.read || false;
                     let tickHtml = '';
@@ -1921,35 +1824,59 @@
                 msgInput.focus();
             }
 
-            // ---------- SEND MESSAGE ----------
-            function sendMessage(text, type = 'text', fileData = null, fileName = null, fileType = null) {
+            // ---------- SEND MESSAGE VIA PEER ----------
+            function sendMessageToPeer(peerId, message) {
+                const conn = connections.find(c => c.peer === peerId && c.open);
+                if (!conn) {
+                    setStatus('Connection lost. Please reconnect.', 'error');
+                    return false;
+                }
+                try {
+                    conn.send({
+                        type: 'message',
+                        text: message,
+                        sender: currentUser.id,
+                        senderName: currentUser.name,
+                        timestamp: Date.now()
+                    });
+                    return true;
+                } catch (e) {
+                    setStatus('Failed to send message: ' + e.message, 'error');
+                    return false;
+                }
+            }
+
+            // ---------- SEND MESSAGE TO CONTACT ----------
+            function sendMessage(text) {
                 if (!activeContactId) return false;
                 const contact = contacts.find(c => c.id === activeContactId);
                 if (!contact) return false;
-                if (!text && type === 'text') return false;
+                if (!text.trim()) return false;
 
+                // Save locally first
                 const msg = {
                     id: generateId(),
                     sender: currentUser.id,
-                    text: text || '',
-                    type: type,
+                    text: text.trim(),
                     timestamp: Date.now(),
-                    read: false,
-                    fileData: fileData,
-                    fileName: fileName,
-                    fileType: fileType
+                    read: false
                 };
 
                 if (!contact.messages) contact.messages = [];
                 contact.messages.push(msg);
-                contact.lastMessage = text || '📎 ' + fileName;
-
+                contact.lastMessage = text.trim();
                 saveData();
                 renderMessages(activeContactId);
                 renderChatList();
 
-                if (type === 'text' && text.trim().length > 0) {
-                    simulateReply(contact.id);
+                // Send via PeerJS
+                const sent = sendMessageToPeer(contact.peerId, text.trim());
+
+                // Simulate reply for demo
+                if (sent) {
+                    setTimeout(() => {
+                        simulateReply(contact.id);
+                    }, 1500 + Math.random() * 2000);
                 }
 
                 return true;
@@ -1957,7 +1884,6 @@
 
             // ---------- SIMULATE REPLY ----------
             function simulateReply(contactId) {
-                if (simTimeout) clearTimeout(simTimeout);
                 if (typingTimeout) clearTimeout(typingTimeout);
 
                 typingIndicator.classList.add('show');
@@ -1983,14 +1909,10 @@
 
                     const msg = {
                         id: generateId(),
-                        sender: contact.id,
+                        sender: 'simulated',
                         text: reply,
-                        type: 'text',
                         timestamp: Date.now(),
-                        read: false,
-                        fileData: null,
-                        fileName: null,
-                        fileType: null
+                        read: true
                     };
 
                     if (!contact.messages) contact.messages = [];
@@ -2007,73 +1929,32 @@
                 }, delay);
             }
 
-            // ---------- CONNECT WITH CODE (FIXED - Multi-device support) ----------
-            function connectWithCode(code) {
-                if (!currentUser) {
-                    showStatus('error', 'Please login first!');
-                    return false;
+            // ---------- STATUS MESSAGE ----------
+            function setStatus(message, type) {
+                // Use the existing status from auth screen or create one
+                const statusBox = document.querySelector('.status-box');
+                if (statusBox) {
+                    const statusMsg = statusBox.querySelector('#statusMessage');
+                    if (statusMsg) {
+                        statusMsg.textContent = message;
+                        statusBox.className = 'status-box';
+                        const icon = statusBox.querySelector('.icon');
+                        if (type === 'success') {
+                            statusBox.classList.add('success');
+                            icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                        } else if (type === 'error') {
+                            statusBox.classList.add('error');
+                            icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                        } else if (type === 'info') {
+                            statusBox.classList.add('info');
+                            icon.innerHTML = '<i class="fas fa-info-circle"></i>';
+                        } else {
+                            icon.innerHTML = '<i class="fas fa-lightbulb"></i>';
+                        }
+                    }
                 }
-
-                code = code.trim();
-                if (code.length !== 6) {
-                    showStatus('error', 'Please enter a valid 6-digit code.');
-                    return false;
-                }
-
-                if (code === myCode) {
-                    showStatus('error', 'You cannot connect with yourself!');
-                    return false;
-                }
-
-                if (contacts.some(c => c.code === code)) {
-                    showStatus('error', 'Already connected with this user!');
-                    return false;
-                }
-
-                // Search in global users list
-                const foundUser = findUserByCode(code);
-
-                if (!foundUser) {
-                    const activeCodes = getAllActiveCodes();
-                    showStatus('error', 
-                        '❌ Invalid or inactive code.\n\n' +
-                        'Active codes in system: ' + (activeCodes.length > 0 ? activeCodes.join(', ') : 'No active codes yet')
-                    );
-                    return false;
-                }
-
-                if (foundUser.id === currentUser.id) {
-                    showStatus('error', 'This is your own code!');
-                    return false;
-                }
-
-                // Create contact
-                const contact = {
-                    id: foundUser.id,
-                    name: foundUser.name,
-                    phone: foundUser.phone || 'Unknown',
-                    code: foundUser.code,
-                    messages: [],
-                    unread: 0,
-                    lastMessage: 'Connected!'
-                };
-
-                contacts.push(contact);
-                saveData();
-                renderChatList();
-                
-                showStatus('success', '✅ Connected with ' + foundUser.name + '!');
-                
-                // Close modal after delay
-                setTimeout(() => {
-                    connectModal.classList.remove('show');
-                    hideStatus();
-                }, 1500);
-                
-                return true;
             }
 
-            // ---------- STATUS MESSAGE ----------
             function showStatus(type, message) {
                 statusMessage.className = 'status-msg ' + type;
                 statusMessage.textContent = message;
@@ -2083,6 +1964,236 @@
             function hideStatus() {
                 statusMessage.style.display = 'none';
                 statusMessage.className = 'status-msg';
+            }
+
+            // ---------- PEERJS SETUP ----------
+            function initPeer() {
+                return new Promise((resolve, reject) => {
+                    if (peer) {
+                        peer.destroy();
+                        peer = null;
+                    }
+
+                    peer = new Peer({
+                        debug: 0,
+                        config: {
+                            iceServers: [
+                                { urls: 'stun:stun.l.google.com:19302' },
+                                { urls: 'stun:stun1.l.google.com:19302' },
+                                { urls: 'stun:stun2.l.google.com:19302' }
+                            ]
+                        }
+                    });
+
+                    peer.on('open', function(id) {
+                        myPeerId = id;
+                        myPeerDisplay.textContent = id;
+                        footerPeerId.textContent = id;
+                        setStatus('Peer ready! Share your ID to connect.', 'success');
+                        resolve(id);
+                    });
+
+                    peer.on('error', function(err) {
+                        console.error('Peer error:', err);
+                        setStatus('Error: ' + err.message, 'error');
+                        reject(err);
+                    });
+
+                    peer.on('connection', function(conn) {
+                        // Handle incoming connection
+                        const existing = connections.find(c => c.peer === conn.peer);
+                        if (existing) {
+                            conn.close();
+                            return;
+                        }
+                        connections.push(conn);
+                        setupConnection(conn);
+                        setStatus('New device connected!', 'success');
+                        updateConnectionUI();
+                    });
+
+                    peer.on('disconnected', function() {
+                        setStatus('Lost connection to signaling server, reconnecting...', 'warning');
+                        try { peer.reconnect(); } catch (e) { /* ignore */ }
+                        connections = connections.filter(c => c.open);
+                        updateConnectionUI();
+                    });
+
+                    setTimeout(() => {
+                        if (!myPeerId) reject(new Error('PeerJS timeout'));
+                    }, 15000);
+                });
+            }
+
+            function setupConnection(conn) {
+                conn.on('open', function() {
+                    // Send username on connect
+                    try {
+                        conn.send({
+                            type: 'username',
+                            username: currentUser.name,
+                            userId: currentUser.id
+                        });
+                    } catch (e) { /* ignore */ }
+                    setStatus('Connected! Ready to chat.', 'success');
+                    updateConnectionUI();
+                });
+
+                conn.on('data', function(data) {
+                    if (data.type === 'username') {
+                        deviceUsernameMap[conn.peer] = data.username;
+                        // Create contact if not exists
+                        const existingContact = contacts.find(c => c.peerId === conn.peer);
+                        if (!existingContact) {
+                            const newContact = {
+                                id: generateId(),
+                                name: data.username,
+                                peerId: conn.peer,
+                                messages: [],
+                                unread: 0,
+                                lastMessage: 'Connected!'
+                            };
+                            contacts.push(newContact);
+                            saveData();
+                            renderChatList();
+                            setStatus('New contact connected: ' + data.username, 'success');
+                        }
+                        updateConnectionUI();
+                        return;
+                    }
+
+                    if (data.type === 'message') {
+                        // Handle incoming message
+                        const contact = contacts.find(c => c.peerId === conn.peer);
+                        if (contact) {
+                            const msg = {
+                                id: generateId(),
+                                sender: data.sender || conn.peer,
+                                text: data.text,
+                                timestamp: data.timestamp || Date.now(),
+                                read: false
+                            };
+                            if (!contact.messages) contact.messages = [];
+                            contact.messages.push(msg);
+                            contact.lastMessage = data.text;
+                            contact.unread = (contact.unread || 0) + 1;
+                            saveData();
+
+                            // Update UI if this chat is open
+                            if (activeContactId === contact.id) {
+                                renderMessages(contact.id);
+                            }
+                            renderChatList();
+
+                            // Auto-reply for demo
+                            setTimeout(() => {
+                                simulateReply(contact.id);
+                            }, 1500 + Math.random() * 2000);
+
+                            // Send read receipt
+                            try {
+                                conn.send({
+                                    type: 'read_receipt',
+                                    messageId: msg.id
+                                });
+                            } catch (e) { /* ignore */ }
+                        }
+                        return;
+                    }
+
+                    if (data.type === 'read_receipt') {
+                        // Mark messages as read
+                        const contact = contacts.find(c => c.peerId === conn.peer);
+                        if (contact && contact.messages) {
+                            contact.messages.forEach(msg => {
+                                if (msg.sender === currentUser.id && !msg.read) {
+                                    msg.read = true;
+                                }
+                            });
+                            saveData();
+                            if (activeContactId === contact.id) {
+                                renderMessages(contact.id);
+                            }
+                        }
+                        return;
+                    }
+
+                    if (data.type === 'typing') {
+                        // Show typing indicator
+                        const contact = contacts.find(c => c.peerId === conn.peer);
+                        if (contact && activeContactId === contact.id) {
+                            typingIndicator.classList.add('show');
+                            clearTimeout(typingTimeout);
+                            typingTimeout = setTimeout(() => {
+                                typingIndicator.classList.remove('show');
+                            }, 3000);
+                        }
+                        return;
+                    }
+                });
+
+                conn.on('close', function() {
+                    const index = connections.indexOf(conn);
+                    if (index > -1) {
+                        const peerId = conn.peer;
+                        delete deviceUsernameMap[peerId];
+                        connections.splice(index, 1);
+                    }
+                    setStatus('A device disconnected', 'warning');
+                    updateConnectionUI();
+                });
+
+                conn.on('error', function(err) {
+                    console.error('Connection error:', err);
+                    setStatus('Connection error: ' + err.message, 'error');
+                });
+            }
+
+            // ---------- CONNECT TO PEER ----------
+            function connectToPeer(peerId) {
+                if (!peer) {
+                    setStatus('Please initialize peer first.', 'error');
+                    return false;
+                }
+
+                if (peerId === myPeerId) {
+                    showStatus('error', 'You cannot connect to yourself!');
+                    return false;
+                }
+
+                const existing = connections.find(c => c.peer === peerId);
+                if (existing && existing.open) {
+                    showStatus('error', 'Already connected to this peer!');
+                    return false;
+                }
+
+                try {
+                    const conn = peer.connect(peerId, { reliable: true });
+                    if (!conn) {
+                        showStatus('error', 'Could not connect. Is the peer online?');
+                        return false;
+                    }
+                    connections.push(conn);
+                    setupConnection(conn);
+                    setStatus('Connecting to ' + peerId + '...', 'info');
+                    updateConnectionUI();
+                    return true;
+                } catch (err) {
+                    showStatus('error', 'Connection failed: ' + err.message);
+                    return false;
+                }
+            }
+
+            // ---------- UPDATE CONNECTION UI ----------
+            function updateConnectionUI() {
+                const activeConnections = connections.filter(c => c.open);
+                const count = activeConnections.length;
+                // Update any connection status displays
+                if (count > 0) {
+                    setStatus('Connected to ' + count + ' device(s)', 'success');
+                } else {
+                    setStatus('Ready to connect. Share your Peer ID.', 'info');
+                }
             }
 
             // ---------- AUTH FLOW ----------
@@ -2112,22 +2223,13 @@
                     const name = authName.value.trim();
                     const phone = authPhone.value.trim();
 
-                    if (!myCode) {
-                        myCode = generateCode();
-                    }
-
                     const user = {
                         id: generateId(),
                         name: name,
-                        phone: phone,
-                        code: myCode
+                        phone: phone
                     };
 
                     currentUser = user;
-
-                    // Register user in global list with code
-                    registerUserInGlobal(user);
-
                     saveData();
 
                     authScreen.classList.remove('active');
@@ -2137,22 +2239,20 @@
                     myAvatar.style.background = stringToColor(currentUser.name);
                     myNameDisplay.textContent = currentUser.name;
                     footerUser.textContent = currentUser.name;
-                    footerCode.textContent = myCode;
 
-                    if (myCode) {
-                        myCodeDisplay.textContent = myCode;
-                    }
-
-                    renderChatList();
+                    // Initialize PeerJS
+                    initPeer().then(() => {
+                        renderChatList();
+                    }).catch(err => {
+                        console.error('Peer init error:', err);
+                        setStatus('Failed to initialize peer: ' + err.message, 'error');
+                    });
 
                     otpSection.classList.remove('show');
                     sendOtpBtn.disabled = false;
                     sendOtpBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP';
                     otpInput.value = '';
                     currentOtp = null;
-
-                    console.log('✅ User registered with code:', myCode);
-                    console.log('📋 All users:', getUsersList());
 
                 } else {
                     alert('❌ Invalid OTP. Please try again.');
@@ -2166,9 +2266,6 @@
                 const loaded = loadData();
 
                 if (loaded && currentUser) {
-                    // Ensure user is in global list with correct code
-                    registerUserInGlobal(currentUser);
-
                     authScreen.classList.remove('active');
                     mainApp.classList.add('active');
 
@@ -2176,16 +2273,12 @@
                     myAvatar.style.background = stringToColor(currentUser.name);
                     myNameDisplay.textContent = currentUser.name;
                     footerUser.textContent = currentUser.name;
-                    footerCode.textContent = myCode || '------';
 
-                    if (myCode) {
-                        myCodeDisplay.textContent = myCode;
-                    }
-
-                    renderChatList();
-
-                    console.log('✅ Logged in user:', currentUser);
-                    console.log('📋 All users:', getUsersList());
+                    initPeer().then(() => {
+                        renderChatList();
+                    }).catch(err => {
+                        console.error('Peer init error:', err);
+                    });
                 } else {
                     authScreen.classList.add('active');
                     mainApp.classList.remove('active');
@@ -2221,7 +2314,7 @@
                 sendMsgBtn.addEventListener('click', () => {
                     const text = msgInput.value.trim();
                     if (text) {
-                        sendMessage(text, 'text');
+                        sendMessage(text);
                         msgInput.value = '';
                         msgInput.focus();
                     }
@@ -2232,8 +2325,23 @@
                         e.preventDefault();
                         const text = msgInput.value.trim();
                         if (text) {
-                            sendMessage(text, 'text');
+                            sendMessage(text);
                             msgInput.value = '';
+                        }
+                    }
+                });
+
+                msgInput.addEventListener('input', () => {
+                    // Send typing indicator
+                    if (activeContactId) {
+                        const contact = contacts.find(c => c.id === activeContactId);
+                        if (contact) {
+                            const conn = connections.find(c => c.peer === contact.peerId && c.open);
+                            if (conn) {
+                                try {
+                                    conn.send({ type: 'typing' });
+                                } catch (e) { /* ignore */ }
+                            }
                         }
                     }
                 });
@@ -2255,7 +2363,29 @@
                         const reader = new FileReader();
                         reader.onload = function(ev) {
                             const data = ev.target.result;
-                            sendMessage('', 'file', data, file.name, file.type);
+                            // Send file as message with data URL
+                            if (activeContactId) {
+                                const contact = contacts.find(c => c.id === activeContactId);
+                                if (contact) {
+                                    const conn = connections.find(c => c.peer === contact.peerId && c.open);
+                                    if (conn) {
+                                        try {
+                                            conn.send({
+                                                type: 'file',
+                                                fileName: file.name,
+                                                fileType: file.type,
+                                                fileData: data,
+                                                sender: currentUser.id,
+                                                senderName: currentUser.name,
+                                                timestamp: Date.now()
+                                            });
+                                            setStatus('File sent: ' + file.name, 'success');
+                                        } catch (err) {
+                                            setStatus('Failed to send file: ' + err.message, 'error');
+                                        }
+                                    }
+                                }
+                            }
                         };
                         reader.readAsDataURL(file);
                     }
@@ -2264,16 +2394,16 @@
 
                 connectBtn.addEventListener('click', () => {
                     connectModal.classList.add('show');
-                    if (myCode) {
-                        myCodeDisplay.textContent = myCode;
+                    if (myPeerId) {
+                        myPeerDisplay.textContent = myPeerId;
                     }
                     hideStatus();
                 });
 
                 emptyConnectBtn.addEventListener('click', () => {
                     connectModal.classList.add('show');
-                    if (myCode) {
-                        myCodeDisplay.textContent = myCode;
+                    if (myPeerId) {
+                        myPeerDisplay.textContent = myPeerId;
                     }
                     hideStatus();
                 });
@@ -2290,41 +2420,71 @@
                     }
                 });
 
-                generateCodeBtn.addEventListener('click', () => {
-                    const newCode = generateCode();
-                    myCode = newCode;
-                    if (currentUser) {
-                        currentUser.code = newCode;
-                        registerUserInGlobal(currentUser);
-                        saveData();
+                copyPeerBtn.addEventListener('click', () => {
+                    if (!myPeerId) {
+                        showStatus('error', 'No Peer ID available. Please wait.');
+                        return;
                     }
-                    myCodeDisplay.textContent = newCode;
-                    footerCode.textContent = newCode;
-                    hideStatus();
-                    showStatus('success', '🔑 New connect code generated: ' + newCode);
-                    setTimeout(hideStatus, 3000);
-                    console.log('📋 Updated users list:', getUsersList());
+                    const text = myPeerId;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            showStatus('success', '✅ Peer ID copied!');
+                            setTimeout(hideStatus, 2000);
+                        }).catch(() => {
+                            fallbackCopy(text);
+                        });
+                    } else {
+                        fallbackCopy(text);
+                    }
                 });
 
-                joinCodeBtn.addEventListener('click', () => {
-                    const code = connectCodeInput.value.trim();
-                    connectWithCode(code);
-                    connectCodeInput.value = '';
+                function fallbackCopy(text) {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showStatus('success', '✅ Peer ID copied!');
+                    setTimeout(hideStatus, 2000);
+                }
+
+                joinPeerBtn.addEventListener('click', () => {
+                    const peerId = connectPeerInput.value.trim();
+                    if (!peerId) {
+                        showStatus('error', 'Please enter a Peer ID');
+                        return;
+                    }
+                    const success = connectToPeer(peerId);
+                    if (success) {
+                        connectPeerInput.value = '';
+                        connectModal.classList.remove('show');
+                        hideStatus();
+                    }
                 });
 
-                connectCodeInput.addEventListener('keypress', (e) => {
+                connectPeerInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
-                        joinCodeBtn.click();
+                        joinPeerBtn.click();
                     }
                 });
 
                 logoutBtn.addEventListener('click', () => {
                     if (confirm('Are you sure you want to logout?')) {
+                        // Close all connections
+                        connections.forEach(conn => {
+                            try { conn.close(); } catch (e) {}
+                        });
+                        connections = [];
+                        if (peer) {
+                            try { peer.destroy(); } catch (e) {}
+                            peer = null;
+                        }
                         localStorage.removeItem(STORAGE_KEY);
                         currentUser = null;
                         contacts = [];
                         activeContactId = null;
-                        myCode = null;
+                        myPeerId = null;
                         chatWindow.classList.remove('active');
                         authScreen.classList.add('active');
                         mainApp.classList.remove('active');
@@ -2339,16 +2499,6 @@
                         location.reload();
                     }
                 });
-
-                // Auto-connect via URL param
-                const urlParams = new URLSearchParams(window.location.search);
-                const inviteCode = urlParams.get('code');
-                if (inviteCode && inviteCode.length === 6 && currentUser) {
-                    setTimeout(() => {
-                        connectWithCode(inviteCode);
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }, 800);
-                }
             }
 
             document.addEventListener('DOMContentLoaded', init);
