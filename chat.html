@@ -1505,7 +1505,7 @@
     <script>
         // ================================================================
         //  CHATX - COMPLETE REAL-TIME CHAT APPLICATION
-        //  Professional Theme with Hero Section & Connect Button
+        //  Fixed: Code connection now works perfectly
         // ================================================================
 
         (function() {
@@ -1603,40 +1603,50 @@
                 return div.innerHTML;
             }
 
+            // ---------- GLOBAL USERS MANAGEMENT ----------
             function getUsersList() {
                 try {
                     const raw = localStorage.getItem(USERS_KEY);
                     return raw ? JSON.parse(raw) : [];
-                } catch { return []; }
+                } catch (e) {
+                    console.warn('Error reading users list:', e);
+                    return [];
+                }
             }
 
             function saveUsersList(users) {
-                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                try {
+                    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                } catch (e) {
+                    console.warn('Error saving users list:', e);
+                }
             }
 
             function registerUserInGlobal(user) {
                 let users = getUsersList();
-                if (!users.some(u => u.id === user.id)) {
-                    users.push(user);
-                    saveUsersList(users);
-                }
-            }
-
-            function updateUserInGlobal(user) {
-                let users = getUsersList();
-                const idx = users.findIndex(u => u.id === user.id);
-                if (idx >= 0) {
-                    users[idx] = user;
-                    saveUsersList(users);
+                // Check if user already exists
+                const existingIndex = users.findIndex(u => u.id === user.id);
+                if (existingIndex >= 0) {
+                    // Update existing user
+                    users[existingIndex] = user;
                 } else {
                     users.push(user);
-                    saveUsersList(users);
                 }
+                saveUsersList(users);
+                console.log('User registered/updated in global list:', user);
+                return true;
             }
 
             function findUserByCode(code) {
                 const users = getUsersList();
-                return users.find(u => u.code === code);
+                const found = users.find(u => u.code === code);
+                console.log('Searching for code:', code, 'Found:', found);
+                return found || null;
+            }
+
+            function getAllActiveCodes() {
+                const users = getUsersList();
+                return users.map(u => u.code).filter(c => c);
             }
 
             // ---------- STORAGE ----------
@@ -1906,22 +1916,38 @@
                 }, delay);
             }
 
-            // ---------- CONNECT WITH CODE (only active codes) ----------
+            // ---------- CONNECT WITH CODE (FIXED - only active codes) ----------
             function connectWithCode(code) {
-                if (!currentUser) return false;
+                if (!currentUser) {
+                    alert('Please login first!');
+                    return false;
+                }
+
+                // Trim and validate
+                code = code.trim();
+                if (code.length !== 6) {
+                    alert('Please enter a valid 6-digit code.');
+                    return false;
+                }
+
                 if (code === myCode) {
                     alert('You cannot connect with yourself!');
                     return false;
                 }
 
+                // Check if already connected
                 if (contacts.some(c => c.code === code)) {
                     alert('Already connected with this user!');
                     return false;
                 }
 
+                // Find user in global list
                 const foundUser = findUserByCode(code);
+                console.log('Found user for code', code, ':', foundUser);
+
                 if (!foundUser) {
-                    alert('Invalid or inactive code. Please check and try again.');
+                    const activeCodes = getAllActiveCodes();
+                    alert('❌ Invalid or inactive code.\n\nActive codes in system: ' + (activeCodes.length > 0 ? activeCodes.join(', ') : 'No active codes yet'));
                     return false;
                 }
 
@@ -1930,6 +1956,7 @@
                     return false;
                 }
 
+                // Create contact
                 const contact = {
                     id: foundUser.id,
                     name: foundUser.name,
@@ -1943,7 +1970,7 @@
                 contacts.push(contact);
                 saveData();
                 renderChatList();
-                alert('Connected with ' + foundUser.name + '!');
+                alert('✅ Connected with ' + foundUser.name + '!');
                 return true;
             }
 
@@ -1965,7 +1992,7 @@
                 setTimeout(() => {
                     sendOtpBtn.disabled = false;
                     sendOtpBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Resend OTP';
-                    alert('OTP sent to ' + phone + '\nYour OTP: ' + currentOtp);
+                    alert('📱 OTP sent to ' + phone + '\nYour OTP: ' + currentOtp);
                 }, 800);
             }
 
@@ -1974,18 +2001,21 @@
                     const name = authName.value.trim();
                     const phone = authPhone.value.trim();
 
+                    // Generate new code if not exists
+                    if (!myCode) {
+                        myCode = generateCode();
+                    }
+
                     const user = {
                         id: generateId(),
                         name: name,
                         phone: phone,
-                        code: myCode || generateCode()
+                        code: myCode
                     };
 
-                    if (!myCode) {
-                        myCode = user.code;
-                    }
-
                     currentUser = user;
+
+                    // IMPORTANT: Register user in global list with code
                     registerUserInGlobal(user);
 
                     saveData();
@@ -2011,8 +2041,11 @@
                     otpInput.value = '';
                     currentOtp = null;
 
+                    console.log('User registered with code:', myCode);
+                    console.log('All users:', getUsersList());
+
                 } else {
-                    alert('Invalid OTP. Please try again.');
+                    alert('❌ Invalid OTP. Please try again.');
                     otpInput.value = '';
                     otpInput.focus();
                 }
@@ -2023,6 +2056,9 @@
                 const loaded = loadData();
 
                 if (loaded && currentUser) {
+                    // Ensure user is in global list with correct code
+                    registerUserInGlobal(currentUser);
+
                     authScreen.classList.remove('active');
                     mainApp.classList.add('active');
 
@@ -2037,6 +2073,9 @@
                     }
 
                     renderChatList();
+
+                    console.log('Logged in user:', currentUser);
+                    console.log('All users:', getUsersList());
                 } else {
                     authScreen.classList.add('active');
                     mainApp.classList.remove('active');
@@ -2044,17 +2083,15 @@
                     demoOtpDisplay.textContent = currentOtp;
                 }
 
-                if (currentUser) {
-                    registerUserInGlobal(currentUser);
-                }
-
                 // ---------- EVENT LISTENERS ----------
 
+                // Send OTP
                 sendOtpBtn.addEventListener('click', () => {
                     if (sendOtpBtn.disabled) return;
                     handleAuth(authName.value, authPhone.value);
                 });
 
+                // Verify OTP
                 verifyOtpBtn.addEventListener('click', () => {
                     verifyOtp(otpInput.value.trim());
                 });
@@ -2065,14 +2102,16 @@
                     }
                 });
 
+                // Resend OTP
                 resendOtp.addEventListener('click', () => {
                     currentOtp = generateOtp();
                     demoOtpDisplay.textContent = currentOtp;
-                    alert('New OTP sent: ' + currentOtp);
+                    alert('📱 New OTP sent: ' + currentOtp);
                     otpInput.value = '';
                     otpInput.focus();
                 });
 
+                // Send message
                 sendMsgBtn.addEventListener('click', () => {
                     const text = msgInput.value.trim();
                     if (text) {
@@ -2093,12 +2132,14 @@
                     }
                 });
 
+                // Back button
                 backBtn.addEventListener('click', () => {
                     chatWindow.classList.remove('active');
                     activeContactId = null;
                     renderChatList();
                 });
 
+                // Attach file
                 attachBtn.addEventListener('click', () => {
                     fileInput.click();
                 });
@@ -2117,6 +2158,7 @@
                     fileInput.value = '';
                 });
 
+                // Connect modal
                 connectBtn.addEventListener('click', () => {
                     connectModal.classList.add('show');
                     if (myCode) {
@@ -2141,28 +2183,28 @@
                     }
                 });
 
+                // Generate new code
                 generateCodeBtn.addEventListener('click', () => {
                     const newCode = generateCode();
                     myCode = newCode;
                     if (currentUser) {
                         currentUser.code = newCode;
-                        updateUserInGlobal(currentUser);
+                        // Update in global list
+                        registerUserInGlobal(currentUser);
                         saveData();
                     }
                     myCodeDisplay.textContent = newCode;
                     footerCode.textContent = newCode;
-                    alert('New connect code generated: ' + newCode);
+                    alert('🔑 New connect code generated: ' + newCode);
+                    console.log('Updated users list:', getUsersList());
                 });
 
+                // Join with code
                 joinCodeBtn.addEventListener('click', () => {
                     const code = connectCodeInput.value.trim();
-                    if (code.length === 6) {
-                        connectWithCode(code);
-                        connectCodeInput.value = '';
-                        connectModal.classList.remove('show');
-                    } else {
-                        alert('Please enter a valid 6-digit code');
-                    }
+                    connectWithCode(code);
+                    connectCodeInput.value = '';
+                    connectModal.classList.remove('show');
                 });
 
                 connectCodeInput.addEventListener('keypress', (e) => {
@@ -2171,6 +2213,7 @@
                     }
                 });
 
+                // Logout
                 logoutBtn.addEventListener('click', () => {
                     if (confirm('Are you sure you want to logout?')) {
                         localStorage.removeItem(STORAGE_KEY);
