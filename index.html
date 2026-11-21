@@ -58,11 +58,13 @@ img,svg,canvas{display:block;max-width:100%}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 [hidden]{display:none!important}
 
-/* ===== HEADER (Logo LEFT, actions RIGHT) ===== */
+/* ===== HEADER ===== */
 .header{position:sticky;top:0;z-index:900;height:var(--header-h);background:color-mix(in srgb,var(--bg-2) 88%,transparent);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line);transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
 .header-inner{max-width:1320px;margin:0 auto;height:100%;padding:0 clamp(16px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.brand-logo{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:17px;box-shadow:var(--shadow-brand);flex-shrink:0}
+/* Logo: image if provided, icon fallback */
+.brand-logo{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:17px;box-shadow:var(--shadow-brand);flex-shrink:0;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:cover;display:block}
 .brand-name{font-weight:800;font-size:1.22rem;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
 .brand-name b{color:var(--brand)}
 .header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -74,18 +76,13 @@ img,svg,canvas{display:block;max-width:100%}
 .icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--bg-3);color:var(--ink-2);font-size:1rem;border:1px solid var(--line);transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease)}
 .icon-btn:hover{background:var(--brand-tint);color:var(--brand-deep);border-color:var(--brand-soft);transform:translateY(-1px)}
 .icon-btn[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
-@media (max-width:640px){
-  .header-status .hs-lat{display:none}
-  .header-status{padding:6px 10px;font-size:.7rem}
-  .brand-name{font-size:1.1rem}
-  .brand-logo{width:36px;height:36px;font-size:15px}
-}
+@media (max-width:640px){.header-status .hs-lat{display:none}.header-status{padding:6px 10px;font-size:.7rem}.brand-name{font-size:1.1rem}.brand-logo{width:36px;height:36px;font-size:15px}}
 @media (max-width:400px){.header-status{display:none}}
 
 /* ===== LAYOUT ===== */
 .wrap{max-width:1320px;margin:0 auto;padding:0 clamp(16px,3vw,32px);width:100%}
-.section{padding:clamp(32px,5vw,56px) 0}
-.section-head{text-align:center;max-width:660px;margin:0 auto clamp(24px,4vw,40px)}
+.section{padding:clamp(24px,4vw,44px) 0}
+.section-head{text-align:center;max-width:660px;margin:0 auto clamp(20px,3vw,32px)}
 .eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--brand-tint);color:var(--brand-deep);padding:6px 14px;border-radius:999px;font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--brand-glow);margin-bottom:14px}
 h1{font-size:clamp(2.1rem,5vw,3.5rem);line-height:1.1;letter-spacing:-.035em;font-weight:800;margin-bottom:18px}
 h1 .grad{background:linear-gradient(120deg,var(--brand),var(--brand-deep));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -104,20 +101,19 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .anim-fade{animation:fadeUp .5s var(--ease-out) both}
 .anim-fade-1{animation:fadeUp .5s .06s var(--ease-out) both}
 .anim-fade-2{animation:fadeUp .5s .12s var(--ease-out) both}
-.anim-fade-3{animation:fadeUp .5s .18s var(--ease-out) both}
 
 /* ===== HERO ===== */
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,5vw,60px);align-items:center;padding:clamp(32px,5vw,64px) 0 clamp(24px,4vw,48px)}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,5vw,60px);align-items:center;padding:clamp(28px,4vw,52px) 0 clamp(20px,3vw,40px)}
 .hero-copy{max-width:560px}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.hero-visual{position:relative;aspect-ratio:1/1;max-width:380px;margin:0 auto;width:100%;display:grid;place-items:center}
+.hero-visual{position:relative;aspect-ratio:1/1;max-width:340px;margin:0 auto;width:100%;display:grid;place-items:center}
 .hero-orbit{position:absolute;inset:0;border:1.5px dashed var(--line-strong);border-radius:50%;opacity:.35;animation:spin 50s linear infinite}
 .hero-orbit:nth-child(2){inset:14%;border-color:var(--brand-soft);animation-duration:35s;animation-direction:reverse;opacity:.5}
-.hero-card{position:relative;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px 28px;text-align:center;box-shadow:var(--shadow-lg);animation:growIn .6s var(--ease-out) both}
-.hero-bolt{width:68px;height:68px;margin:0 auto 16px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:27px;box-shadow:var(--shadow-brand)}
-.hero-card h3{font-size:1.1rem;font-weight:800;margin-bottom:4px}
-.hero-card p{font-size:.85rem;color:var(--ink-3)}
-@media (max-width:880px){.hero{grid-template-columns:1fr;text-align:center}.hero-copy{max-width:none;margin:0 auto}.hero-cta{justify-content:center}.hero-visual{max-width:280px}}
+.hero-card{position:relative;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px 24px;text-align:center;box-shadow:var(--shadow-lg);animation:growIn .6s var(--ease-out) both}
+.hero-bolt{width:64px;height:64px;margin:0 auto 14px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:26px;box-shadow:var(--shadow-brand)}
+.hero-card h3{font-size:1.05rem;font-weight:800;margin-bottom:4px}
+.hero-card p{font-size:.82rem;color:var(--ink-3)}
+@media (max-width:880px){.hero{grid-template-columns:1fr;text-align:center}.hero-copy{max-width:none;margin:0 auto}.hero-cta{justify-content:center}.hero-visual{max-width:260px}}
 
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:11px;font-weight:700;font-size:.9rem;border:1.5px solid transparent;white-space:nowrap;text-align:center;transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background-color var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
@@ -129,18 +125,15 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .btn-soft{background:var(--brand-tint);color:var(--brand-deep);border-color:var(--brand-glow)}
 .btn-soft:hover{background:var(--brand-glow)}
 .btn-success{background:var(--ok);color:#fff}
-.btn-success:hover{filter:brightness(1.05)}
 .btn-danger{background:var(--err);color:#fff}
-.btn-danger:hover{filter:brightness(1.05)}
 .btn-warn{background:var(--warn);color:#fff}
-.btn-warn:hover{filter:brightness(1.05)}
 .btn-sm{padding:7px 14px;font-size:.8rem;border-radius:9px}
 .btn-xs{padding:5px 10px;font-size:.72rem;border-radius:7px}
 .btn-block{width:100%}
 .btn:disabled{opacity:.42;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 
 /* ===== CARDS ===== */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(18px,2.5vw,26px);box-shadow:var(--shadow-xs);transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(16px,2.2vw,22px);box-shadow:var(--shadow-xs);transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
 .card:hover{border-color:var(--brand-soft);box-shadow:var(--shadow-sm)}
 .card-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .card-icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:16px;flex-shrink:0}
@@ -156,15 +149,34 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .input-row .field{flex:1;min-width:140px}
 
 /* ===== STEPS ===== */
-.steps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
-.step{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:var(--bg-2);border:1px solid var(--line);font-size:.82rem;font-weight:600;color:var(--ink-3);transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease)}
-.step .n{width:22px;height:22px;border-radius:50%;background:var(--bg-3);display:grid;place-items:center;font-size:.7rem;font-weight:800;color:var(--ink-3);transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease)}
+.steps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.step{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--bg-2);border:1px solid var(--line);font-size:.8rem;font-weight:600;color:var(--ink-3);transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease)}
+.step .n{width:20px;height:20px;border-radius:50%;background:var(--bg-3);display:grid;place-items:center;font-size:.68rem;font-weight:800;color:var(--ink-3);transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease)}
 .step.active{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-deep)}
 .step.active .n{background:var(--brand);color:#fff}
 .step.done .n{background:var(--ok);color:#fff}
 
+/* ===== ROOM HEADER (at top when connected) ===== */
+.room-header{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);animation:fadeUp .4s var(--ease-out)}
+.room-header[hidden]{display:none}
+.rh-top{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg-3);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.rh-title{font-weight:800;font-size:.9rem;color:var(--ink);display:flex;align-items:center;gap:8px}
+.rh-tag{font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--brand);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.rh-tag.guest{background:var(--info)}
+.rh-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.rh-body{padding:16px 18px;display:grid;gap:14px;grid-template-columns:auto 1fr;align-items:center}
+@media (max-width:640px){.rh-body{grid-template-columns:1fr;text-align:center}}
+.rh-qr{width:140px;height:140px;border-radius:12px;background:#fff;padding:8px;box-shadow:var(--shadow-sm);flex-shrink:0;margin:0 auto}
+.rh-qr canvas{width:100%;height:100%;border-radius:6px;display:block}
+.rh-info{display:grid;gap:6px;min-width:0}
+.rh-code{font-family:var(--mono);font-size:1.6rem;font-weight:800;letter-spacing:.32em;color:var(--brand-deep);word-break:break-all}
+.rh-name{font-size:.86rem;color:var(--ink-2);font-weight:600}
+.rh-name span{color:var(--ink-4);font-weight:500}
+.rh-meta{font-size:.78rem;color:var(--ink-4);display:flex;gap:12px;flex-wrap:wrap}
+.rh-copy{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
 /* ===== STATUS BAR ===== */
-.status-bar{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--line);font-size:.88rem;margin-top:16px;min-height:52px;color:var(--ink-2);transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease)}
+.status-bar{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--line);font-size:.85rem;margin-top:14px;min-height:48px;color:var(--ink-2);transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease)}
 .status-bar .si{font-size:1rem;flex-shrink:0;margin-top:1px}
 .status-bar.success{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 6%,var(--card))}
 .status-bar.success .si{color:var(--ok)}
@@ -175,104 +187,77 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .status-bar.warning{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 6%,var(--card))}
 .status-bar.warning .si{color:var(--warn)}
 
+/* ===== SEND/RECEIVE GRID ===== */
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:760px){.io-grid{grid-template-columns:1fr}}
+.io-box{display:flex;flex-direction:column;min-height:0}
+.io-box .card-head{flex-shrink:0}
+.io-files{display:grid;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;margin-top:4px}
+.io-files::-webkit-scrollbar{width:5px}
+.io-files::-webkit-scrollbar-thumb{background:var(--brand-soft);border-radius:99px}
+.io-empty{text-align:center;color:var(--ink-4);font-size:.82rem;padding:20px 8px}
+.io-empty i{font-size:26px;display:block;margin-bottom:6px;opacity:.5}
+
+/* ===== FILE ITEM ===== */
+.file-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-3);border-radius:9px;border:1px solid var(--line);flex-wrap:wrap;transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease)}
+.file-item:hover{border-color:var(--brand-soft);background:var(--brand-tint)}
+.file-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:14px;flex-shrink:0}
+.file-meta{flex:1;min-width:100px}
+.file-name{font-weight:700;font-size:.82rem;word-break:break-all;line-height:1.3}
+.file-sub{font-size:.68rem;color:var(--ink-4);margin-top:2px}
+.file-title{font-size:.7rem;color:var(--brand-deep);font-style:italic;margin-top:1px}
+.dl-btn{padding:6px 12px;border-radius:8px;background:var(--brand);color:#fff;font-size:.74rem;font-weight:700;display:inline-flex;align-items:center;gap:5px;transition:background-color var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.dl-btn:hover{background:var(--brand-deep);transform:translateY(-1px)}
+
+/* ===== TRANSFER MINI (inside io-box) ===== */
+.tp-mini{background:var(--bg-3);border-radius:9px;padding:10px 12px;margin-top:10px;border:1px solid var(--line)}
+.tp-mini[hidden]{display:none}
+.tp-mini-row{display:flex;justify-content:space-between;gap:8px;font-size:.76rem;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.tp-mini-row .pct{color:var(--brand-deep);font-variant-numeric:tabular-nums}
+.track{height:7px;border-radius:99px;background:var(--card);overflow:hidden;position:relative}
+.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--brand),var(--brand-deep));width:0%;transition:width .15s linear;position:relative;overflow:hidden}
+.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translate3d(-100%,0,0);animation:shimmer 1.5s infinite}
+
 /* ===== CONNECTIONS ===== */
 .conn-panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs)}
 .panel-head{display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--bg-3);border-bottom:1px solid var(--line);font-weight:700;font-size:.88rem;color:var(--ink-2);flex-wrap:wrap}
 .panel-head .tag{margin-left:auto;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--brand-tint);color:var(--brand-deep);border:1px solid var(--brand-glow)}
 .panel-body{padding:14px 20px;display:grid;gap:8px}
-.conn-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:var(--bg-3);border-left:3px solid var(--line-strong);flex-wrap:wrap;transition:background-color var(--dur) var(--ease)}
+.conn-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:var(--bg-3);border-left:3px solid var(--line-strong);flex-wrap:wrap;transition:background-color var(--dur) var(--ease)}
 .conn-row.host{border-left-color:var(--brand);background:color-mix(in srgb,var(--brand) 5%,var(--bg-3))}
 .conn-row.guest{border-left-color:var(--info)}
 .conn-row.self{border-left-color:var(--ink-4);background:var(--bg-2);border-style:dashed}
 .conn-dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex-shrink:0;animation:pulse 2.2s ease-in-out infinite}
 .conn-row.self .conn-dot{background:var(--brand);animation:none}
-.conn-name{font-weight:700;font-size:.88rem}
+.conn-name{font-weight:700;font-size:.86rem}
 .conn-role{font-size:.72rem;color:var(--ink-4)}
-.conn-row .badge{margin-left:auto}
-.badge{font-size:.66rem;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.badge{font-size:.64rem;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
 .badge.ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
 .badge.no{background:color-mix(in srgb,var(--err) 14%,transparent);color:var(--err)}
-.badge.neutral{background:color-mix(in srgb,var(--info) 14%,transparent);color:var(--info)}
 .badge.host-tag{background:var(--brand);color:#fff}
 .badge.guest-tag{background:var(--info);color:#fff}
 .badge.self-tag{background:var(--ink-4);color:#fff}
 
-/* Connection actions (host only) */
 .conn-actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
-.conn-actions .btn-xs{padding:5px 9px}
-
-/* Permission toggles in guest row */
 .perm-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;width:100%}
-.perm-toggle{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;background:var(--bg-2);border:1px solid var(--line);font-size:.7rem;font-weight:700;color:var(--ink-3);transition:all var(--dur) var(--ease)}
+.perm-toggle{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:7px;background:var(--bg-2);border:1px solid var(--line);font-size:.68rem;font-weight:700;color:var(--ink-3);transition:all var(--dur) var(--ease)}
 .perm-toggle.on{background:var(--ok);color:#fff;border-color:var(--ok)}
 .perm-toggle.off{background:var(--bg-2);color:var(--ink-4);border-color:var(--line)}
 .perm-toggle:hover{transform:translateY(-1px)}
+.guest-summary{text-align:center;padding:12px;font-size:.82rem;color:var(--ink-3)}
+.guest-summary strong{color:var(--ink);font-size:1rem;font-weight:800}
 
-/* Guest summary */
-.guest-summary{text-align:center;padding:16px;font-size:.88rem;color:var(--ink-3)}
-.guest-summary strong{color:var(--ink);font-size:1.05rem;font-weight:800}
-
-/* ===== HOST PANEL ===== */
-.host-panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs)}
-.host-panel[hidden]{display:none}
-.host-body{padding:16px 20px}
-.control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-@media (max-width:520px){.control-grid{grid-template-columns:1fr 1fr}}
-
-/* ===== TRANSFER PANEL ===== */
-.transfer-panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs);animation:fadeIn .3s var(--ease-out)}
-.transfer-panel[hidden]{display:none}
-.tp-head{display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--bg-3);border-bottom:1px solid var(--line);font-weight:700;font-size:.88rem;color:var(--ink-2)}
-.tp-dot{width:9px;height:9px;border-radius:50%;background:var(--ok);animation:pulse 1.6s ease-in-out infinite}
-.tp-dot.idle{background:var(--ink-4);animation:none}
-.tp-body{padding:16px 20px;display:grid;gap:14px}
-.tp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px}
-.stat{background:var(--bg-3);border-radius:10px;padding:10px 14px;border:1px solid var(--line)}
-.stat-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-4);margin-bottom:2px}
-.stat-val{font-size:1.02rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
-.tp-file-name{display:flex;justify-content:space-between;gap:10px;font-size:.82rem;font-weight:600;margin-bottom:8px;color:var(--ink-2)}
-.tp-file-name .pct{color:var(--brand-deep);font-variant-numeric:tabular-nums}
-.track{height:8px;border-radius:99px;background:var(--bg-3);overflow:hidden;position:relative}
-.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--brand),var(--brand-deep));width:0%;transition:width .15s linear;position:relative;overflow:hidden}
-.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translate3d(-100%,0,0);animation:shimmer 1.5s infinite}
-.queue{display:grid;gap:8px;max-height:200px;overflow-y:auto;padding-right:4px}
-.queue::-webkit-scrollbar{width:5px}
-.queue::-webkit-scrollbar-thumb{background:var(--brand-soft);border-radius:99px}
-.q-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-3);border-radius:9px;font-size:.8rem;border-left:3px solid var(--ink-4);transition:border-color var(--dur) var(--ease)}
-.q-item.sending{border-left-color:var(--brand)}
-.q-item.receiving{border-left-color:var(--info)}
-.q-item.done{border-left-color:var(--ok)}
-.q-item.failed{border-left-color:var(--err)}
-.q-item .qi{color:var(--ink-3);flex-shrink:0}
-.q-item .qn{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.q-item .qs{font-size:.7rem;color:var(--ink-4);font-weight:700;font-variant-numeric:tabular-nums}
-.tp-empty{text-align:center;color:var(--ink-4);font-size:.82rem;padding:8px 0}
-
-/* ===== FILE LISTS ===== */
-.file-list{display:grid;gap:8px}
-.file-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-3);border-radius:10px;border:1px solid var(--line);flex-wrap:wrap;transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease)}
-.file-item:hover{border-color:var(--brand-soft);background:var(--brand-tint)}
-.file-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:16px;flex-shrink:0}
-.file-meta{flex:1;min-width:120px}
-.file-name{font-weight:700;font-size:.86rem;word-break:break-all}
-.file-sub{font-size:.72rem;color:var(--ink-4);margin-top:2px}
-.file-title{font-size:.72rem;color:var(--brand-deep);font-style:italic;margin-top:1px}
-.dl-btn{padding:7px 14px;border-radius:9px;background:var(--brand);color:#fff;font-size:.78rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:background-color var(--dur) var(--ease),transform var(--dur) var(--ease)}
-.dl-btn:hover{background:var(--brand-deep);transform:translateY(-1px)}
-.empty-state{text-align:center;padding:26px 12px;color:var(--ink-4);font-size:.85rem}
-.empty-state i{font-size:30px;display:block;margin-bottom:8px;opacity:.5}
-
-/* Sent files with filter */
+/* ===== SENT FILES ===== */
 .sent-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.sent-tab{padding:6px 12px;border-radius:8px;background:var(--bg-3);border:1px solid var(--line);font-size:.75rem;font-weight:700;color:var(--ink-3);transition:all var(--dur) var(--ease)}
+.sent-tab{padding:6px 12px;border-radius:8px;background:var(--bg-3);border:1px solid var(--line);font-size:.74rem;font-weight:700;color:var(--ink-3);transition:all var(--dur) var(--ease)}
 .sent-tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
-.sent-item{padding:10px 12px;border-radius:9px;background:var(--bg-3);border-left:3px solid var(--ink-4);margin-bottom:6px;font-size:.8rem}
+.sent-item{padding:10px 12px;border-radius:9px;background:var(--bg-3);border-left:3px solid var(--ink-4);margin-bottom:6px;font-size:.78rem}
 .sent-item.sent{border-left-color:var(--ok)}
 .sent-item.pending{border-left-color:var(--warn)}
 .sent-item.failed{border-left-color:var(--err)}
 .sent-item .si-name{font-weight:700;word-break:break-all}
-.sent-item .si-meta{font-size:.7rem;color:var(--ink-4);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.sent-item .si-status{font-size:.68rem;font-weight:800;text-transform:uppercase;padding:2px 8px;border-radius:99px}
+.sent-item .si-meta{font-size:.68rem;color:var(--ink-4);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sent-item .si-status{font-size:.66rem;font-weight:800;text-transform:uppercase;padding:2px 8px;border-radius:99px}
 .sent-item.sent .si-status{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
 .sent-item.pending .si-status{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
 .sent-item.failed .si-status{background:color-mix(in srgb,var(--err) 15%,transparent);color:var(--err)}
@@ -313,13 +298,12 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .loader-txt{font-size:.86rem;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:6px}
 .loader-txt i{color:var(--brand)}
 
-/* ===== QR ===== */
-.qr-wrap{display:grid;place-items:center;margin-top:14px;padding:18px;background:var(--bg-2);border:2px dashed var(--brand-soft);border-radius:var(--radius);gap:12px;animation:fadeIn .3s var(--ease-out)}
-.qr-canvas{width:220px;height:220px;max-width:100%;height:auto;border-radius:10px;background:#fff;padding:8px;box-shadow:var(--shadow-sm)}
+/* ===== QR / SCANNER ===== */
+.qr-wrap{display:grid;place-items:center;margin-top:14px;padding:18px;background:var(--bg-2);border:2px dashed var(--brand-soft);border-radius:var(--radius);gap:12px}
+.qr-canvas{width:200px;height:200px;max-width:100%;height:auto;border-radius:10px;background:#fff;padding:8px;box-shadow:var(--shadow-sm)}
 .qr-hint{font-size:.75rem;color:var(--ink-4);text-align:center;line-height:1.5}
 .qr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 
-/* ===== SCANNER ===== */
 .scan-area{position:relative;width:100%;aspect-ratio:1/1;max-width:420px;margin:0 auto;background:#000;border-radius:16px;overflow:hidden;border:3px solid var(--brand)}
 .scan-area video{width:100%;height:100%;object-fit:cover;display:block}
 .scan-overlay{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center}
@@ -337,7 +321,7 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .offline-banner[hidden]{display:none}
 
 /* ===== FOOTER ===== */
-.footer{border-top:1px solid var(--line);padding:24px 0;background:var(--bg-2);margin-top:40px}
+.footer{border-top:1px solid var(--line);padding:24px 0;background:var(--bg-2);margin-top:32px}
 .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--ink-3)}
 .footer-inner a{color:var(--brand-deep);font-weight:700}
 .footer-inner a:hover{text-decoration:underline}
@@ -355,9 +339,6 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 [data-theme="dark"][data-contrast="high"]{--line:#FFF;--line-strong:#FFF;--ink:#FFF;--ink-2:#FFF;--ink-3:#E0E0E0;--brand:#FFB968;--brand-deep:#FFD29A;--brand-tint:#3A2A10}
 [data-textsize="large"]{font-size:18px}
 [data-textsize="xlarge"]{font-size:21px}
-
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-.mt-16{margin-top:16px}
 </style>
 </head>
 <body>
@@ -368,7 +349,7 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 <header class="header" role="banner">
   <div class="header-inner">
     <a href="#" class="brand" aria-label="SHAREx home">
-      <span class="brand-logo" aria-hidden="true"><i class="fas fa-bolt"></i></span>
+      <span class="brand-logo" id="brandLogo" aria-hidden="true"><i class="fas fa-bolt"></i></span>
       <span class="brand-name">SHARE<b>x</b></span>
     </a>
     <div class="header-right">
@@ -444,7 +425,6 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
   </div>
 </div>
 
-<!-- LOADER -->
 <div class="loader" id="loader" hidden>
   <div class="loader-box">
     <div class="loader-ring"><div class="r"></div><div class="r"></div><div class="r"></div></div>
@@ -490,40 +470,40 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     <div class="step" id="step3"><span class="n">3</span> Share</div>
   </div>
 
-  <div class="grid-2">
-    <!-- HOST -->
-    <div class="card anim-fade">
-      <div class="card-head">
-        <div class="card-icon"><i class="fas fa-qrcode"></i></div>
-        <div><h3>Create Room</h3><p>Generate a code + QR</p></div>
-      </div>
-      <button class="btn btn-primary btn-block" id="hostBtn"><i class="fas fa-plus-circle"></i> Create Room</button>
-      <div id="hostBox" hidden class="mt-16">
-        <label style="font-size:.78rem;font-weight:700;color:var(--ink-3)">Your Code</label>
-        <input class="field code-input" id="codeOut" readonly value="" style="margin-top:6px" aria-label="Your room code" />
-        <div class="qr-wrap">
-          <div id="qrCanvasHost" aria-label="QR code for joining"></div>
-          <p class="qr-hint">Scan with any camera to join instantly</p>
+  <!-- SETUP: Create/Join. Hidden once in a room -->
+  <div id="setupSection">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+      <div class="card anim-fade" id="hostCard">
+        <div class="card-head">
+          <div class="card-icon"><i class="fas fa-qrcode"></i></div>
+          <div><h3>Create Room</h3><p>Generate a code + QR</p></div>
         </div>
-        <div class="qr-actions" style="margin-top:12px">
-          <button class="btn btn-soft btn-sm" id="copyCodeBtn"><i class="fas fa-copy"></i> Copy Code</button>
-          <button class="btn btn-soft btn-sm" id="copyLinkBtn"><i class="fas fa-link"></i> Copy Link</button>
-          <button class="btn btn-ghost btn-sm" id="resetHostBtn"><i class="fas fa-sync"></i> New Code</button>
+        <button class="btn btn-primary btn-block" id="hostBtn"><i class="fas fa-plus-circle"></i> Create Room</button>
+      </div>
+      <div class="card anim-fade-1" id="joinCard">
+        <div class="card-head">
+          <div class="card-icon"><i class="fas fa-plug"></i></div>
+          <div><h3>Join Room</h3><p>Enter code or scan QR</p></div>
+        </div>
+        <label for="joinCode" class="sr-only">6-digit code</label>
+        <input class="field code-input" id="joinCode" placeholder="000000" inputmode="numeric" maxlength="6" autocomplete="off" />
+        <div class="input-row" style="margin-top:10px">
+          <button class="btn btn-primary" id="joinBtn" style="flex:1"><i class="fas fa-link"></i> Connect</button>
+          <button class="btn btn-soft" id="scanBtn" aria-label="Scan QR"><i class="fas fa-qrcode"></i> Scan</button>
         </div>
       </div>
     </div>
-    <!-- GUEST -->
-    <div class="card anim-fade-1">
-      <div class="card-head">
-        <div class="card-icon"><i class="fas fa-plug"></i></div>
-        <div><h3>Join Room</h3><p>Enter code or scan QR</p></div>
-      </div>
-      <label for="joinCode" class="sr-only">6-digit code</label>
-      <input class="field code-input" id="joinCode" placeholder="000000" inputmode="numeric" maxlength="6" autocomplete="off" />
-      <div class="input-row" style="margin-top:10px">
-        <button class="btn btn-primary" id="joinBtn" style="flex:1"><i class="fas fa-link"></i> Connect</button>
-        <button class="btn btn-soft" id="scanBtn" aria-label="Scan QR"><i class="fas fa-qrcode"></i> Scan</button>
-      </div>
+  </div>
+
+  <!-- ROOM HEADER: shown once host or guest is in room -->
+  <div class="room-header" id="roomHeader" hidden>
+    <div class="rh-top">
+      <div class="rh-title" id="rhTitle"><i class="fas fa-crown" style="color:var(--brand)"></i> <span id="rhTitleTxt">Room</span></div>
+      <span class="rh-tag" id="rhTag">HOST</span>
+      <div class="rh-actions" id="rhActions"></div>
+    </div>
+    <div class="rh-body" id="rhBody">
+      <!-- Filled dynamically -->
     </div>
   </div>
 
@@ -532,75 +512,57 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     <span id="statusTxt">Create a room or join one to get started.</span>
   </div>
 
-  <!-- CONNECTIONS -->
-  <div class="conn-panel" id="connPanel">
-    <div class="panel-head"><i class="fas fa-users"></i> Connected Devices <span class="tag" id="devTag">0 devices</span></div>
-    <div class="panel-body" id="connBody">
-      <div class="empty-state"><i class="fas fa-user-slash"></i>No devices connected yet</div>
-    </div>
-  </div>
-
-  <!-- HOST CONTROLS -->
-  <div class="host-panel" id="hostPanel" hidden>
-    <div class="panel-head"><i class="fas fa-crown" style="color:var(--brand)"></i> Host Controls</div>
-    <div class="host-body">
-      <div class="control-grid">
-        <button class="btn btn-success btn-sm" id="shareAllBtn"><i class="fas fa-broadcast-tower"></i> Send to All</button>
-        <button class="btn btn-soft btn-sm" id="shareSelBtn"><i class="fas fa-user-plus"></i> Pick Device</button>
+  <!-- SEND / RECEIVE -->
+  <div class="io-grid" id="ioGrid" hidden>
+    <!-- SEND -->
+    <div class="card io-box" id="sendBox">
+      <div class="card-head">
+        <div class="card-icon"><i class="fas fa-upload"></i></div>
+        <div><h3>Send Files</h3><p>Max 3 files · 10 MB each</p></div>
       </div>
-      <div id="shareTargetBox" hidden style="margin-top:12px">
-        <label for="targetSel" style="font-size:.78rem;font-weight:700;color:var(--ink-3)">Send to:</label>
+      <p style="font-size:.76rem;color:var(--ink-4);margin-bottom:10px" id="sendToTxt">Sending to: All devices</p>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <button class="btn btn-soft btn-xs" id="sendAllBtn"><i class="fas fa-broadcast-tower"></i> All</button>
+        <button class="btn btn-ghost btn-xs" id="sendPickBtn"><i class="fas fa-user-plus"></i> Pick Device</button>
+      </div>
+      <div id="sendTargetBox" hidden style="margin-bottom:8px">
+        <label for="targetSel" style="font-size:.74rem;font-weight:700;color:var(--ink-3)">Send to:</label>
         <div class="input-row" style="margin-top:6px">
           <select class="field" id="targetSel" style="flex:1"><option value="all">All Devices</option></select>
           <button class="btn btn-primary btn-sm" id="targetGoBtn"><i class="fas fa-check"></i> Set</button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- TRANSFER -->
-  <div class="transfer-panel" id="transferPanel" hidden>
-    <div class="tp-head"><span class="tp-dot idle" id="tpDot"></span> Transfer Status <span class="tag" id="tpDirection" style="margin-left:auto">Idle</span></div>
-    <div class="tp-body">
-      <div class="tp-stats">
-        <div class="stat"><div class="stat-lbl">Speed</div><div class="stat-val" id="statSpeed">—</div></div>
-        <div class="stat"><div class="stat-lbl">Progress</div><div class="stat-val" id="statPct">0%</div></div>
-        <div class="stat"><div class="stat-lbl">ETA</div><div class="stat-val" id="statEta">—</div></div>
-        <div class="stat"><div class="stat-lbl">Files</div><div class="stat-val" id="statFiles">0/0</div></div>
-      </div>
-      <div class="tp-file">
-        <div class="tp-file-name"><span id="tpFileName">—</span><span class="pct" id="tpFilePct">0%</span></div>
-        <div class="track"><div class="fill" id="tpFill"></div></div>
-      </div>
-      <div class="queue" id="queue"><div class="tp-empty">Transfers will appear here</div></div>
-    </div>
-  </div>
-
-  <!-- SEND / RECEIVE / SENT -->
-  <div id="ioSection" hidden class="grid-2 mt-16">
-    <div class="card">
-      <div class="card-head">
-        <div class="card-icon"><i class="fas fa-upload"></i></div>
-        <div><h3>Send Files</h3><p>Max 3 files · 10 MB each</p></div>
-      </div>
-      <p style="font-size:.78rem;color:var(--ink-4);margin-bottom:10px" id="sendToTxt">Sending to: All devices</p>
       <label for="fileIn" class="sr-only">Choose files</label>
       <input type="file" id="fileIn" class="field" multiple style="padding:10px" />
       <label for="titleIn" class="sr-only">Optional title</label>
       <input type="text" id="titleIn" class="field" placeholder="Optional title…" maxlength="50" style="margin-top:8px" />
-      <button class="btn btn-primary btn-block" id="sendBtn" style="margin-top:12px"><i class="fas fa-paper-plane"></i> Send Files</button>
+      <button class="btn btn-primary btn-block" id="sendBtn" style="margin-top:10px"><i class="fas fa-paper-plane"></i> Send Files</button>
+      <!-- Mini transfer -->
+      <div class="tp-mini" id="tpMini" hidden>
+        <div class="tp-mini-row"><span id="tpMiniName">—</span><span class="pct" id="tpMiniPct">0%</span></div>
+        <div class="track"><div class="fill" id="tpMiniFill"></div></div>
+      </div>
     </div>
-    <div class="card">
+    <!-- RECEIVE -->
+    <div class="card io-box" id="rxBox">
       <div class="card-head">
         <div class="card-icon"><i class="fas fa-download"></i></div>
-        <div><h3>Recent Files</h3><p id="rxCount">0 files</p></div>
+        <div><h3>Received Files</h3><p id="rxCount">0 files</p></div>
       </div>
-      <div class="file-list" id="rxList"><div class="empty-state"><i class="fas fa-inbox"></i>No files yet</div></div>
+      <div class="io-files" id="rxList"><div class="io-empty"><i class="fas fa-inbox"></i>No files yet</div></div>
     </div>
   </div>
 
-  <!-- SENT FILES WITH FILTERS -->
-  <div class="card mt-16" id="sentCard" hidden>
+  <!-- CONNECTIONS -->
+  <div class="conn-panel" id="connPanel" hidden>
+    <div class="panel-head"><i class="fas fa-users"></i> Connected Devices <span class="tag" id="devTag">0 devices</span></div>
+    <div class="panel-body" id="connBody">
+      <div class="io-empty"><i class="fas fa-user-slash"></i>No devices connected yet</div>
+    </div>
+  </div>
+
+  <!-- SENT FILES -->
+  <div class="card" id="sentCard" hidden style="margin-top:16px">
     <div class="card-head">
       <div class="card-icon"><i class="fas fa-paper-plane"></i></div>
       <div><h3>Sent Files</h3><p id="sentSummary">0 files</p></div>
@@ -611,11 +573,11 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
       <button class="sent-tab" data-filter="pending" role="tab">Pending</button>
       <button class="sent-tab" data-filter="failed" role="tab">Failed</button>
     </div>
-    <div id="sentList"><div class="empty-state"><i class="fas fa-paper-plane"></i>No files sent yet</div></div>
+    <div id="sentList"><div class="io-empty"><i class="fas fa-paper-plane"></i>No files sent yet</div></div>
   </div>
 
-  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px">
-    <button class="btn btn-ghost" id="disconnectBtn" hidden><i class="fas fa-times-circle"></i> Disconnect All</button>
+  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px" id="bottomActions" hidden>
+    <button class="btn btn-ghost" id="disconnectBtn"><i class="fas fa-times-circle"></i> Disconnect</button>
     <button class="btn btn-danger" id="closeBtn" hidden><i class="fas fa-door-closed"></i> Close Room</button>
   </div>
 </section>
@@ -625,11 +587,11 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     <span class="eyebrow"><i class="fas fa-star"></i> Why SHAREx</span>
     <h2>Built for speed & privacy</h2>
   </div>
-  <div class="grid-2" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
     <div class="card anim-fade" style="text-align:center"><div class="card-icon" style="margin:0 auto 12px;width:52px;height:52px;font-size:22px"><i class="fas fa-bolt"></i></div><h4 style="font-weight:800;margin-bottom:4px">Blazing Fast</h4><p style="font-size:.82rem;color:var(--ink-3)">Direct P2P — no middleman, max speed.</p></div>
     <div class="card anim-fade-1" style="text-align:center"><div class="card-icon" style="margin:0 auto 12px;width:52px;height:52px;font-size:22px"><i class="fas fa-lock"></i></div><h4 style="font-weight:800;margin-bottom:4px">100% Private</h4><p style="font-size:.82rem;color:var(--ink-3)">Files never touch a server. Device to device only.</p></div>
     <div class="card anim-fade-2" style="text-align:center"><div class="card-icon" style="margin:0 auto 12px;width:52px;height:52px;font-size:22px"><i class="fas fa-qrcode"></i></div><h4 style="font-weight:800;margin-bottom:4px">Scan to Join</h4><p style="font-size:.82rem;color:var(--ink-3)">Point your camera — instant connection.</p></div>
-    <div class="card anim-fade-3" style="text-align:center"><div class="card-icon" style="margin:0 auto 12px;width:52px;height:52px;font-size:22px"><i class="fas fa-universal-access"></i></div><h4 style="font-weight:800;margin-bottom:4px">Accessible</h4><p style="font-size:.82rem;color:var(--ink-3)">Dark mode, high contrast, keyboard nav, screen reader ready.</p></div>
+    <div class="card anim-fade-2" style="text-align:center"><div class="card-icon" style="margin:0 auto 12px;width:52px;height:52px;font-size:22px"><i class="fas fa-universal-access"></i></div><h4 style="font-weight:800;margin-bottom:4px">Accessible</h4><p style="font-size:.82rem;color:var(--ink-3)">Dark mode, high contrast, keyboard nav, screen reader ready.</p></div>
   </div>
 </section>
 </main>
@@ -650,18 +612,14 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 (function(){
 'use strict';
 
-/* ============================================================
-   CONSTANTS
-   ============================================================ */
+/* ===== CONSTANTS ===== */
 const MAX_FILES = 3;
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-const CHUNK = 128 * 1024; // 128 KB chunks for speed
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const CHUNK = 128 * 1024;
 const MAX_BUFFER = 8 * 1024 * 1024;
 const PING_MS = 20000;
 
-/* ============================================================
-   HELPERS
-   ============================================================ */
+/* ===== HELPERS ===== */
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -669,30 +627,16 @@ const LS = {
   get:(k,d)=>{try{const v=localStorage.getItem('sx:'+k);return v?JSON.parse(v):d}catch(e){return d}},
   set:(k,v)=>{try{localStorage.setItem('sx:'+k,JSON.stringify(v))}catch(e){}}
 };
-
-function fmtSize(b){
-  if(b<1024)return b+' B';
-  if(b<1048576)return (b/1024).toFixed(1)+' KB';
-  return (b/1048576).toFixed(2)+' MB';
-}
-function fmtTime(ts){
-  const d = new Date(ts);
-  return d.toLocaleString(undefined,{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-}
-function iconFor(n){
-  const e=(n.split('.').pop()||'').toLowerCase();
-  const m={pdf:'fa-file-pdf',doc:'fa-file-word',docx:'fa-file-word',xls:'fa-file-excel',xlsx:'fa-file-excel',ppt:'fa-file-powerpoint',pptx:'fa-file-powerpoint',jpg:'fa-file-image',jpeg:'fa-file-image',png:'fa-file-image',gif:'fa-file-image',svg:'fa-file-image',webp:'fa-file-image',mp4:'fa-file-video',mkv:'fa-file-video',avi:'fa-file-video',mov:'fa-file-video',mp3:'fa-file-audio',wav:'fa-file-audio',m4a:'fa-file-audio',zip:'fa-file-archive',rar:'fa-file-archive','7z':'fa-file-archive',gz:'fa-file-archive',js:'fa-file-code',html:'fa-file-code',css:'fa-file-code',json:'fa-file-code',txt:'fa-file-alt',exe:'fa-file',apk:'fa-file',ttf:'fa-file',woff:'fa-file',woff2:'fa-file'};
-  return m[e]||'fa-file';
-}
+function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(1)+' KB';return (b/1048576).toFixed(2)+' MB';}
+function fmtTime(ts){const d=new Date(ts);return d.toLocaleString(undefined,{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
+function iconFor(n){const e=(n.split('.').pop()||'').toLowerCase();const m={pdf:'fa-file-pdf',doc:'fa-file-word',docx:'fa-file-word',xls:'fa-file-excel',xlsx:'fa-file-excel',ppt:'fa-file-powerpoint',pptx:'fa-file-powerpoint',jpg:'fa-file-image',jpeg:'fa-file-image',png:'fa-file-image',gif:'fa-file-image',svg:'fa-file-image',webp:'fa-file-image',mp4:'fa-file-video',mkv:'fa-file-video',avi:'fa-file-video',mov:'fa-file-video',mp3:'fa-file-audio',wav:'fa-file-audio',m4a:'fa-file-audio',zip:'fa-file-archive',rar:'fa-file-archive','7z':'fa-file-archive',gz:'fa-file-archive',js:'fa-file-code',html:'fa-file-code',css:'fa-file-code',json:'fa-file-code',txt:'fa-file-alt',exe:'fa-file',apk:'fa-file',ttf:'fa-file',woff:'fa-file',woff2:'fa-file'};return m[e]||'fa-file';}
 const genCode = () => String(Math.floor(100000+Math.random()*900000));
 
-/* ============================================================
-   STATE
-   ============================================================ */
+/* ===== STATE ===== */
 const S = {
   peer:null, conns:[], me:null, host:false, name:'',
-  target:'all', users:{}, 
-  // per-peer permissions: { canSend: bool, canReceive: bool }
+  target:'all', users:{},
+  // Permissions: default canReceive = ON
   perms:{},
   myPerms:{ canSend:true, canReceive:true },
   rxFiles:[], sentFiles:[],
@@ -701,12 +645,12 @@ const S = {
   scanStream:null, scanFacing:'environment', scanRAF:null,
   totalBps:0, lastBytes:0, lastTime:0,
   sentFilter:'all',
-  netLatency:null
+  netLatency:null,
+  // Room identity for UI
+  roomCode:null, roomRole:null, hostName:null
 };
 
-/* ============================================================
-   TOAST / STATUS / LOADER
-   ============================================================ */
+/* ===== TOAST ===== */
 function toast(msg, type='info', ms=3000){
   const t=document.createElement('div');
   t.className='toast '+type; t.setAttribute('role','alert');
@@ -717,9 +661,7 @@ function toast(msg, type='info', ms=3000){
 }
 const announce = t => { const lr=$('#liveRegion'); if(lr) lr.textContent = t; };
 const speak = t => { try{ const a=LS.get('a11y',{}); if(!a.speech) return; const u=new SpeechSynthesisUtterance(t); speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} };
-
 function loader(on, txt){ $('#loader').hidden = !on; if(txt) $('#loaderTxt').textContent = txt; }
-
 function setStatus(msg, type=''){
   const b=$('#statusBar'); b.className='status-bar'+(type?' '+type:'');
   b.querySelector('.si').innerHTML =
@@ -740,9 +682,7 @@ function step(n){
   });
 }
 
-/* ============================================================
-   QR GENERATOR (compact, no deps)
-   ============================================================ */
+/* ===== QR GENERATOR ===== */
 const QR = (function(){
   function pushBits(a,v,n){for(let i=n-1;i>=0;i--)a.push((v>>i)&1);}
   function toBytes(t){const a=[];for(let i=0;i<t.length;i++){const c=t.charCodeAt(i);if(c<128)a.push(c);else{const u=encodeURIComponent(t[i]);for(const p of u.split('%'))if(p)a.push(parseInt(p,16));}}return a;}
@@ -808,7 +748,7 @@ const QR = (function(){
     for(let i=0;i<15;i++){m[f1[i][0]][f1[i][1]]=fmt[i];m[f2[i][0]][f2[i][1]]=fmt[i];}
     return m;
   }
-  function draw(canvas,text,size=220){
+  function draw(canvas,text,size=200){
     const m=makeQR(text);
     const n=m.length;
     const scale=Math.floor(size/n);
@@ -822,9 +762,7 @@ const QR = (function(){
   return {draw};
 })();
 
-/* ============================================================
-   PEER
-   ============================================================ */
+/* ===== PEER ===== */
 function initPeer(id){
   return new Promise((resolve,reject)=>{
     if(S.peer){try{S.peer.destroy()}catch(e){}}
@@ -841,16 +779,15 @@ function initPeer(id){
       if(!S.host){try{conn.close()}catch(e){}return;}
       if(S.conns.some(c=>c.peer===conn.peer && c.open)){try{conn.close()}catch(e){}return;}
       S.conns.push(conn);
-      // Default permissions for new guest
+      // DEFAULT: canSend true, canReceive true
       S.perms[conn.peer] = { canSend:true, canReceive:true };
       wire(conn);
       toast('New device connected','success');
-      renderConns();
+      renderAll();
     });
     p.on('disconnected', ()=>{ try{p.reconnect()}catch(e){} });
   });
 }
-
 function wire(conn){
   conn.on('open', ()=>{
     safeSend(conn,{t:'hello', name:S.name, host:S.host});
@@ -859,159 +796,132 @@ function wire(conn){
       safeSend(conn,{t:'perm', canSend:p.canSend, canReceive:p.canReceive});
     }
     setStatus('Connected — ready to share','success');
-    renderConns(); startPing();
+    renderAll(); startPing();
   });
   conn.on('data', d=>handleData(conn,d));
   conn.on('close', ()=>{
     const i=S.conns.indexOf(conn); if(i>-1) S.conns.splice(i,1);
     delete S.users[conn.peer]; delete S.perms[conn.peer];
     if(S.conns.filter(c=>c.open).length===0 && !S.host){
-      setStatus('Disconnected','error'); step(1); toggleIO(false);
+      setStatus('Disconnected','error'); step(1);
+      // Guest's connection lost → back to setup
+      S.roomCode=null; S.roomRole=null; S.hostName=null;
+      renderAll();
+    } else {
+      renderAll();
     }
-    renderConns();
   });
   conn.on('error', ()=>{});
 }
-
 function safeSend(conn,obj){ try{ if(conn.open) conn.send(obj); }catch(e){} }
 function broadcast(obj){ S.conns.forEach(c=>safeSend(c,obj)); }
 function startPing(){
   clearInterval(S._ping);
-  S._ping=setInterval(()=>{
-    S.conns.forEach(c=>{ if(c.open) safeSend(c,{t:'ping',ts:Date.now()}); });
-  }, PING_MS);
+  S._ping=setInterval(()=>{ S.conns.forEach(c=>{ if(c.open) safeSend(c,{t:'ping',ts:Date.now()}); }); }, PING_MS);
 }
 
-/* ============================================================
-   DATA HANDLING
-   ============================================================ */
+/* ===== DATA ===== */
 function handleData(conn,d){
   if(!d) return;
   if(d.t==='ping'){ safeSend(conn,{t:'pong',ts:d.ts}); return; }
-  if(d.t==='pong'){
-    if(d.ts){ S.netLatency = Date.now() - d.ts; updateNetStatus(); }
+  if(d.t==='pong'){ if(d.ts){ S.netLatency = Date.now()-d.ts; updateNetStatus(); } return; }
+  if(d.t==='hello'){
+    S.users[conn.peer]=d.name||conn.peer;
+    if(!S.host && d.host){ S.hostName = d.name || 'Host'; renderRoomHeader(); }
+    renderAll();
     return;
   }
-  if(d.t==='hello'){ S.users[conn.peer]=d.name||conn.peer; renderConns(); return; }
   if(d.t==='perm'){
     if(!S.host){
       S.myPerms.canSend = !!d.canSend;
       S.myPerms.canReceive = !!d.canReceive;
-      const msg = `Host permissions: ${d.canSend?'✓ send':'✗ send'} · ${d.canReceive?'✓ receive':'✗ receive'}`;
-      setStatus(msg, 'info');
-      renderConns();
+      setStatus(`Host: ${d.canSend?'✓ send':'✗ send'} · ${d.canReceive?'✓ receive':'✗ receive'}`,'info');
+      renderAll();
     }
     return;
   }
   if(d.t==='perm-update'){
-    S.perms[d.peer] = { canSend: !!d.canSend, canReceive: !!d.canReceive };
-    renderConns();
+    S.perms[d.peer] = { canSend:!!d.canSend, canReceive:!!d.canReceive };
+    renderAll();
     return;
   }
   if(d.t==='target'){ S.target=d.target; updateSendTo(); return; }
   if(d.t==='meta') return onMeta(conn,d);
   if(d.t==='chunk') return onChunk(conn,d);
-  if(d.t==='file-complete') return onFileComplete(conn,d);
 }
 
 function onMeta(conn,d){
   if(d.target && d.target!=='all' && d.target!==S.me) return;
-  // Check permissions
   if(S.host){
     const p = S.perms[conn.peer] || {canSend:true,canReceive:true};
     if(!p.canSend){ toast('Guest not allowed to send','warning'); return; }
   } else {
-    if(!S.myPerms.canReceive){ toast('Host revoked receive permission','warning'); return; }
+    if(!S.myPerms.canReceive){ toast('Receive permission revoked','warning'); return; }
   }
-  // Check size limit
   if(d.size > MAX_FILE_SIZE){ toast('File too large (max 10 MB)','error'); return; }
-
   const key=conn.peer+'::'+d.bid+'::'+d.fidx;
   S.batches[key]={meta:d,chunks:[],received:0,conn};
-  addQueue({key,name:d.name,size:d.size,dir:'rx'});
-  updateTransferUI(true,'rx',{fileName:d.name,fileIndex:d.fidx,fileTotal:d.total});
+  updateTpMini(d.name,0);
   setStatus('Receiving '+(d.fidx+1)+'/'+d.total+': '+d.name,'info');
 }
-
 function onChunk(conn,d){
   const key=conn.peer+'::'+d.bid+'::'+d.fidx;
   const b=S.batches[key]; if(!b) return;
   b.chunks.push(new Blob([d.data]));
   b.received+=d.data.byteLength;
   const pct=Math.min(100,Math.round(b.received/b.meta.size*100));
-  updateQueue(key,pct);
-  updateTransferUI(true,'rx',{pct,bytes:b.received,size:b.meta.size,fileName:b.meta.name,fileIndex:b.meta.fidx,fileTotal:b.meta.total});
+  updateTpMini(b.meta.name,pct);
   if(b.received>=b.meta.size){
     const blob=new Blob(b.chunks,{type:b.meta.ftype||'application/octet-stream'});
     const url=URL.createObjectURL(blob);
     addReceived(b.meta.name,url,b.meta.size,b.meta.title,b.meta.sender);
     delete S.batches[key];
-    updateQueue(key,100,true);
     toast('Received: '+b.meta.name,'success');
     step(3);
-    if(Object.keys(S.batches).length===0) updateTransferUI(false,'done');
+    if(Object.keys(S.batches).length===0){ setTimeout(()=>$('#tpMini').hidden=true,800); }
   }
 }
 
-function onFileComplete(conn,d){ /* ack — not used for now */ }
-
-/* ============================================================
-   SEND FILES (fast, chunked, sequential)
-   ============================================================ */
+/* ===== SEND ===== */
 function sendBatch(files,target,title){
-  // Filter eligible connections
   const conns = S.conns.filter(c=>c.open).filter(c=>target==='all'||c.peer===target).filter(c=>{
     if(!S.host) return S.myPerms.canSend;
     const p = S.perms[c.peer] || {canSend:true,canReceive:true};
-    return p.canReceive; // host can send to guest only if guest allowed to receive
+    return p.canReceive;
   });
   if(conns.length===0){ setStatus('No eligible devices','error'); toast('No devices can receive','error'); return; }
   if(S.sending){ toast('Already sending…','warning'); return; }
-
   S.sending=true;
   const bid='b'+(++S.batchSeq)+'-'+Date.now();
   let fileIdx=0;
   S.lastTime=performance.now(); S.lastBytes=0;
-
-  updateTransferUI(true,'tx');
   setStatus('Sending '+files.length+' file(s)…','info');
-
-  // Register in sent list
   const sentEntry = {
     id:bid, files:files.map(f=>({name:f.name,size:f.size})),
     target, targetName: target==='all'?'All devices':(S.users[target]||target),
-    ts:Date.now(), status:'pending', title: title||''
+    ts:Date.now(), status:'pending', title:title||''
   };
-  S.sentFiles.unshift(sentEntry);
-  renderSent();
+  S.sentFiles.unshift(sentEntry); renderSent();
 
   const sendNext=()=>{
     if(fileIdx>=files.length){
       setTimeout(()=>{
         S.sending=false;
-        sentEntry.status = 'sent';
-        renderSent();
+        sentEntry.status='sent'; renderSent();
         setStatus('Sent '+files.length+' file(s) successfully','success');
         toast('Shared '+files.length+' file(s) with '+sentEntry.targetName,'success');
-        updateTransferUI(false,'done');
         step(3);
+        setTimeout(()=>$('#tpMini').hidden=true,800);
       },400);
       return;
     }
     const f=files[fileIdx];
-    const meta={
-      t:'meta', bid, fidx:fileIdx, total:files.length,
-      name:f.name, size:f.size, ftype:f.type||'application/octet-stream',
-      title:title||'', sender:S.name, target
-    };
+    const meta={t:'meta', bid, fidx:fileIdx, total:files.length, name:f.name, size:f.size, ftype:f.type||'application/octet-stream', title:title||'', sender:S.name, target};
     conns.forEach(c=>safeSend(c,meta));
-    addQueue({key:bid+'::'+fileIdx, name:f.name, size:f.size, dir:'tx'});
-
     let offset=0;
     const read=()=>{
       if(offset>=f.size){
         conns.forEach(c=>safeSend(c,{t:'file-complete',bid,fidx:fileIdx}));
-        updateQueue(bid+'::'+fileIdx,100,true);
         fileIdx++;
         setTimeout(sendNext,50);
         return;
@@ -1021,19 +931,16 @@ function sendBatch(files,target,title){
       const fr=new FileReader();
       fr.onload=()=>{
         const chunkMsg={t:'chunk', bid, fidx:fileIdx, data:new Uint8Array(fr.result)};
-        // Backpressure wait
         const wait=()=>{
           const high=conns.some(c=>{ try{return c.open && c.dataChannel && c.dataChannel.bufferedAmount>MAX_BUFFER}catch(e){return false} });
           if(high){ setTimeout(wait,15); return; }
           conns.forEach(c=>safeSend(c,chunkMsg));
           offset=end;
           const pct=Math.min(100,Math.round(offset/f.size*100));
-          updateQueue(bid+'::'+fileIdx,pct);
-          // Speed calculation
+          updateTpMini(f.name,pct);
           const now=performance.now();
           const dt=(now-S.lastTime)/1000;
           if(dt>0.2){ S.totalBps=(offset-S.lastBytes)/dt; S.lastTime=now; S.lastBytes=offset; }
-          updateTransferUI(true,'tx',{pct,filePct:pct,bytes:offset,size:f.size,fileIndex:fileIdx,fileTotal:files.length,fileName:f.name});
           requestAnimationFrame(read);
         };
         wait();
@@ -1045,87 +952,50 @@ function sendBatch(files,target,title){
   sendNext();
 }
 
-/* ============================================================
-   TRANSFER UI
-   ============================================================ */
-function updateTransferUI(active,dir,info){
-  const panel=$('#transferPanel'); panel.hidden=false;
-  $('#tpDot').className='tp-dot'+(active?'':' idle');
-  $('#tpDirection').textContent=active?(dir==='rx'?'Receiving':'Sending'):(dir==='done'?'Done':'Idle');
-  if(info){
-    const pct=Math.min(100,info.filePct!=null?info.filePct:info.pct||0);
-    $('#tpFill').style.width=pct+'%';
-    $('#tpFilePct').textContent=pct+'%';
-    if(info.fileName) $('#tpFileName').textContent=info.fileName;
-    if(info.bytes!=null&&info.size) $('#statPct').textContent=Math.round(info.bytes/info.size*100)+'%';
-    if(info.fileTotal) $('#statFiles').textContent=((info.fileIndex||0)+1)+'/'+info.fileTotal;
-    if(S.totalBps>0) $('#statSpeed').textContent=fmtSize(S.totalBps)+'/s';
-    if(info.size&&info.bytes!=null&&S.totalBps>0){
-      const eta=Math.max(0,Math.round((info.size-info.bytes)/S.totalBps));
-      $('#statEta').textContent=eta>60?Math.ceil(eta/60)+'m':eta+'s';
-    }
-  }
+/* ===== UI: TP MINI ===== */
+function updateTpMini(name,pct){
+  const el=$('#tpMini'); el.hidden=false;
+  $('#tpMiniName').textContent=name;
+  $('#tpMiniPct').textContent=pct+'%';
+  $('#tpMiniFill').style.width=pct+'%';
 }
 
-/* ============================================================
-   QUEUE
-   ============================================================ */
-function addQueue(item){
-  const q=$('#queue'); const empty=q.querySelector('.tp-empty'); if(empty) empty.remove();
-  const el=document.createElement('div');
-  el.className='q-item '+(item.dir==='rx'?'receiving':'sending');
-  el.id='q-'+cssId(item.key);
-  el.innerHTML=`<span class="qi"><i class="fas ${iconFor(item.name)}"></i></span><span class="qn" title="${esc(item.name)}">${esc(item.name)}</span><span class="qs">0%</span>`;
-  q.prepend(el);
-}
-function updateQueue(key,pct,done){
-  const el=document.getElementById('q-'+cssId(key)); if(!el) return;
-  el.querySelector('.qs').textContent=pct+'%';
-  if(done) el.classList.add('done');
-}
-function cssId(s){return 'k'+String(s).replace(/[^a-z0-9]/gi,'_');}
-
-/* ============================================================
-   RECEIVED FILES (newest first)
-   ============================================================ */
+/* ===== RECEIVED ===== */
 function addReceived(name,url,size,title,sender){
-  const list=$('#rxList'); const empty=list.querySelector('.empty-state'); if(empty) empty.remove();
-  const ts = Date.now();
+  const list=$('#rxList'); const empty=list.querySelector('.io-empty'); if(empty) empty.remove();
+  const ts=Date.now();
   const el=document.createElement('div'); el.className='file-item';
   el.innerHTML=`
     <div class="file-icon"><i class="fas ${iconFor(name)}"></i></div>
     <div class="file-meta">
       <div class="file-name">${esc(name)}</div>
       ${title?`<div class="file-title">${esc(title)}</div>`:''}
-      <div class="file-sub">${fmtSize(size)} · from ${esc(sender||'Device')} · ${fmtTime(ts)}</div>
+      <div class="file-sub">${fmtSize(size)} · ${esc(sender||'Device')} · ${fmtTime(ts)}</div>
     </div>
-    <a class="dl-btn" href="${url}" download="${esc(name)}"><i class="fas fa-download"></i> Save</a>
+    <a class="dl-btn" href="${url}" download="${esc(name)}"><i class="fas fa-download"></i></a>
   `;
   list.prepend(el);
   S.rxFiles.unshift({name,size,title,sender,ts,url});
   $('#rxCount').textContent=S.rxFiles.length+' file'+(S.rxFiles.length>1?'s':'');
 }
 
-/* ============================================================
-   SENT FILES (with filters)
-   ============================================================ */
+/* ===== SENT FILES ===== */
 function renderSent(){
   const card=$('#sentCard'); card.hidden=false;
   const list=$('#sentList');
-  const summary=$('#sentSummary');
-  const filtered = S.sentFilter==='all' ? S.sentFiles : S.sentFiles.filter(f=>f.status===S.sentFilter);
-  summary.textContent = S.sentFiles.length+' file'+(S.sentFiles.length!==1?'s':'');
+  $('#sentSummary').textContent=S.sentFiles.length+' file'+(S.sentFiles.length!==1?'s':'');
+  const filtered = S.sentFilter==='all'?S.sentFiles:S.sentFiles.filter(f=>f.status===S.sentFilter);
   if(filtered.length===0){
-    list.innerHTML=`<div class="empty-state"><i class="fas fa-paper-plane"></i>No ${S.sentFilter==='all'?'':S.sentFilter+' '}files</div>`;
+    list.innerHTML=`<div class="io-empty"><i class="fas fa-paper-plane"></i>No ${S.sentFilter==='all'?'':S.sentFilter+' '}files</div>`;
     return;
   }
-  list.innerHTML = filtered.map(f=>{
-    const fileNames = f.files.map(x=>x.name).join(', ');
-    const totalSize = f.files.reduce((a,x)=>a+x.size,0);
+  list.innerHTML=filtered.map(f=>{
+    const names=f.files.map(x=>x.name).join(', ');
+    const total=f.files.reduce((a,x)=>a+x.size,0);
     return `<div class="sent-item ${f.status}">
-      <div class="si-name">${esc(fileNames)}</div>
+      <div class="si-name">${esc(names)}</div>
       <div class="si-meta">
-        <span>${f.files.length} file(s) · ${fmtSize(totalSize)}</span>
+        <span>${f.files.length} · ${fmtSize(total)}</span>
         <span>→ ${esc(f.targetName)}</span>
         <span>${fmtTime(f.ts)}</span>
         <span class="si-status">${f.status}</span>
@@ -1137,62 +1007,131 @@ $$('.sent-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
     $$('.sent-tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    S.sentFilter = tab.dataset.filter;
+    S.sentFilter=tab.dataset.filter;
     renderSent();
   });
 });
 
-/* ============================================================
-   CONNECTIONS UI (Host top, self below)
-   ============================================================ */
+/* ===== ROOM HEADER ===== */
+function renderRoomHeader(){
+  const rh=$('#roomHeader');
+  const inRoom = S.host || (S.conns.some(c=>c.open) && !S.host);
+  if(!inRoom){ rh.hidden=true; return; }
+  rh.hidden=false;
+  const isHost = S.host;
+  $('#rhTag').textContent = isHost ? 'HOST' : 'GUEST';
+  $('#rhTag').className = 'rh-tag'+(isHost?'':' guest');
+  $('#rhTitleTxt').textContent = isHost ? 'Hosting Room' : 'Connected to Room';
+  $('#rhTitle').innerHTML = isHost
+    ? '<i class="fas fa-crown" style="color:var(--brand)"></i> <span id="rhTitleTxt">Hosting Room</span>'
+    : '<i class="fas fa-link" style="color:var(--info)"></i> <span id="rhTitleTxt">Connected to Room</span>';
+  
+  // Actions
+  const actions=$('#rhActions');
+  if(isHost){
+    actions.innerHTML = `
+      <button class="btn btn-ghost btn-sm" id="rhDisconnect"><i class="fas fa-times-circle"></i> Disconnect All</button>
+      <button class="btn btn-danger btn-sm" id="rhClose"><i class="fas fa-door-closed"></i> Close Room</button>
+    `;
+    $('#rhDisconnect').onclick = ()=>{ disconnectAll(); toast('All disconnected','info'); };
+    $('#rhClose').onclick = ()=>{ resetAll(); toast('Room closed','info'); };
+  } else {
+    actions.innerHTML = `
+      <button class="btn btn-ghost btn-sm" id="rhDisconnect"><i class="fas fa-sign-out-alt"></i> Leave Room</button>
+    `;
+    $('#rhDisconnect').onclick = ()=>{ disconnectAll(); toast('Left room','info'); };
+  }
+  
+  // Body
+  const body=$('#rhBody');
+  const code = S.roomCode || '';
+  const hostName = S.hostName || (isHost? S.name : 'Host');
+  if(isHost){
+    body.innerHTML = `
+      <div class="rh-qr" id="rhQrWrap"></div>
+      <div class="rh-info">
+        <div class="rh-code">${esc(code)}</div>
+        <div class="rh-name"><span>Host:</span> ${esc(S.name)}</div>
+        <div class="rh-meta">
+          <span><i class="fas fa-users"></i> ${S.conns.filter(c=>c.open).length} guest(s)</span>
+          <span><i class="fas fa-circle" style="color:var(--ok);font-size:.5rem"></i> Room active</span>
+        </div>
+        <div class="rh-copy">
+          <button class="btn btn-soft btn-xs" id="rhCopyCode"><i class="fas fa-copy"></i> Copy Code</button>
+          <button class="btn btn-soft btn-xs" id="rhCopyLink"><i class="fas fa-link"></i> Copy Link</button>
+        </div>
+      </div>
+    `;
+    const wrap=$('#rhQrWrap');
+    if(wrap){
+      const c=document.createElement('canvas');
+      QR.draw(c, shareLink(code), 200);
+      wrap.appendChild(c);
+    }
+    $('#rhCopyCode').onclick = ()=>{ copyText(code).then(()=>toast('Code copied','success')); };
+    $('#rhCopyLink').onclick = ()=>{ copyText(shareLink(code)).then(()=>toast('Link copied','success')); };
+  } else {
+    body.innerHTML = `
+      <div class="rh-qr" style="display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:44px"><i class="fas fa-link"></i></div>
+      <div class="rh-info">
+        <div class="rh-code">${esc(code)}</div>
+        <div class="rh-name"><span>Host:</span> ${esc(hostName)}</div>
+        <div class="rh-name"><span>You:</span> ${esc(S.name)}</div>
+        <div class="rh-meta">
+          <span><i class="fas fa-circle" style="color:var(--ok);font-size:.5rem"></i> Connected</span>
+          <span><i class="fas fa-users"></i> ${S.conns.filter(c=>c.open).length + 1} device(s)</span>
+        </div>
+      </div>
+    `;
+  }
+}
+
+/* ===== CONNECTIONS ===== */
 function renderConns(){
   const body=$('#connBody'); const tag=$('#devTag');
   const active=S.conns.filter(c=>c.open);
   tag.textContent=active.length+' device'+(active.length!==1?'s':'');
+  const panel=$('#connPanel');
+  const inRoom = S.host || active.length>0;
+  panel.hidden = !inRoom;
+  if(!inRoom){ return; }
 
-  // Guest view: only count
   if(!S.host){
-    if(active.length===0){
-      body.innerHTML=`<div class="empty-state"><i class="fas fa-user-slash"></i>Not connected yet</div>`;
-    } else {
-      // Host row + self row
-      const hostConn = active[0];
-      const hostName = S.users[hostConn.peer] || 'Host';
-      body.innerHTML = `
-        <div class="conn-row host">
-          <span class="conn-dot"></span>
-          <span class="conn-name">${esc(hostName)}</span>
-          <span class="conn-role">Host</span>
-          <span class="badge host-tag"><i class="fas fa-crown"></i> Host</span>
-        </div>
-        <div class="conn-row self">
-          <span class="conn-dot"></span>
-          <span class="conn-name">${esc(S.name)}</span>
-          <span class="conn-role">You</span>
-          <span class="badge self-tag">You</span>
-        </div>
-        <div class="guest-summary">
-          <i class="fas fa-users" style="color:var(--info)"></i>
-          <strong>${active.length + 1}</strong> device${active.length+1>1?'s':''} in room
-        </div>
-      `;
-    }
+    // Guest view
+    const hostConn = active[0];
+    const hostName = S.users[hostConn.peer] || S.hostName || 'Host';
+    body.innerHTML = `
+      <div class="conn-row host">
+        <span class="conn-dot"></span>
+        <span class="conn-name">${esc(hostName)}</span>
+        <span class="conn-role">Host</span>
+        <span class="badge host-tag"><i class="fas fa-crown"></i> Host</span>
+      </div>
+      <div class="conn-row self">
+        <span class="conn-dot"></span>
+        <span class="conn-name">${esc(S.name)}</span>
+        <span class="conn-role">You</span>
+        <span class="badge self-tag">You</span>
+      </div>
+      <div class="guest-summary">
+        <i class="fas fa-users" style="color:var(--info)"></i>
+        <strong>${active.length + 1}</strong> device${active.length+1>1?'s':''} in room
+      </div>
+    `;
   } else {
-    // Host view: full list with actions
+    // Host view
+    let html = '';
+    html += `
+      <div class="conn-row host">
+        <span class="conn-dot"></span>
+        <span class="conn-name">${esc(S.name)}</span>
+        <span class="conn-role">You</span>
+        <span class="badge host-tag"><i class="fas fa-crown"></i> Host</span>
+      </div>
+    `;
     if(active.length===0){
-      body.innerHTML=`<div class="empty-state"><i class="fas fa-user-slash"></i>No guests connected yet</div>`;
+      html += `<div class="io-empty"><i class="fas fa-user-slash"></i>No guests yet</div>`;
     } else {
-      let html = '';
-      // First: host row (self)
-      html += `
-        <div class="conn-row host">
-          <span class="conn-dot"></span>
-          <span class="conn-name">${esc(S.name)}</span>
-          <span class="conn-role">You</span>
-          <span class="badge host-tag"><i class="fas fa-crown"></i> Host</span>
-        </div>
-      `;
-      // Then: guests with actions
       active.forEach(conn=>{
         const name = S.users[conn.peer] || conn.peer;
         const p = S.perms[conn.peer] || {canSend:true,canReceive:true};
@@ -1219,18 +1158,9 @@ function renderConns(){
           </div>
         `;
       });
-      body.innerHTML = html;
     }
+    body.innerHTML = html;
   }
-  if(S.host) $('#hostPanel').hidden=false; else $('#hostPanel').hidden=true;
-  const has=active.length>0;
-  toggleIO(has);
-  if(has) step(2);
-}
-function toggleIO(on){
-  $('#ioSection').hidden=!on;
-  $('#disconnectBtn').hidden=!on;
-  $('#closeBtn').hidden=!on||!S.host;
 }
 
 /* Handle connection row actions */
@@ -1243,10 +1173,9 @@ $('#connBody').addEventListener('click', e=>{
     S.perms[peer][key] = !S.perms[peer][key];
     const c = S.conns.find(c=>c.peer===peer);
     if(c) safeSend(c, {t:'perm', canSend:S.perms[peer].canSend, canReceive:S.perms[peer].canReceive});
-    // Also broadcast so all guests know
     broadcast({t:'perm-update', peer, canSend:S.perms[peer].canSend, canReceive:S.perms[peer].canReceive});
     toast(`${key==='canSend'?'Send':'Receive'} permission ${S.perms[peer][key]?'granted':'revoked'}`,'info');
-    renderConns();
+    renderAll();
     return;
   }
   const btn = e.target.closest('button[data-act]'); if(!btn) return;
@@ -1256,59 +1185,70 @@ $('#connBody').addEventListener('click', e=>{
     updateSendTo();
     broadcast({t:'target', target:peer});
     toast('Target: '+(S.users[peer]||peer),'info');
-    document.getElementById('fileIn').click();
+    $('#fileIn').click();
   } else if(act==='kick'){
     const c = S.conns.find(c=>c.peer===peer);
     if(c){ try{c.close()}catch(e){} const i=S.conns.indexOf(c); if(i>-1) S.conns.splice(i,1); }
     delete S.users[peer]; delete S.perms[peer];
-    toast('Guest disconnected','warning'); renderConns();
+    toast('Guest disconnected','warning'); renderAll();
   }
 });
 
-function fillTargets(active){
-  const sel=$('#targetSel'); const cur=sel.value;
-  sel.innerHTML='<option value="all">All Devices</option>'+active.map(c=>{
-    const n=S.users[c.peer]||c.peer;
-    return `<option value="${c.peer}">${esc(n)}</option>`;
-  }).join('');
-  if([...sel.options].some(o=>o.value===cur)) sel.value=cur;
-}
 function updateSendTo(){
   if(!S.host){ $('#sendToTxt').textContent='Sending to: Host'; return; }
   if(S.target==='all') $('#sendToTxt').textContent='Sending to: All devices';
   else $('#sendToTxt').textContent='Sending to: '+(S.users[S.target]||S.target);
 }
 
-/* ============================================================
-   NETWORK STATUS
-   ============================================================ */
+function fillTargets(){
+  const sel=$('#targetSel'); if(!sel) return;
+  const cur=sel.value;
+  const active=S.conns.filter(c=>c.open);
+  sel.innerHTML='<option value="all">All Devices</option>'+active.map(c=>{
+    const n=S.users[c.peer]||c.peer;
+    return `<option value="${c.peer}"${c.peer===cur?' selected':''}>${esc(n)}</option>`;
+  }).join('');
+}
+
+/* ===== RENDER ALL ===== */
+function renderAll(){
+  const inRoom = S.host || S.conns.some(c=>c.open);
+  // Setup vs Room
+  $('#setupSection').hidden = inRoom;
+  $('#roomHeader').hidden = !inRoom;
+  $('#ioGrid').hidden = !inRoom;
+  $('#bottomActions').hidden = !inRoom;
+  
+  if(inRoom){
+    renderRoomHeader();
+    renderConns();
+    updateSendTo();
+    fillTargets();
+    step(2);
+  } else {
+    step(1);
+  }
+  $('#closeBtn').hidden = !S.host || !inRoom;
+  $('#disconnectBtn').hidden = !inRoom;
+}
+
+/* ===== NETWORK STATUS ===== */
 function updateNetStatus(){
   const el = $('#netStatus');
   const txt = $('#netStatusTxt');
   const lat = $('#netLat');
   if(!navigator.onLine){
     el.classList.add('offline');
-    txt.textContent = 'Offline';
-    lat.textContent = '';
-    return;
+    txt.textContent='Offline'; lat.textContent=''; return;
   }
   el.classList.remove('offline');
-  txt.textContent = 'Online';
-  if(S.netLatency!=null) lat.textContent = S.netLatency+'ms';
-  else lat.textContent = '';
+  txt.textContent='Online';
+  lat.textContent = S.netLatency!=null ? S.netLatency+'ms' : '';
 }
 window.addEventListener('online', updateNetStatus);
 window.addEventListener('offline', updateNetStatus);
 
-/* ============================================================
-   QR HOST
-   ============================================================ */
-function renderHostQR(code){
-  const wrap=$('#qrCanvasHost'); wrap.innerHTML='';
-  const c=document.createElement('canvas'); c.className='qr-canvas';
-  QR.draw(c,'https://'+(location.hostname||'sharex.tool')+'/?join='+code,220);
-  wrap.appendChild(c);
-}
+/* ===== QR HELPERS ===== */
 function shareLink(code){
   try{ return location.origin+location.pathname+'?join='+code; }catch(e){ return '?join='+code; }
 }
@@ -1321,26 +1261,22 @@ function joinParam(){
   return null;
 }
 
-/* ============================================================
-   HOST / JOIN
-   ============================================================ */
+/* ===== HOST/JOIN ===== */
 async function startHost(){
   if(!S.name){ openName(); return; }
   if(S.host && S.me){ toast('Already hosting','info'); return; }
-  if(!S.host && S.conns.some(c=>c.open)){ toast('Disconnect from guest first','warning'); return; }
+  if(!S.host && S.conns.some(c=>c.open)){ toast('Leave current room first','warning'); return; }
   loader(true,'Creating room…');
   try{
     S.host=true;
     const code=genCode();
     await initPeer(code);
     S.me=code;
-    $('#codeOut').value=code;
-    $('#hostBox').hidden=false;
-    $('#closeBtn').hidden=false;
-    renderHostQR(code);
-    setStatus('Room created: '+code+' — share the code or QR','success');
+    S.roomCode=code;
+    S.roomRole='host';
+    setStatus('Room created: '+code,'success');
     toast('Room created: '+code,'success');
-    renderConns();
+    renderAll();
   }catch(err){
     S.host=false;
     setStatus('Failed to create room','error');
@@ -1365,17 +1301,17 @@ async function joinRoom(code){
     if(!conn){ setStatus('Could not connect','error'); loader(false); return; }
     S.host=false;
     S.conns.push(conn);
+    S.roomCode=code;
+    S.roomRole='guest';
     wire(conn);
     setStatus('Connecting to '+code+'…','info');
-    renderConns();
+    renderAll();
   }catch(err){
     setStatus('Connection failed','error'); toast('Connection failed','error');
   }finally{ setTimeout(()=>loader(false),600); }
 }
 
-/* ============================================================
-   NAME MODAL
-   ============================================================ */
+/* ===== NAME ===== */
 function openName(){ $('#nameModal').hidden=false; setTimeout(()=>$('#nameInput').focus(),100); }
 $('#nameSubmit').addEventListener('click',()=>{
   const v=$('#nameInput').value.trim();
@@ -1390,9 +1326,7 @@ $('#nameSubmit').addEventListener('click',()=>{
 });
 $('#nameInput').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#nameSubmit').click(); });
 
-/* ============================================================
-   CONFIRM SEND
-   ============================================================ */
+/* ===== CONFIRM ===== */
 function openConfirm(files,target,title){
   S.pendingFiles=files; S.pendingTarget=target; S.pendingTitle=title;
   $('#confirmTarget').textContent='Sending to: '+(target==='all'?'All devices':(S.users[target]||target));
@@ -1414,9 +1348,7 @@ $('#confirmSend').onclick=()=>{
   },3000);
 };
 
-/* ============================================================
-   SCANNER
-   ============================================================ */
+/* ===== SCANNER ===== */
 let jsQRPromise=null;
 function loadJsQR(){
   if(window.jsQR) return Promise.resolve();
@@ -1503,9 +1435,7 @@ async function stopScan(){
   const v=$('#scanVideo'); if(v) v.srcObject=null;
 }
 
-/* ============================================================
-   THEME / A11Y
-   ============================================================ */
+/* ===== THEME / A11Y ===== */
 function applyTheme(t){
   document.documentElement.dataset.theme=t;
   $('#themeBtn').setAttribute('aria-pressed',t==='dark');
@@ -1539,9 +1469,7 @@ $('#toggleTextSize').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'n
 $('#toggleMotion').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false}); a.motion=!a.motion; LS.set('a11y',a); applyA11y(); };
 $('#toggleSpeech').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false}); a.speech=!a.speech; LS.set('a11y',a); applyA11y(); speak('Speech '+(a.speech?'on':'off')); };
 
-/* ============================================================
-   EVENT BINDINGS
-   ============================================================ */
+/* ===== EVENTS ===== */
 $('#hostBtn').onclick=startHost;
 $('#joinBtn').onclick=()=>joinRoom($('#joinCode').value.trim());
 $('#joinCode').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,6); });
@@ -1551,17 +1479,10 @@ $('#scanQuickBtn').onclick=openScanner;
 $('#scanCancel').onclick=()=>{ stopScan(); $('#scanModal').hidden=true; };
 $('#scanSwitch').onclick=()=>{ S.scanFacing=S.scanFacing==='environment'?'user':'environment'; openScanner(); };
 
-$('#copyCodeBtn').onclick=()=>{ const v=$('#codeOut').value; copyText(v).then(()=>toast('Code copied: '+v,'success')); };
-$('#copyLinkBtn').onclick=()=>{ const v=shareLink($('#codeOut').value); copyText(v).then(()=>toast('Link copied','success')); };
-$('#resetHostBtn').onclick=()=>{ resetAll(); toast('Click Create Room for a new code','info'); };
-function copyText(t){
-  if(navigator.clipboard?.writeText) return navigator.clipboard.writeText(t);
-  return new Promise((res,rej)=>{ try{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); res(); }catch(e){ rej(e); } });
-}
-
-$('#shareAllBtn').onclick=()=>{ S.target='all'; updateSendTo(); broadcast({t:'target',target:'all'}); toast('Sending to: All','info'); $('#shareTargetBox').hidden=true; };
-$('#shareSelBtn').onclick=()=>{ $('#shareTargetBox').hidden=!$('#shareTargetBox').hidden; };
-$('#targetGoBtn').onclick=()=>{ const v=$('#targetSel').value; S.target=v; updateSendTo(); broadcast({t:'target',target:v}); toast('Sending to: '+(v==='all'?'All':(S.users[v]||v)),'info'); $('#shareTargetBox').hidden=true; };
+// Send target
+$('#sendAllBtn').onclick=()=>{ S.target='all'; updateSendTo(); broadcast({t:'target',target:'all'}); toast('Sending to: All','info'); $('#sendTargetBox').hidden=true; };
+$('#sendPickBtn').onclick=()=>{ fillTargets(); $('#sendTargetBox').hidden=!$('#sendTargetBox').hidden; };
+$('#targetGoBtn').onclick=()=>{ const v=$('#targetSel').value; S.target=v; updateSendTo(); broadcast({t:'target',target:v}); toast('Sending to: '+(v==='all'?'All':(S.users[v]||v)),'info'); $('#sendTargetBox').hidden=true; };
 
 // Send
 $('#sendBtn').onclick=()=>{
@@ -1570,10 +1491,8 @@ $('#sendBtn').onclick=()=>{
   const files=Array.from($('#fileIn').files||[]);
   if(files.length===0){ toast('Select at least one file','error'); return; }
   if(files.length>MAX_FILES){ toast('Max '+MAX_FILES+' files','warning'); return; }
-  // Check file sizes
-  const tooBig = files.find(f=>f.size>MAX_FILE_SIZE);
+  const tooBig=files.find(f=>f.size>MAX_FILE_SIZE);
   if(tooBig){ toast('"'+tooBig.name+'" exceeds 10 MB','error'); return; }
-  // Check permissions
   if(!S.host && !S.myPerms.canSend){ toast('Host revoked send permission','error'); return; }
   const title=$('#titleIn').value.trim();
   openConfirm(files.slice(0,MAX_FILES), S.host?S.target:'all', title);
@@ -1594,17 +1513,16 @@ $('#closeBtn').onclick=()=>{ resetAll(); toast('Room closed','info'); };
 function disconnectAll(){
   S.conns.forEach(c=>{ try{c.close()}catch(e){} });
   S.conns=[]; S.users={}; S.perms={};
-  renderConns(); step(1);
+  if(!S.host){ S.roomCode=null; S.roomRole=null; S.hostName=null; }
+  renderAll();
 }
 function resetAll(){
   disconnectAll();
   if(S.peer){ try{S.peer.destroy()}catch(e){} S.peer=null; }
   S.me=null; S.host=false; S.target='all'; S.sending=false;
-  $('#hostBox').hidden=true; $('#codeOut').value='';
-  $('#closeBtn').hidden=true;
-  $('#transferPanel').hidden=true;
-  $('#queue').innerHTML='<div class="tp-empty">Transfers will appear here</div>';
-  toggleIO(false); renderConns();
+  S.roomCode=null; S.roomRole=null; S.hostName=null;
+  $('#tpMini').hidden=true;
+  renderAll();
 }
 
 // Keyboard
@@ -1621,16 +1539,14 @@ document.addEventListener('keydown',e=>{
 window.addEventListener('online', updateNetStatus);
 window.addEventListener('offline', updateNetStatus);
 
-/* ============================================================
-   INIT
-   ============================================================ */
+/* ===== INIT ===== */
 (function init(){
   applyTheme(LS.get('theme','light'));  // DEFAULT LIGHT
   applyA11y();
   const saved=LS.get('name','');
   if(saved) S.name=saved;
   if(!S.name) openName();
-  renderConns();
+  renderAll();
   updateNetStatus();
   const jc=joinParam();
   if(jc){
@@ -1638,12 +1554,10 @@ window.addEventListener('offline', updateNetStatus);
     else pendingJoin=jc;
   }
   if(!navigator.onLine) $('#offlineBanner').hidden=false;
-  step(1);
-  // Continuous net status ping
   setInterval(updateNetStatus, 10000);
 })();
 
-console.log('%cSHAREx','font-weight:800;color:#E08A2E;font-size:14px','ready — 2-permission system + sent filters + network status');
+console.log('%cSHAREx','font-weight:800;color:#E08A2E;font-size:14px','ready — room header + pick device + 2 permissions');
 })();
 </script>
 </body>
