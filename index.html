@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="SHAREx Tool — Fast, private P2P file sharing. No servers, no uploads. Share up to 3 files at once with a 6-digit code or QR.">
+<meta name="description" content="SHAREx — Fast, private P2P file sharing. No servers. No uploads. Share up to 3 files instantly with a 6-digit code or QR.">
 <meta name="theme-color" content="#E08A2E">
-<meta property="og:title" content="SHAREx Tool — P2P File Sharing">
-<meta property="og:description" content="Fast, private peer-to-peer file sharing. Scan QR or enter code.">
-<title>SHAREx Tool — Fast P2P File Sharing</title>
-<link rel="manifest" href='data:application/manifest+json,{"name":"SHAREx Tool","short_name":"SHAREx","start_url":".","display":"standalone","background_color":"%23F7F8FB","theme_color":"%23E08A2E"}'>
+<meta property="og:title" content="SHAREx — P2P File Sharing">
+<meta property="og:description" content="Fast, private peer-to-peer file sharing. Code or QR. No servers.">
+<title>SHAREx — Fast P2P File Sharing</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"SHAREx","short_name":"SHAREx","start_url":".","display":"standalone","background_color":"%23F7F8FB","theme_color":"%23E08A2E"}'>
 <link rel="icon" href="https://res.cloudinary.com/dwupxj7vf/image/upload/v1788852826/school/slider/slider-39085-1788852825031-27604938.png" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,327 +16,647 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></noscript>
 <style>
+/* ========== THEME TOKENS ========== */
 :root,[data-theme="light"]{
-  --brand:#E08A2E;--brand-soft:#F4B46A;--brand-deep:#B86A14;--brand-tint:#FFF3E3;--brand-glow:rgba(224,138,46,.22);
-  --ink:#1E2736;--ink-2:#3D4A5C;--ink-3:#6B7688;--ink-4:#9AA3B2;
-  --bg:#F7F8FB;--bg-2:#FFF;--bg-3:#EEF1F7;--card:#FFF;--card-2:#FBFCFE;
-  --line:#E4E8F0;--line-strong:#D2D8E3;
-  --ok:#2BAE66;--err:#D64545;--warn:#E89A2A;--info:#3A7BD5;
-  --shadow-sm:0 2px 8px rgba(30,39,54,.06);--shadow:0 6px 24px rgba(30,39,54,.08);--shadow-lg:0 16px 48px rgba(224,138,46,.18);
-  --radius:20px;--radius-sm:12px;--radius-xs:8px;
-  --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --brand:#E08A2E;--brand-soft:#F4B46A;--brand-deep:#B86A14;--brand-tint:#FFF6EC;--brand-glow:rgba(224,138,46,.18);
+  --ink:#1A2230;--ink-2:#3A4658;--ink-3:#6B7688;--ink-4:#9AA3B2;
+  --bg:#F8F9FC;--bg-2:#FFFFFF;--bg-3:#F1F4F9;--card:#FFFFFF;
+  --line:#E6EAF1;--line-strong:#D4DAE5;
+  --ok:#22A45D;--err:#D64545;--warn:#E89524;--info:#3A7BD5;
+  --shadow-xs:0 1px 2px rgba(26,34,48,.04);
+  --shadow-sm:0 2px 8px rgba(26,34,48,.05);
+  --shadow-md:0 6px 20px rgba(26,34,48,.07);
+  --shadow-lg:0 14px 40px rgba(26,34,48,.10);
+  --shadow-brand:0 8px 24px rgba(224,138,46,.20);
+  --radius:16px;--radius-sm:11px;--radius-xs:8px;
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
-  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
-  --header-h:64px;color-scheme:light;
+  --ease:cubic-bezier(.4,0,.2,1);--ease-out:cubic-bezier(.16,1,.3,1);
+  --dur:220ms;
+  --header-h:68px;
+  color-scheme:light;
 }
 [data-theme="dark"]{
-  --brand:#F4A44C;--brand-soft:#F9C67F;--brand-deep:#E08A2E;--brand-tint:#2A2218;--brand-glow:rgba(244,164,76,.25);
+  --brand:#F4A44C;--brand-soft:#F9C67F;--brand-deep:#E08A2E;--brand-tint:#261E14;--brand-glow:rgba(244,164,76,.20);
   --ink:#E8ECF4;--ink-2:#B8C2D2;--ink-3:#8892A4;--ink-4:#5A6478;
-  --bg:#0F141C;--bg-2:#161C26;--bg-3:#1E2632;--card:#181F2A;--card-2:#1D2531;
-  --line:#28323F;--line-strong:#3A4655;
+  --bg:#0F141C;--bg-2:#151B25;--bg-3:#1C2430;--card:#171E28;
+  --line:#252E3B;--line-strong:#35404F;
   --ok:#3DD68C;--err:#F26B6B;--warn:#F4A54E;--info:#5B9BF5;
-  --shadow-sm:0 2px 8px rgba(0,0,0,.3);--shadow:0 6px 24px rgba(0,0,0,.35);--shadow-lg:0 16px 48px rgba(0,0,0,.4);
+  --shadow-xs:0 1px 2px rgba(0,0,0,.25);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.30);
+  --shadow-md:0 6px 20px rgba(0,0,0,.35);
+  --shadow-lg:0 14px 40px rgba(0,0,0,.45);
+  --shadow-brand:0 8px 24px rgba(244,164,76,.22);
   color-scheme:dark;
 }
-[data-contrast="high"]{--line:#000;--line-strong:#000;--ink:#000;--ink-2:#000;--ink-3:#1a1a1a;--brand:#8A4A00;--brand-deep:#5A3000;--brand-tint:#FFE9CC}
-[data-theme="dark"][data-contrast="high"]{--line:#FFF;--line-strong:#FFF;--ink:#FFF;--ink-2:#FFF;--ink-3:#E0E0E0;--brand:#FFB968;--brand-deep:#FFD29A;--brand-tint:#3A2A10}
-[data-textsize="large"]{font-size:18px}[data-textsize="xlarge"]{font-size:21px}
 
+/* ========== RESET ========== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;transition:background .35s var(--ease),color .35s var(--ease)}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
-[data-reduced-motion="true"] *,[data-reduced-motion="true"] *::before,[data-reduced-motion="true"] *::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
-img,svg{display:block;max-width:100%}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--ink);
+  min-height:100vh;line-height:1.55;font-size:16px;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease);
+}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 a{color:inherit;text-decoration:none}
-:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+img,svg,canvas{display:block;max-width:100%}
+:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px;border-radius:6px}
+::selection{background:var(--brand-glow);color:var(--ink)}
 
-.bg-orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.bg-orbs::before,.bg-orbs::after{content:"";position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;will-change:transform}
-.bg-orbs::before{width:520px;height:520px;background:radial-gradient(circle,var(--brand-soft),transparent 70%);top:-160px;right:-120px;animation:orbFloat 18s ease-in-out infinite}
-.bg-orbs::after{width:460px;height:460px;background:radial-gradient(circle,#9BC1F0,transparent 70%);bottom:-140px;left:-100px;animation:orbFloat 22s ease-in-out infinite reverse}
-[data-theme="dark"] .bg-orbs::after{background:radial-gradient(circle,#2A4A7A,transparent 70%)}
-@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
 
-.skip-link{position:absolute;left:12px;top:-60px;z-index:10000;background:var(--brand);color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;transition:top .2s var(--ease)}
-.skip-link:focus{top:12px}
+/* ========== SUBTLE BACKGROUND ========== */
+.page-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--bg)}
+.page-bg::before{
+  content:"";position:absolute;width:640px;height:640px;border-radius:50%;
+  background:radial-gradient(circle,var(--brand-soft),transparent 65%);
+  opacity:.10;top:-220px;right:-200px;
+}
+.page-bg::after{
+  content:"";position:absolute;width:540px;height:540px;border-radius:50%;
+  background:radial-gradient(circle,#9BC1F0,transparent 65%);
+  opacity:.08;bottom:-200px;left:-180px;
+}
+[data-theme="dark"] .page-bg::after{background:radial-gradient(circle,#2A4A7A,transparent 65%);opacity:.12}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+/* ========== SKIP LINK ========== */
+.skip{position:absolute;left:12px;top:-60px;z-index:10000;background:var(--brand);color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;transition:top var(--dur) var(--ease)}
+.skip:focus{top:12px}
+
+/* ========== ANIMATIONS (SMOOTH) ========== */
+@keyframes fadeUp{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
-@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-@keyframes toastOut{to{opacity:0;transform:translateX(30px)}}
-@keyframes shimmer{100%{transform:translateX(100%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes shimmer{100%{transform:translate3d(100%,0,0)}}
+@keyframes toastIn{from{opacity:0;transform:translate3d(24px,0,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes toastOut{to{opacity:0;transform:translate3d(24px,0,0)}}
 @keyframes scanLine{0%{top:0}100%{top:100%}}
-.fade-up{animation:fadeUp .5s var(--ease) both}
-.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}
+@keyframes growIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
 
-.header{position:sticky;top:0;z-index:900;height:var(--header-h);background:color-mix(in srgb,var(--bg-2) 82%,transparent);backdrop-filter:saturate(160%) blur(14px);-webkit-backdrop-filter:saturate(160%) blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 clamp(14px,3vw,32px);gap:14px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.02em;flex-shrink:0}
-.brand-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:16px;box-shadow:0 4px 14px var(--brand-glow)}
-.brand span b{color:var(--brand)}
-.header nav{display:flex;gap:6px;margin-left:auto;align-items:center}
-.nav-link{padding:8px 14px;border-radius:10px;font-size:.9rem;font-weight:600;color:var(--ink-2);transition:all .2s var(--ease)}
-.nav-link:hover,.nav-link:focus-visible{background:var(--brand-tint);color:var(--brand-deep)}
-.nav-actions{display:flex;gap:6px;align-items:center;margin-left:8px}
-.icon-btn{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--bg-3);color:var(--ink-2);font-size:1rem;transition:all .2s var(--ease);border:1px solid var(--line)}
-.icon-btn:hover,.icon-btn:focus-visible{background:var(--brand-tint);color:var(--brand-deep);border-color:var(--brand-soft);transform:translateY(-1px)}
+.anim-fade{animation:fadeUp .5s var(--ease-out) both}
+.anim-fade-1{animation:fadeUp .5s .06s var(--ease-out) both}
+.anim-fade-2{animation:fadeUp .5s .12s var(--ease-out) both}
+.anim-fade-3{animation:fadeUp .5s .18s var(--ease-out) both}
+
+/* ========== HEADER (PROFESSIONAL) ========== */
+.header{
+  position:sticky;top:0;z-index:900;height:var(--header-h);
+  background:color-mix(in srgb,var(--bg-2) 85%,transparent);
+  backdrop-filter:saturate(180%) blur(16px);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);
+  border-bottom:1px solid var(--line);
+  transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+}
+.header-inner{
+  max-width:1280px;margin:0 auto;height:100%;
+  padding:0 clamp(16px,3vw,32px);
+  display:flex;align-items:center;gap:12px;
+}
+/* Logo LEFT */
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-logo{
+  width:40px;height:40px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand-deep));
+  color:#fff;font-size:17px;box-shadow:var(--shadow-brand);
+  flex-shrink:0;
+}
+.brand-name{font-weight:800;font-size:1.22rem;letter-spacing:-.02em;color:var(--ink)}
+.brand-name b{color:var(--brand)}
+/* Nav center */
+.nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+.nav a{
+  padding:8px 14px;border-radius:9px;font-size:.9rem;font-weight:600;
+  color:var(--ink-2);transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+.nav a:hover{background:var(--brand-tint);color:var(--brand-deep)}
+/* Actions RIGHT */
+.actions{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:8px}
+.icon-btn{
+  width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+  background:var(--bg-3);color:var(--ink-2);font-size:1rem;
+  border:1px solid var(--line);
+  transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease);
+}
+.icon-btn:hover{background:var(--brand-tint);color:var(--brand-deep);border-color:var(--brand-soft);transform:translateY(-1px)}
 .icon-btn[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
-.menu-toggle{display:none}
+.menu-btn{display:none}
 
-.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(14px,3vw,32px);width:100%}
-.section{padding:clamp(32px,5vw,64px) 0}
-.section-head{text-align:center;margin-bottom:clamp(24px,4vw,40px)}
-.eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--brand-tint);color:var(--brand-deep);padding:6px 14px;border-radius:999px;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--brand-glow);margin-bottom:14px}
-h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;letter-spacing:-.035em;font-weight:800;margin-bottom:16px}
+/* Mobile nav */
+@media (max-width:880px){
+  .nav{
+    position:fixed;top:var(--header-h);left:0;right:0;
+    background:var(--bg-2);border-bottom:1px solid var(--line);
+    flex-direction:column;align-items:stretch;gap:4px;padding:14px;
+    box-shadow:var(--shadow-md);
+    transform:translateY(-12px);opacity:0;pointer-events:none;
+    transition:transform var(--dur) var(--ease),opacity var(--dur) var(--ease);
+    margin-left:0;
+  }
+  .nav.open{transform:translateY(0);opacity:1;pointer-events:auto}
+  .nav a{padding:12px 14px}
+  .menu-btn{display:grid}
+  /* Move accessibility into menu on mobile */
+  .actions .a11y-desktop{display:none}
+  .nav .a11y-mobile{display:flex;margin-top:8px;border-top:1px solid var(--line);padding-top:12px}
+  .nav .a11y-mobile .icon-btn{width:auto;padding:10px 14px;gap:8px;display:flex;font-size:.88rem;font-weight:600}
+}
+@media (min-width:881px){
+  .nav .a11y-mobile{display:none}
+}
+
+/* ========== LAYOUT ========== */
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(16px,3vw,32px);width:100%}
+.section{padding:clamp(40px,6vw,72px) 0}
+.section-head{text-align:center;max-width:660px;margin:0 auto clamp(28px,4vw,44px)}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--brand-tint);color:var(--brand-deep);
+  padding:6px 14px;border-radius:999px;font-size:.74rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--brand-glow);
+  margin-bottom:14px;
+}
+h1{font-size:clamp(2.1rem,5vw,3.5rem);line-height:1.1;letter-spacing:-.035em;font-weight:800;margin-bottom:18px}
 h1 .grad{background:linear-gradient(120deg,var(--brand),var(--brand-deep));-webkit-background-clip:text;background-clip:text;color:transparent}
-h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;margin-bottom:8px}
-.lead{color:var(--ink-3);font-size:clamp(1rem,1.4vw,1.1rem);max-width:640px;margin:0 auto}
+h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800;margin-bottom:10px}
+.lead{color:var(--ink-3);font-size:clamp(1rem,1.4vw,1.12rem);line-height:1.65}
 
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,56px);align-items:center;padding:clamp(32px,5vw,72px) 0 clamp(24px,4vw,48px)}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.hero-visual{position:relative;aspect-ratio:1/1;max-width:440px;margin:0 auto;width:100%;display:grid;place-items:center}
-.orbit{position:absolute;inset:0;border:2px dashed var(--line-strong);border-radius:50%;opacity:.45;animation:spin 40s linear infinite}
-.orbit:nth-child(2){inset:12%;animation-duration:30s;animation-direction:reverse;border-color:var(--brand-soft)}
-.hero-card{position:relative;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:32px 28px;text-align:center;box-shadow:var(--shadow-lg);animation:pop .7s var(--spring) both}
-.hero-card .bolt{width:72px;height:72px;margin:0 auto 14px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:30px;box-shadow:0 10px 26px var(--brand-glow)}
+/* ========== HERO ========== */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,64px);align-items:center;padding:clamp(40px,6vw,80px) 0 clamp(28px,4vw,56px)}
+.hero-copy{max-width:560px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-visual{
+  position:relative;aspect-ratio:1/1;max-width:400px;margin:0 auto;width:100%;
+  display:grid;place-items:center;
+}
+.hero-orbit{position:absolute;inset:0;border:1.5px dashed var(--line-strong);border-radius:50%;opacity:.35;animation:spin 50s linear infinite}
+.hero-orbit:nth-child(2){inset:14%;border-color:var(--brand-soft);animation-duration:35s;animation-direction:reverse;opacity:.5}
+.hero-card{
+  position:relative;z-index:2;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:32px 28px;text-align:center;
+  box-shadow:var(--shadow-lg);
+  animation:growIn .6s var(--ease-out) both;
+}
+.hero-bolt{
+  width:70px;height:70px;margin:0 auto 16px;border-radius:20px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand-deep));
+  color:#fff;font-size:28px;box-shadow:var(--shadow-brand);
+}
 .hero-card h3{font-size:1.1rem;font-weight:800;margin-bottom:4px}
 .hero-card p{font-size:.85rem;color:var(--ink-3)}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:13px;font-weight:700;font-size:.9rem;transition:transform .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease),color .18s var(--ease);border:1.5px solid transparent;white-space:nowrap;text-align:center}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 6px 20px var(--brand-glow)}
-.btn-primary:hover,.btn-primary:focus-visible{transform:translateY(-2px);box-shadow:0 10px 28px var(--brand-glow)}
-.btn-ghost{background:var(--bg-2);color:var(--ink);border-color:var(--line-strong)}
-.btn-ghost:hover,.btn-ghost:focus-visible{background:var(--brand-tint);border-color:var(--brand-soft);color:var(--brand-deep)}
-.btn-soft{background:var(--brand-tint);color:var(--brand-deep);border-color:var(--brand-glow)}
-.btn-soft:hover,.btn-soft:focus-visible{background:var(--brand-glow)}
-.btn-success{background:var(--ok);color:#fff}
-.btn-danger{background:var(--err);color:#fff}
-.btn-warn{background:var(--warn);color:#fff}
-.btn-sm{padding:7px 14px;font-size:.8rem;border-radius:9px}
-.btn-xs{padding:5px 10px;font-size:.72rem;border-radius:8px}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-.btn-block{width:100%}
+@media (max-width:880px){
+  .hero{grid-template-columns:1fr;text-align:center}
+  .hero-copy{max-width:none;margin:0 auto}
+  .hero-cta{justify-content:center}
+  .hero-visual{max-width:300px}
+}
 
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(18px,2.5vw,26px);box-shadow:var(--shadow-sm);transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease)}
-.card:hover{border-color:var(--brand-soft);box-shadow:var(--shadow)}
-.card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.card-head .ci{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:15px;flex-shrink:0}
-.card-head h3{font-size:1.02rem;font-weight:800;line-height:1.2}
+/* ========== BUTTONS ========== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 22px;border-radius:11px;font-weight:700;font-size:.9rem;
+  border:1.5px solid transparent;white-space:nowrap;text-align:center;
+  transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background-color var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:var(--shadow-brand)}
+.btn-primary:hover{box-shadow:0 12px 30px var(--brand-glow);transform:translateY(-1px)}
+.btn-ghost{background:var(--bg-2);color:var(--ink);border-color:var(--line-strong)}
+.btn-ghost:hover{background:var(--brand-tint);border-color:var(--brand-soft);color:var(--brand-deep)}
+.btn-soft{background:var(--brand-tint);color:var(--brand-deep);border-color:var(--brand-glow)}
+.btn-soft:hover{background:var(--brand-glow)}
+.btn-success{background:var(--ok);color:#fff}
+.btn-success:hover{filter:brightness(1.05)}
+.btn-danger{background:var(--err);color:#fff}
+.btn-danger:hover{filter:brightness(1.05)}
+.btn-warn{background:var(--warn);color:#fff}
+.btn-warn:hover{filter:brightness(1.05)}
+.btn-sm{padding:8px 14px;font-size:.8rem;border-radius:9px}
+.btn-xs{padding:5px 10px;font-size:.72rem;border-radius:7px}
+.btn-block{width:100%}
+.btn:disabled{opacity:.42;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* ========== CARDS ========== */
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:clamp(20px,2.5vw,28px);
+  box-shadow:var(--shadow-xs);
+  transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+.card:hover{border-color:var(--brand-soft);box-shadow:var(--shadow-sm)}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.card-icon{
+  width:40px;height:40px;border-radius:11px;display:grid;place-items:center;
+  background:var(--brand-tint);color:var(--brand-deep);font-size:16px;flex-shrink:0;
+}
+.card-head h3{font-size:1rem;font-weight:800;line-height:1.2}
 .card-head p{font-size:.78rem;color:var(--ink-3);margin-top:2px}
 
-.field{width:100%;padding:12px 16px;border:1.5px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--bg-3);color:var(--ink);font-size:.92rem;transition:all .2s var(--ease);-webkit-appearance:none}
+/* ========== INPUTS ========== */
+.field{
+  width:100%;padding:12px 16px;border:1.5px solid var(--line-strong);
+  border-radius:var(--radius-sm);background:var(--bg-3);color:var(--ink);
+  font-size:.92rem;
+  transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background-color var(--dur) var(--ease);
+  -webkit-appearance:none;
+}
 .field:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-glow);background:var(--bg-2)}
 .field::placeholder{color:var(--ink-4)}
+.code-input{
+  font-family:var(--mono);font-size:1.5rem!important;letter-spacing:.35em;
+  text-align:center;font-weight:600;padding:14px!important;
+}
 .input-row{display:flex;gap:10px;flex-wrap:wrap}
-.input-row .field{flex:1;min-width:150px}
-.code-input{font-family:var(--mono);font-size:1.4rem!important;letter-spacing:.4em;text-align:center;font-weight:600;padding:14px!important}
+.input-row .field{flex:1;min-width:140px}
 
-.steps{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
-.step{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:var(--bg-2);border:1px solid var(--line);font-size:.82rem;font-weight:600;color:var(--ink-3);transition:all .25s var(--ease)}
-.step .n{width:22px;height:22px;border-radius:50%;background:var(--bg-3);display:grid;place-items:center;font-size:.7rem;font-weight:800;color:var(--ink-3);transition:all .25s var(--ease)}
+/* ========== STEPS ========== */
+.steps{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.step{
+  display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
+  background:var(--bg-2);border:1px solid var(--line);
+  font-size:.82rem;font-weight:600;color:var(--ink-3);
+  transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+.step .n{
+  width:22px;height:22px;border-radius:50%;background:var(--bg-3);
+  display:grid;place-items:center;font-size:.7rem;font-weight:800;color:var(--ink-3);
+  transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease);
+}
 .step.active{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-deep)}
 .step.active .n{background:var(--brand);color:#fff}
 .step.done .n{background:var(--ok);color:#fff}
 
-.status-bar{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--line);font-size:.88rem;margin-top:16px;transition:all .3s var(--ease);min-height:52px;color:var(--ink-2)}
+/* ========== STATUS BAR ========== */
+.status-bar{
+  display:flex;align-items:flex-start;gap:12px;padding:14px 18px;
+  border-radius:var(--radius-sm);background:var(--card);
+  border:1px solid var(--line);font-size:.88rem;margin-top:16px;
+  min-height:52px;color:var(--ink-2);
+  transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease);
+}
 .status-bar .si{font-size:1rem;flex-shrink:0;margin-top:1px}
-.status-bar.success{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--card))}.status-bar.success .si{color:var(--ok)}
-.status-bar.error{border-color:var(--err);background:color-mix(in srgb,var(--err) 8%,var(--card))}.status-bar.error .si{color:var(--err)}
-.status-bar.info{border-color:var(--info);background:color-mix(in srgb,var(--info) 8%,var(--card))}.status-bar.info .si{color:var(--info)}
-.status-bar.warning{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,var(--card))}.status-bar.warning .si{color:var(--warn)}
+.status-bar.success{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 6%,var(--card))}
+.status-bar.success .si{color:var(--ok)}
+.status-bar.error{border-color:var(--err);background:color-mix(in srgb,var(--err) 6%,var(--card))}
+.status-bar.error .si{color:var(--err)}
+.status-bar.info{border-color:var(--info);background:color-mix(in srgb,var(--info) 6%,var(--card))}
+.status-bar.info .si{color:var(--info)}
+.status-bar.warning{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 6%,var(--card))}
+.status-bar.warning .si{color:var(--warn)}
 
-.transfer-panel{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
-.transfer-panel[hidden]{display:none}
-.tp-head{display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--bg-3);border-bottom:1px solid var(--line);font-weight:700;font-size:.9rem;color:var(--ink-2)}
-.tp-head .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);animation:pulse 1.6s infinite}
-.tp-head .dot.idle{background:var(--ink-4);animation:none}
-.tp-body{padding:16px 20px;display:grid;gap:14px}
-.tp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
-.stat{background:var(--bg-3);border-radius:var(--radius-sm);padding:10px 14px;border:1px solid var(--line)}
-.stat .lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-4);margin-bottom:2px}
-.stat .val{font-size:1.05rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
-.stat .val.small{font-size:.85rem}
-.tp-file{margin-top:4px}
-.tp-file .name{display:flex;justify-content:space-between;gap:10px;font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--ink-2)}
-.tp-file .name .pct{color:var(--brand-deep);font-variant-numeric:tabular-nums}
-.track{height:8px;border-radius:99px;background:var(--bg-3);overflow:hidden;position:relative}
-.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--brand),var(--brand-deep));width:0%;transition:width .15s linear;position:relative;overflow:hidden}
-.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transform:translateX(-100%);animation:shimmer 1.4s infinite}
-.queue{display:grid;gap:8px;max-height:240px;overflow-y:auto;padding-right:4px}
-.queue::-webkit-scrollbar{width:5px}.queue::-webkit-scrollbar-thumb{background:var(--brand-soft);border-radius:99px}
-.q-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-3);border-radius:10px;font-size:.8rem;border-left:3px solid var(--ink-4)}
-.q-item.sending{border-left-color:var(--brand)}.q-item.receiving{border-left-color:var(--info)}.q-item.done{border-left-color:var(--ok)}.q-item.error{border-left-color:var(--err)}
-.q-item .qi{color:var(--ink-3);flex-shrink:0}.q-item .qn{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.q-item .qs{font-size:.7rem;color:var(--ink-4);font-weight:700;font-variant-numeric:tabular-nums}
-.tp-empty{text-align:center;color:var(--ink-4);font-size:.82rem;padding:6px 0}
-
-.conn-panel{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
-.conn-head{padding:14px 20px;background:var(--bg-3);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem;color:var(--ink-2);flex-wrap:wrap}
-.conn-head .tag{margin-left:auto;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--brand-tint);color:var(--brand-deep);border:1px solid var(--brand-glow)}
-.conn-body{padding:14px 20px;display:grid;gap:8px}
-.conn{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:var(--bg-3);border-left:3px solid var(--brand);flex-wrap:wrap;transition:all .25s var(--ease)}
+/* ========== CONNECTION PANEL ========== */
+.conn-panel{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs)}
+.panel-head{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 20px;background:var(--bg-3);border-bottom:1px solid var(--line);
+  font-weight:700;font-size:.88rem;color:var(--ink-2);flex-wrap:wrap;
+}
+.panel-head .tag{
+  margin-left:auto;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;
+  background:var(--brand-tint);color:var(--brand-deep);border:1px solid var(--brand-glow);
+}
+.panel-body{padding:14px 20px;display:grid;gap:8px}
+.conn{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  border-radius:10px;background:var(--bg-3);border-left:3px solid var(--brand);
+  flex-wrap:wrap;transition:background-color var(--dur) var(--ease);
+}
 .conn.guest{border-left-color:var(--info)}
-.conn .cd{width:9px;height:9px;border-radius:50%;background:var(--ok);flex-shrink:0;animation:pulse 2s infinite}
-.conn .cn{font-weight:700;font-size:.85rem}.conn .cs{font-size:.72rem;color:var(--ink-4)}
-.badge{margin-left:auto;font-size:.66rem;font-weight:800;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.conn-dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex-shrink:0;animation:pulse 2.2s ease-in-out infinite}
+.conn-name{font-weight:700;font-size:.86rem}
+.conn-role{font-size:.72rem;color:var(--ink-4)}
+.badge{
+  margin-left:auto;font-size:.66rem;font-weight:800;padding:3px 10px;
+  border-radius:999px;text-transform:uppercase;letter-spacing:.04em;
+}
 .badge.ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
 .badge.no{background:color-mix(in srgb,var(--err) 14%,transparent);color:var(--err)}
 .badge.neutral{background:color-mix(in srgb,var(--info) 14%,transparent);color:var(--info)}
 
-.host-panel{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
+/* ========== HOST PANEL ========== */
+.host-panel{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs)}
 .host-panel[hidden]{display:none}
-.host-body{padding:16px 20px}
+.host-body{padding:18px 20px}
 .control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.guest-list{margin-top:14px;display:grid;gap:8px;max-height:320px;overflow-y:auto}
-.guest-list::-webkit-scrollbar{width:5px}.guest-list::-webkit-scrollbar-thumb{background:var(--brand-soft);border-radius:99px}
-.g-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-3);border-radius:10px;border-left:3px solid var(--brand-soft);flex-wrap:wrap;font-size:.82rem;transition:all .2s var(--ease)}
-.g-item:hover{background:var(--brand-tint)}
-.g-item .gn{font-weight:700;display:flex;align-items:center;gap:6px}
-.g-item .actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
-.g-count{text-align:center;font-size:.78rem;color:var(--ink-4);margin-top:10px}
+.guest-list{margin-top:14px;display:grid;gap:8px;max-height:340px;overflow-y:auto;padding-right:4px}
+.guest-list::-webkit-scrollbar{width:5px}
+.guest-list::-webkit-scrollbar-thumb{background:var(--brand-soft);border-radius:99px}
+.guest-item{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;
+  background:var(--bg-3);border-radius:10px;border-left:3px solid var(--brand-soft);
+  flex-wrap:wrap;font-size:.82rem;
+  transition:background-color var(--dur) var(--ease);
+}
+.guest-item:hover{background:var(--brand-tint)}
+.guest-name{font-weight:700;display:flex;align-items:center;gap:6px}
+.guest-actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.guest-count{text-align:center;font-size:.78rem;color:var(--ink-4);margin-top:10px}
 
-.file-list{display:grid;gap:8px;margin-top:4px}
-.file-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-3);border-radius:10px;border:1px solid var(--line);transition:all .2s var(--ease);flex-wrap:wrap}
+/* ========== TRANSFER PANEL ========== */
+.transfer-panel{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs);animation:fadeIn .3s var(--ease-out)}
+.transfer-panel[hidden]{display:none}
+.tp-head{display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--bg-3);border-bottom:1px solid var(--line);font-weight:700;font-size:.88rem;color:var(--ink-2)}
+.tp-dot{width:9px;height:9px;border-radius:50%;background:var(--ok);animation:pulse 1.6s ease-in-out infinite}
+.tp-dot.idle{background:var(--ink-4);animation:none}
+.tp-body{padding:16px 20px;display:grid;gap:16px}
+.tp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.stat{background:var(--bg-3);border-radius:10px;padding:10px 14px;border:1px solid var(--line)}
+.stat-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-4);margin-bottom:2px}
+.stat-val{font-size:1.05rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.tp-file .tp-file-name{display:flex;justify-content:space-between;gap:10px;font-size:.82rem;font-weight:600;margin-bottom:8px;color:var(--ink-2)}
+.tp-file-name .pct{color:var(--brand-deep);font-variant-numeric:tabular-nums}
+.track{height:8px;border-radius:99px;background:var(--bg-3);overflow:hidden;position:relative}
+.fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--brand),var(--brand-deep));
+  width:0%;transition:width .15s linear;position:relative;overflow:hidden;
+}
+.fill::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
+  transform:translate3d(-100%,0,0);animation:shimmer 1.5s infinite;
+}
+.queue{display:grid;gap:8px;max-height:220px;overflow-y:auto;padding-right:4px}
+.queue::-webkit-scrollbar{width:5px}
+.queue::-webkit-scrollbar-thumb{background:var(--brand-soft);border-radius:99px}
+.q-item{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  background:var(--bg-3);border-radius:9px;font-size:.8rem;
+  border-left:3px solid var(--ink-4);
+  transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease);
+}
+.q-item.sending{border-left-color:var(--brand)}
+.q-item.receiving{border-left-color:var(--info)}
+.q-item.done{border-left-color:var(--ok)}
+.q-item.error{border-left-color:var(--err)}
+.q-item .qi{color:var(--ink-3);flex-shrink:0}
+.q-item .qn{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q-item .qs{font-size:.7rem;color:var(--ink-4);font-weight:700;font-variant-numeric:tabular-nums}
+.tp-empty{text-align:center;color:var(--ink-4);font-size:.82rem;padding:8px 0}
+
+/* ========== FILE LIST ========== */
+.file-list{display:grid;gap:8px}
+.file-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:var(--bg-3);border-radius:10px;border:1px solid var(--line);
+  flex-wrap:wrap;
+  transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease);
+}
 .file-item:hover{border-color:var(--brand-soft);background:var(--brand-tint)}
-.file-item .fi{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:16px;flex-shrink:0}
-.file-item .fm{flex:1;min-width:120px}
-.file-item .fname{font-weight:700;font-size:.85rem;word-break:break-all}
-.file-item .fmeta{font-size:.72rem;color:var(--ink-4);margin-top:2px}
-.file-item .ftitle{font-size:.72rem;color:var(--brand-deep);font-style:italic;margin-top:1px}
-.file-item .dl{padding:7px 14px;border-radius:9px;background:var(--brand);color:#fff;font-size:.78rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:all .2s var(--ease)}
-.file-item .dl:hover{background:var(--brand-deep);transform:translateY(-1px)}
-.empty{text-align:center;padding:28px 12px;color:var(--ink-4);font-size:.85rem}
-.empty .ei{font-size:30px;display:block;margin-bottom:8px;opacity:.6}
+.file-icon{
+  width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+  background:var(--brand-tint);color:var(--brand-deep);font-size:16px;flex-shrink:0;
+}
+.file-meta{flex:1;min-width:120px}
+.file-name{font-weight:700;font-size:.86rem;word-break:break-all}
+.file-sub{font-size:.72rem;color:var(--ink-4);margin-top:2px}
+.file-title{font-size:.72rem;color:var(--brand-deep);font-style:italic;margin-top:1px}
+.dl-btn{
+  padding:7px 14px;border-radius:9px;background:var(--brand);color:#fff;
+  font-size:.78rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;
+  transition:background-color var(--dur) var(--ease),transform var(--dur) var(--ease);
+}
+.dl-btn:hover{background:var(--brand-deep);transform:translateY(-1px)}
+.empty-state{text-align:center;padding:28px 12px;color:var(--ink-4);font-size:.85rem}
+.empty-state i{font-size:30px;display:block;margin-bottom:8px;opacity:.5}
 
+/* ========== FEATURES ========== */
 .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.feature{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;text-align:center;transition:all .25s var(--ease)}
-.feature:hover{transform:translateY(-4px);border-color:var(--brand-soft);box-shadow:var(--shadow)}
-.feature .ficon{width:52px;height:52px;margin:0 auto 12px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand-tint),color-mix(in srgb,var(--brand-soft) 40%,var(--brand-tint)));color:var(--brand-deep);font-size:22px}
+.feature{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 22px;text-align:center;
+  transition:transform var(--dur) var(--ease),border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+.feature:hover{transform:translateY(-3px);border-color:var(--brand-soft);box-shadow:var(--shadow-sm)}
+.feature-icon{
+  width:52px;height:52px;margin:0 auto 14px;border-radius:15px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand-tint),color-mix(in srgb,var(--brand-soft) 40%,var(--brand-tint)));
+  color:var(--brand-deep);font-size:22px;
+}
 .feature h4{font-size:.98rem;font-weight:800;margin-bottom:4px}
 .feature p{font-size:.82rem;color:var(--ink-3);line-height:1.6}
 
-.modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:16px;background:rgba(15,20,28,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fadeUp .25s var(--ease)}
+/* ========== FOOTER ========== */
+.footer{border-top:1px solid var(--line);padding:28px 0;background:var(--bg-2);margin-top:48px}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--ink-3)}
+.footer-inner a{color:var(--brand-deep);font-weight:700}
+.footer-inner a:hover{text-decoration:underline}
+.socials{display:flex;gap:8px}
+.socials a{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  background:var(--bg-3);color:var(--ink-3);
+  transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease);
+}
+.socials a:hover{background:var(--brand-tint);color:var(--brand-deep);transform:translateY(-2px)}
+
+/* ========== MODALS ========== */
+.modal{
+  position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+  padding:16px;background:rgba(15,20,28,.5);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  animation:fadeIn .2s var(--ease-out);
+}
 .modal[hidden]{display:none}
-.modal-box{background:var(--card);border-radius:22px;padding:clamp(24px,4vw,34px);max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.3);border:1px solid var(--line);animation:pop .3s var(--spring) both;max-height:90vh;overflow-y:auto}
+.modal-box{
+  background:var(--card);border-radius:20px;
+  padding:clamp(24px,4vw,34px);
+  max-width:460px;width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,.3);
+  border:1px solid var(--line);
+  animation:growIn .3s var(--ease-out) both;
+  max-height:90vh;overflow-y:auto;
+}
 .modal-box h2{font-size:1.3rem;margin-bottom:6px;text-align:center}
 .modal-box .sub{text-align:center;color:var(--ink-3);font-size:.86rem;margin-bottom:20px}
-.modal-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-deep);font-size:26px;border:2px solid var(--brand-glow)}
-.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-icon{
+  width:64px;height:64px;margin:0 auto 16px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--brand-tint);color:var(--brand-deep);font-size:26px;
+  border:2px solid var(--brand-glow);
+}
+.modal-actions{display:flex;gap:10px;margin-top:22px}
 .modal-actions .btn{flex:1}
+.field-err{color:var(--err);font-size:.78rem;margin-top:8px;display:none}
+.field-err.show{display:block}
 
-.toasts{position:fixed;top:calc(var(--header-h) + 12px);right:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;max-width:340px;pointer-events:none}
-.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);font-size:.85rem;font-weight:600;border-left:4px solid var(--info);animation:toastIn .3s var(--ease);pointer-events:auto}
+/* ========== TOASTS ========== */
+.toasts{
+  position:fixed;top:calc(var(--header-h) + 12px);right:16px;z-index:10000;
+  display:flex;flex-direction:column;gap:8px;max-width:340px;pointer-events:none;
+}
+.toast{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;
+  border-radius:11px;background:var(--card);border:1px solid var(--line);
+  box-shadow:var(--shadow-md);font-size:.85rem;font-weight:600;
+  border-left:4px solid var(--info);
+  animation:toastIn .3s var(--ease-out);pointer-events:auto;
+}
 .toast.success{border-left-color:var(--ok)}.toast.success .ti{color:var(--ok)}
 .toast.error{border-left-color:var(--err)}.toast.error .ti{color:var(--err)}
 .toast.warning{border-left-color:var(--warn)}.toast.warning .ti{color:var(--warn)}
 .toast.info{border-left-color:var(--info)}.toast.info .ti{color:var(--info)}
 .toast .ti{font-size:1rem;flex-shrink:0}
-.toast.out{animation:toastOut .3s var(--ease) forwards}
+.toast.out{animation:toastOut .3s var(--ease-out) forwards}
+@media (max-width:520px){.toasts{left:12px;right:12px;max-width:none}}
 
-.loader{position:fixed;inset:0;z-index:10001;display:grid;place-items:center;background:rgba(247,248,251,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-[data-theme="dark"] .loader{background:rgba(15,20,28,.75)}
+/* ========== LOADER ========== */
+.loader{
+  position:fixed;inset:0;z-index:10001;display:grid;place-items:center;
+  background:rgba(248,249,252,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  animation:fadeIn .2s var(--ease-out);
+}
+[data-theme="dark"] .loader{background:rgba(15,20,28,.8)}
 .loader[hidden]{display:none}
-.loader-box{display:flex;flex-direction:column;align-items:center;gap:14px}
-.loader-ring{width:56px;height:56px;position:relative}
-.loader-ring .r{position:absolute;inset:0;border-radius:50%;border:4px solid transparent}
-.loader-ring .r:nth-child(1){border-top-color:var(--brand);animation:spin 1s linear infinite}
-.loader-ring .r:nth-child(2){inset:8px;border-right-color:var(--info);animation:spin 1.5s linear infinite reverse}
-.loader-ring .r:nth-child(3){inset:16px;border-bottom-color:var(--brand-soft);animation:spin 2s linear infinite}
+.loader-box{display:flex;flex-direction:column;align-items:center;gap:16px}
+.loader-ring{width:52px;height:52px;position:relative}
+.loader-ring .r{position:absolute;inset:0;border-radius:50%;border:3.5px solid transparent}
+.loader-ring .r:nth-child(1){border-top-color:var(--brand);animation:spin .9s linear infinite}
+.loader-ring .r:nth-child(2){inset:7px;border-right-color:var(--info);animation:spin 1.3s linear infinite reverse}
+.loader-ring .r:nth-child(3){inset:14px;border-bottom-color:var(--brand-soft);animation:spin 1.8s linear infinite}
 .loader-txt{font-size:.86rem;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.loader-txt i{color:var(--brand)}
 
-/* QR */
-.qr-wrap{display:grid;place-items:center;margin-top:14px;padding:16px;background:var(--bg-2);border:2px dashed var(--brand-soft);border-radius:var(--radius);gap:10px}
-.qr-wrap canvas,.qr-wrap img{width:220px;height:220px;max-width:100%;height:auto;border-radius:10px;background:#fff;padding:8px;box-shadow:var(--shadow-sm)}
+/* ========== QR ========== */
+.qr-wrap{
+  display:grid;place-items:center;margin-top:14px;
+  padding:18px;background:var(--bg-2);
+  border:2px dashed var(--brand-soft);border-radius:var(--radius);gap:12px;
+  animation:fadeIn .3s var(--ease-out);
+}
+.qr-canvas{width:220px;height:220px;max-width:100%;height:auto;border-radius:10px;background:#fff;padding:8px;box-shadow:var(--shadow-sm)}
 .qr-hint{font-size:.75rem;color:var(--ink-4);text-align:center;line-height:1.5}
 .qr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 
-.scan-modal .modal-box{max-width:520px}
-.scan-area{position:relative;width:100%;aspect-ratio:1/1;max-width:420px;margin:0 auto;background:#000;border-radius:16px;overflow:hidden;border:3px solid var(--brand)}
+/* ========== SCANNER ========== */
+.scan-area{
+  position:relative;width:100%;aspect-ratio:1/1;max-width:420px;margin:0 auto;
+  background:#000;border-radius:16px;overflow:hidden;border:3px solid var(--brand);
+}
 .scan-area video{width:100%;height:100%;object-fit:cover;display:block}
 .scan-overlay{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center}
-.scan-frame{width:65%;aspect-ratio:1/1;border:3px solid rgba(255,255,255,.85);border-radius:16px;position:relative;box-shadow:0 0 0 100vmax rgba(0,0,0,.35)}
-.scan-frame::before,.scan-frame::after{content:"";position:absolute;width:32px;height:32px;border:4px solid var(--brand)}
+.scan-frame{
+  width:65%;aspect-ratio:1/1;border:3px solid rgba(255,255,255,.85);
+  border-radius:16px;position:relative;box-shadow:0 0 0 100vmax rgba(0,0,0,.35);
+}
+.scan-frame::before,.scan-frame::after{
+  content:"";position:absolute;width:30px;height:30px;border:4px solid var(--brand);
+}
 .scan-frame::before{top:-4px;left:-4px;border-right:none;border-bottom:none;border-radius:16px 0 0 0}
 .scan-frame::after{bottom:-4px;right:-4px;border-left:none;border-top:none;border-radius:0 0 16px 0}
-.scan-line{position:absolute;left:4%;right:4%;height:3px;background:linear-gradient(90deg,transparent,var(--brand),transparent);border-radius:99px;box-shadow:0 0 12px var(--brand);animation:scanLine 2s ease-in-out infinite}
+.scan-line{
+  position:absolute;left:4%;right:4%;height:3px;
+  background:linear-gradient(90deg,transparent,var(--brand),transparent);
+  border-radius:99px;box-shadow:0 0 12px var(--brand);
+  animation:scanLine 2s ease-in-out infinite;
+}
 .scan-status{text-align:center;font-size:.82rem;color:var(--ink-3);margin-top:12px;min-height:20px}
 .scan-status.ok{color:var(--ok);font-weight:700}
 .scan-status.err{color:var(--err);font-weight:700}
 
-.offline-banner{position:fixed;bottom:16px;left:16px;z-index:9998;background:var(--err);color:#fff;padding:10px 18px;border-radius:12px;font-size:.82rem;font-weight:700;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px;animation:fadeUp .3s var(--ease)}
+/* ========== OFFLINE BANNER ========== */
+.offline-banner{
+  position:fixed;bottom:16px;left:16px;z-index:9998;
+  background:var(--err);color:#fff;padding:10px 18px;border-radius:11px;
+  font-size:.82rem;font-weight:700;box-shadow:var(--shadow-md);
+  display:flex;align-items:center;gap:8px;
+  animation:fadeUp .3s var(--ease-out);
+}
 .offline-banner[hidden]{display:none}
 
-.footer{border-top:1px solid var(--line);padding:24px 0;background:var(--bg-2);margin-top:40px}
-.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--ink-3)}
-.footer-inner a{color:var(--brand-deep);font-weight:700}
-.footer-inner a:hover{text-decoration:underline}
-.socials{display:flex;gap:8px}
-.socials a{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--bg-3);color:var(--ink-3);transition:all .2s var(--ease)}
-.socials a:hover{background:var(--brand-tint);color:var(--brand-deep);transform:translateY(-2px)}
-
-@media (max-width:860px){
-  .hero{grid-template-columns:1fr;text-align:center}
-  .hero-cta{justify-content:center}
-  .hero-visual{max-width:320px}
-  .header nav{display:none}
-  .menu-toggle{display:grid}
-  .header nav.open{display:flex;position:absolute;top:var(--header-h);left:0;right:0;background:var(--bg-2);border-bottom:1px solid var(--line);flex-direction:column;padding:12px;gap:4px;box-shadow:var(--shadow)}
-  .header nav.open .nav-link{width:100%}
-}
-@media (max-width:520px){
-  .toasts{left:12px;right:12px;max-width:none}
-  .modal-actions{flex-direction:column}
-  .qr-wrap canvas,.qr-wrap img{width:180px}
-}
-
-/* Ripple for btn */
-.ripple{position:relative;overflow:hidden}
-.ripple .rp{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s linear;pointer-events:none}
-@keyframes rip{to{transform:scale(4);opacity:0}}
-
-/* A11Y live region hidden */
+/* ========== UTILITY ========== */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+[hidden]{display:none!important}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.mt-16{margin-top:16px}
+.mt-18{margin-top:18px}
+
+/* Accessibility panel — bigger tap targets */
+.a11y-row{display:grid;gap:10px;margin-top:16px}
+.a11y-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 16px;border-radius:11px;background:var(--bg-3);
+  border:1.5px solid var(--line-strong);font-size:.88rem;font-weight:600;
+  transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease);
+}
+.a11y-btn:hover{background:var(--brand-tint);border-color:var(--brand-soft)}
+.a11y-btn .state{font-size:.75rem;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--bg-2);color:var(--ink-3);border:1px solid var(--line)}
+.a11y-btn[data-on="true"] .state{background:var(--brand);color:#fff;border-color:var(--brand)}
 </style>
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to main content</a>
-<div class="bg-orbs" aria-hidden="true"></div>
+<a href="#main" class="skip">Skip to main content</a>
+<div class="page-bg" aria-hidden="true"></div>
 <div class="sr-only" aria-live="polite" id="liveRegion"></div>
 
 <!-- HEADER -->
 <header class="header" role="banner">
-  <div class="brand"><span class="brand-mark" aria-hidden="true"><i class="fas fa-bolt"></i></span><span>SHARE<b>x</b></span></div>
-  <nav id="navMenu" role="navigation" aria-label="Primary">
-    <a href="#app" class="nav-link">Share</a>
-    <a href="#status" class="nav-link">Status</a>
-    <a href="#features" class="nav-link">Features</a>
-    <a href="#about" class="nav-link">About</a>
-  </nav>
-  <div class="nav-actions">
-    <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode" aria-pressed="false" title="Toggle dark mode (Alt+D)"><i class="fas fa-moon" aria-hidden="true"></i></button>
-    <button class="icon-btn" id="a11yBtn" aria-label="Accessibility settings" aria-pressed="false" title="Accessibility settings"><i class="fas fa-universal-access" aria-hidden="true"></i></button>
-    <button class="icon-btn menu-toggle" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><i class="fas fa-bars" aria-hidden="true"></i></button>
+  <div class="header-inner">
+    <!-- LEFT: Logo + Name -->
+    <a href="#" class="brand" aria-label="SHAREx home">
+      <span class="brand-logo" aria-hidden="true"><i class="fas fa-bolt"></i></span>
+      <span class="brand-name">SHARE<b>x</b></span>
+    </a>
+    <!-- CENTER: Nav (mobile: full-screen dropdown) -->
+    <nav id="navMenu" class="nav" role="navigation" aria-label="Primary">
+      <a href="#app">Share</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <!-- Accessibility moves here on mobile -->
+      <button class="icon-btn a11y-mobile" id="a11yMobileBtn" aria-label="Accessibility settings">
+        <i class="fas fa-universal-access"></i> <span>Accessibility</span>
+      </button>
+    </nav>
+    <!-- RIGHT: Actions -->
+    <div class="actions">
+      <button class="icon-btn a11y-desktop" id="a11yBtn" aria-label="Accessibility settings" title="Accessibility">
+        <i class="fas fa-universal-access"></i>
+      </button>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode" aria-pressed="false" title="Toggle theme (Alt+D)">
+        <i class="fas fa-moon" aria-hidden="true"></i>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
 </header>
 
-<!-- A11Y PANEL -->
+<!-- A11Y MODAL -->
 <div class="modal" id="a11yModal" hidden role="dialog" aria-modal="true" aria-labelledby="a11yTitle">
   <div class="modal-box">
     <div class="modal-icon"><i class="fas fa-universal-access" aria-hidden="true"></i></div>
-    <h2 id="a11yTitle">Accessibility Settings</h2>
-    <p class="sub">Adjust for your needs. Saved automatically.</p>
-    <div style="display:grid;gap:10px">
-      <button class="btn btn-ghost btn-block" id="toggleContrast"><i class="fas fa-adjust"></i> High Contrast: <span id="contrastState">Off</span></button>
-      <button class="btn btn-ghost btn-block" id="toggleTextSize"><i class="fas fa-font"></i> Text Size: <span id="sizeState">Normal</span></button>
-      <button class="btn btn-ghost btn-block" id="toggleMotion"><i class="fas fa-wind"></i> Reduce Motion: <span id="motionState">Off</span></button>
-      <button class="btn btn-ghost btn-block" id="toggleSpeech"><i class="fas fa-volume-up"></i> Speak Alerts: <span id="speechState">Off</span></button>
-      <button class="btn btn-primary btn-block" id="a11yClose"><i class="fas fa-check"></i> Done</button>
+    <h2 id="a11yTitle">Accessibility</h2>
+    <p class="sub">Adjust the interface. Saved to this browser.</p>
+    <div class="a11y-row">
+      <button class="a11y-btn" id="toggleContrast" data-on="false">
+        <span><i class="fas fa-adjust"></i> High Contrast</span>
+        <span class="state" id="contrastState">Off</span>
+      </button>
+      <button class="a11y-btn" id="toggleTextSize" data-on="false">
+        <span><i class="fas fa-font"></i> Larger Text</span>
+        <span class="state" id="sizeState">Normal</span>
+      </button>
+      <button class="a11y-btn" id="toggleMotion" data-on="false">
+        <span><i class="fas fa-wind"></i> Reduce Motion</span>
+        <span class="state" id="motionState">Off</span>
+      </button>
+      <button class="a11y-btn" id="toggleSpeech" data-on="false">
+        <span><i class="fas fa-volume-up"></i> Speak Alerts</span>
+        <span class="state" id="speechState">Off</span>
+      </button>
     </div>
-    <p style="font-size:.72rem;color:var(--ink-4);margin-top:14px;text-align:center">Keyboard shortcuts: <b>Alt+N</b> name, <b>Alt+C</b> connect, <b>Alt+S</b> send, <b>Alt+D</b> theme</p>
+    <div class="modal-actions"><button class="btn btn-primary btn-block" id="a11yClose">Done</button></div>
+    <p style="font-size:.72rem;color:var(--ink-4);margin-top:14px;text-align:center">Shortcuts: <b>Alt+N</b> name · <b>Alt+C</b> code · <b>Alt+S</b> send · <b>Alt+D</b> theme</p>
   </div>
 </div>
 
@@ -347,18 +667,18 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
     <h2 id="nameTitle">Welcome to SHAREx</h2>
     <p class="sub">Enter your name so others can identify you.</p>
     <label for="nameInput" class="sr-only">Your name</label>
-    <input class="field" id="nameInput" type="text" placeholder="Your name..." maxlength="20" autocomplete="nickname" />
-    <p id="nameErr" style="color:var(--err);font-size:.78rem;margin-top:8px;display:none">Please enter at least 2 characters</p>
+    <input class="field" id="nameInput" type="text" placeholder="Your name…" maxlength="20" autocomplete="nickname" />
+    <p class="field-err" id="nameErr">Please enter at least 2 characters</p>
     <div class="modal-actions"><button class="btn btn-primary btn-block" id="nameSubmit"><i class="fas fa-arrow-right"></i> Continue</button></div>
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
+<!-- CONFIRM SEND -->
 <div class="modal" id="confirmModal" hidden role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
   <div class="modal-box">
     <div class="modal-icon"><i class="fas fa-paper-plane" aria-hidden="true"></i></div>
     <h2 id="confirmTitle">Confirm Send</h2>
-    <p class="sub" id="confirmTarget">Sending to: All Devices</p>
+    <p class="sub" id="confirmTarget">Sending to: All devices</p>
     <div id="confirmFiles" style="display:grid;gap:6px;max-height:180px;overflow-y:auto"></div>
     <p id="confirmSummary" style="text-align:center;font-size:.78rem;color:var(--ink-4);margin-top:12px"></p>
     <div class="modal-actions">
@@ -368,17 +688,15 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
   </div>
 </div>
 
-<!-- SCAN MODAL -->
-<div class="modal scan-modal" id="scanModal" hidden role="dialog" aria-modal="true" aria-labelledby="scanTitle">
-  <div class="modal-box">
+<!-- SCAN -->
+<div class="modal" id="scanModal" hidden role="dialog" aria-modal="true" aria-labelledby="scanTitle">
+  <div class="modal-box" style="max-width:520px">
     <div class="modal-icon"><i class="fas fa-qrcode" aria-hidden="true"></i></div>
     <h2 id="scanTitle">Scan QR to Connect</h2>
     <p class="sub">Point your camera at the host's QR code</p>
     <div class="scan-area" id="scanArea">
       <video id="scanVideo" playsinline muted aria-label="Camera preview"></video>
-      <div class="scan-overlay" aria-hidden="true">
-        <div class="scan-frame"><div class="scan-line"></div></div>
-      </div>
+      <div class="scan-overlay" aria-hidden="true"><div class="scan-frame"><div class="scan-line"></div></div></div>
     </div>
     <p class="scan-status" id="scanStatus">Requesting camera…</p>
     <div class="modal-actions">
@@ -389,7 +707,12 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
 </div>
 
 <!-- LOADER -->
-<div class="loader" id="loader" hidden><div class="loader-box"><div class="loader-ring"><div class="r"></div><div class="r"></div><div class="r"></div></div><div class="loader-txt"><i class="fas fa-circle-notch fa-spin"></i> <span id="loaderTxt">Working…</span></div></div></div>
+<div class="loader" id="loader" hidden>
+  <div class="loader-box">
+    <div class="loader-ring"><div class="r"></div><div class="r"></div><div class="r"></div></div>
+    <div class="loader-txt"><i class="fas fa-circle-notch fa-spin"></i> <span id="loaderTxt">Working…</span></div>
+  </div>
+</div>
 
 <!-- TOASTS -->
 <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
@@ -400,18 +723,23 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
 <!-- MAIN -->
 <main id="main">
 <section class="hero wrap">
-  <div>
-    <span class="eyebrow fade-up"><i class="fas fa-bolt"></i> Peer-to-Peer</span>
-    <h1 class="fade-up d1">Share files <span class="grad">instantly</span><br>and privately.</h1>
-    <p class="lead fade-up d2" style="margin:0">No servers. No uploads. No limits. Connect with a 6-digit code or QR scan, then send up to 3 files at once — fast and secure.</p>
-    <div class="hero-cta fade-up d3">
-      <a href="#app" class="btn btn-primary" id="startBtn"><i class="fas fa-rocket"></i> Start Sharing</a>
+  <div class="hero-copy anim-fade">
+    <span class="eyebrow"><i class="fas fa-bolt"></i> Peer-to-Peer</span>
+    <h1>Share files <span class="grad">instantly</span> and privately.</h1>
+    <p class="lead">No servers. No uploads. No limits. Connect with a 6-digit code or scan a QR, then send up to 3 files at once — fast and secure.</p>
+    <div class="hero-cta">
+      <a href="#app" class="btn btn-primary"><i class="fas fa-rocket"></i> Start Sharing</a>
       <button class="btn btn-ghost" id="scanQuickBtn"><i class="fas fa-qrcode"></i> Scan QR</button>
     </div>
   </div>
-  <div class="hero-visual fade-up d2" aria-hidden="true">
-    <div class="orbit"></div><div class="orbit"></div>
-    <div class="hero-card"><div class="bolt"><i class="fas fa-bolt"></i></div><h3>SHAREx Tool</h3><p>Fast • Private • No limits</p></div>
+  <div class="hero-visual anim-fade-1" aria-hidden="true">
+    <div class="hero-orbit"></div>
+    <div class="hero-orbit"></div>
+    <div class="hero-card">
+      <div class="hero-bolt"><i class="fas fa-bolt"></i></div>
+      <h3>SHAREx</h3>
+      <p>Fast · Private · No limits</p>
+    </div>
   </div>
 </section>
 
@@ -428,33 +756,39 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
     <div class="step" id="step3" role="listitem"><span class="n">3</span> Share</div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+  <div class="grid-2">
     <!-- HOST -->
-    <div class="card fade-up">
-      <div class="card-head"><div class="ci"><i class="fas fa-qrcode"></i></div><div><h3>Create Room</h3><p>Generate a 6-digit code + QR</p></div></div>
+    <div class="card anim-fade">
+      <div class="card-head">
+        <div class="card-icon"><i class="fas fa-qrcode"></i></div>
+        <div><h3>Create Room</h3><p>Generate a code + QR</p></div>
+      </div>
       <button class="btn btn-primary btn-block" id="hostBtn"><i class="fas fa-plus-circle"></i> Create Room</button>
-      <div id="hostBox" hidden style="margin-top:14px">
+      <div id="hostBox" hidden class="mt-16">
         <label style="font-size:.78rem;font-weight:700;color:var(--ink-3)">Your Code</label>
-        <input class="field code-input" id="codeOut" readonly value="" style="margin-top:6px" />
+        <input class="field code-input" id="codeOut" readonly value="" style="margin-top:6px" aria-label="Your room code" />
         <div class="qr-wrap">
-          <div id="qrCanvasHost"></div>
+          <div id="qrCanvasHost" aria-label="QR code for joining"></div>
           <p class="qr-hint">Scan with any camera to join instantly</p>
         </div>
-        <div class="qr-actions" style="margin-top:10px">
+        <div class="qr-actions" style="margin-top:12px">
           <button class="btn btn-soft btn-sm" id="copyCodeBtn"><i class="fas fa-copy"></i> Copy Code</button>
           <button class="btn btn-soft btn-sm" id="copyLinkBtn"><i class="fas fa-link"></i> Copy Link</button>
-          <button class="btn btn-ghost btn-sm" id="resetHostBtn"><i class="fas fa-sync"></i> New</button>
+          <button class="btn btn-ghost btn-sm" id="resetHostBtn"><i class="fas fa-sync"></i> New Code</button>
         </div>
       </div>
     </div>
     <!-- GUEST -->
-    <div class="card fade-up d1">
-      <div class="card-head"><div class="ci"><i class="fas fa-plug"></i></div><div><h3>Join Room</h3><p>Enter code or scan QR</p></div></div>
+    <div class="card anim-fade-1">
+      <div class="card-head">
+        <div class="card-icon"><i class="fas fa-plug"></i></div>
+        <div><h3>Join Room</h3><p>Enter code or scan QR</p></div>
+      </div>
       <label for="joinCode" class="sr-only">6-digit code</label>
       <input class="field code-input" id="joinCode" placeholder="000000" inputmode="numeric" maxlength="6" autocomplete="off" />
       <div class="input-row" style="margin-top:10px">
         <button class="btn btn-primary" id="joinBtn" style="flex:1"><i class="fas fa-link"></i> Connect</button>
-        <button class="btn btn-soft" id="scanBtn" aria-label="Scan QR code"><i class="fas fa-qrcode"></i> Scan</button>
+        <button class="btn btn-soft" id="scanBtn" aria-label="Scan QR"><i class="fas fa-qrcode"></i> Scan</button>
       </div>
     </div>
   </div>
@@ -465,95 +799,107 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
     <span id="statusTxt">Create a room or join one to get started.</span>
   </div>
 
+  <!-- CONNECTIONS -->
   <div class="conn-panel" id="connPanel">
-    <div class="conn-head"><i class="fas fa-users"></i> Connected Devices <span class="tag" id="devTag">0 devices</span></div>
-    <div class="conn-body" id="connBody">
-      <div class="empty"><span class="ei"><i class="fas fa-user-slash"></i></span>No devices connected yet</div>
+    <div class="panel-head"><i class="fas fa-users"></i> Connected Devices <span class="tag" id="devTag">0 devices</span></div>
+    <div class="panel-body" id="connBody">
+      <div class="empty-state"><i class="fas fa-user-slash"></i>No devices connected yet</div>
     </div>
   </div>
 
   <!-- HOST CONTROLS -->
   <div class="host-panel" id="hostPanel" hidden>
-    <div class="conn-head"><i class="fas fa-crown" style="color:var(--brand)"></i> Host Controls</div>
+    <div class="panel-head"><i class="fas fa-crown" style="color:var(--brand)"></i> Host Controls</div>
     <div class="host-body">
       <div class="control-grid">
         <button class="btn btn-success btn-sm" id="shareAllBtn"><i class="fas fa-broadcast-tower"></i> Share to All</button>
         <button class="btn btn-soft btn-sm" id="shareSelBtn"><i class="fas fa-user-plus"></i> Pick Device</button>
         <button class="btn btn-warn btn-sm" id="permBtn"><i class="fas fa-key"></i> Permissions</button>
       </div>
-      <div id="shareTargetBox" hidden style="margin-top:10px">
+      <div id="shareTargetBox" hidden style="margin-top:12px">
         <label for="targetSel" style="font-size:.78rem;font-weight:700;color:var(--ink-3)">Send to:</label>
         <div class="input-row" style="margin-top:6px">
           <select class="field" id="targetSel" style="flex:1"><option value="all">All Devices</option></select>
           <button class="btn btn-primary btn-sm" id="targetGoBtn"><i class="fas fa-check"></i> Set</button>
         </div>
       </div>
-      <div class="guest-list" id="guestList"><div class="empty" style="padding:12px"><i class="fas fa-user-friends"></i> No guests yet</div></div>
-      <div class="g-count" id="guestCount">Total: 0 guests</div>
+      <div class="guest-list" id="guestList"><div class="empty-state" style="padding:14px"><i class="fas fa-user-friends"></i>No guests yet</div></div>
+      <div class="guest-count" id="guestCount">Total: 0 guests</div>
     </div>
   </div>
 
   <!-- TRANSFER STATUS -->
   <div class="transfer-panel" id="transferPanel" hidden>
-    <div class="tp-head"><span class="dot idle" id="tpDot"></span> Transfer Status <span class="tag" id="tpDirection" style="margin-left:auto">Idle</span></div>
+    <div class="tp-head"><span class="tp-dot idle" id="tpDot"></span> Transfer Status <span class="tag" id="tpDirection" style="margin-left:auto">Idle</span></div>
     <div class="tp-body">
       <div class="tp-stats">
-        <div class="stat"><div class="lbl">Speed</div><div class="val" id="statSpeed">—</div></div>
-        <div class="stat"><div class="lbl">Progress</div><div class="val" id="statPct">0%</div></div>
-        <div class="stat"><div class="lbl">ETA</div><div class="val" id="statEta">—</div></div>
-        <div class="stat"><div class="lbl">Files</div><div class="val" id="statFiles">0/0</div></div>
+        <div class="stat"><div class="stat-lbl">Speed</div><div class="stat-val" id="statSpeed">—</div></div>
+        <div class="stat"><div class="stat-lbl">Progress</div><div class="stat-val" id="statPct">0%</div></div>
+        <div class="stat"><div class="stat-lbl">ETA</div><div class="stat-val" id="statEta">—</div></div>
+        <div class="stat"><div class="stat-lbl">Files</div><div class="stat-val" id="statFiles">0/0</div></div>
       </div>
       <div class="tp-file">
-        <div class="name"><span id="tpFileName">—</span><span class="pct" id="tpFilePct">0%</span></div>
+        <div class="tp-file-name"><span id="tpFileName">—</span><span class="pct" id="tpFilePct">0%</span></div>
         <div class="track"><div class="fill" id="tpFill"></div></div>
       </div>
       <div class="queue" id="queue"><div class="tp-empty">Transfers will appear here</div></div>
     </div>
   </div>
 
-  <!-- SEND/RECEIVE -->
-  <div id="ioSection" hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:18px">
+  <!-- SEND / RECEIVE -->
+  <div id="ioSection" hidden class="grid-2 mt-18">
     <div class="card">
-      <div class="card-head"><div class="ci"><i class="fas fa-upload"></i></div><div><h3>Send Files</h3><p>Max 3 files at once</p></div></div>
-      <p style="font-size:.78rem;color:var(--ink-4);margin-bottom:8px" id="sendToTxt">Sending to: All Devices</p>
+      <div class="card-head">
+        <div class="card-icon"><i class="fas fa-upload"></i></div>
+        <div><h3>Send Files</h3><p>Max 3 files at once</p></div>
+      </div>
+      <p style="font-size:.78rem;color:var(--ink-4);margin-bottom:10px" id="sendToTxt">Sending to: All devices</p>
       <label for="fileIn" class="sr-only">Choose files</label>
       <input type="file" id="fileIn" class="field" multiple style="padding:10px" />
       <label for="titleIn" class="sr-only">Optional title</label>
       <input type="text" id="titleIn" class="field" placeholder="Optional title…" maxlength="50" style="margin-top:8px" />
-      <button class="btn btn-primary btn-block" id="sendBtn" style="margin-top:10px"><i class="fas fa-paper-plane"></i> Send Files</button>
+      <button class="btn btn-primary btn-block" id="sendBtn" style="margin-top:12px"><i class="fas fa-paper-plane"></i> Send Files</button>
     </div>
     <div class="card">
-      <div class="card-head"><div class="ci"><i class="fas fa-download"></i></div><div><h3>Received Files</h3><p id="rxCount">0 files</p></div></div>
-      <div class="file-list" id="rxList"><div class="empty"><span class="ei"><i class="fas fa-inbox"></i></span>No files yet</div></div>
+      <div class="card-head">
+        <div class="card-icon"><i class="fas fa-download"></i></div>
+        <div><h3>Received Files</h3><p id="rxCount">0 files</p></div>
+      </div>
+      <div class="file-list" id="rxList"><div class="empty-state"><i class="fas fa-inbox"></i>No files yet</div></div>
     </div>
   </div>
 
-  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px">
+  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px">
     <button class="btn btn-ghost" id="disconnectBtn" hidden><i class="fas fa-times-circle"></i> Disconnect All</button>
     <button class="btn btn-danger" id="closeBtn" hidden><i class="fas fa-door-closed"></i> Close Room</button>
   </div>
 </section>
 
 <section class="wrap section" id="features">
-  <div class="section-head"><span class="eyebrow"><i class="fas fa-star"></i> Why SHAREx</span><h2>Built for speed & privacy</h2></div>
+  <div class="section-head">
+    <span class="eyebrow"><i class="fas fa-star"></i> Why SHAREx</span>
+    <h2>Built for speed & privacy</h2>
+  </div>
   <div class="features">
-    <div class="feature"><div class="ficon"><i class="fas fa-bolt"></i></div><h4>Blazing Fast</h4><p>Direct P2P — no middleman, max speed.</p></div>
-    <div class="feature"><div class="ficon"><i class="fas fa-lock"></i></div><h4>100% Private</h4><p>Files never touch a server. Device to device only.</p></div>
-    <div class="feature"><div class="ficon"><i class="fas fa-qrcode"></i></div><h4>Scan to Join</h4><p>Point your camera — instant connection.</p></div>
-    <div class="feature"><div class="ficon"><i class="fas fa-universal-access"></i></div><h4>Accessible</h4><p>Dark mode, high contrast, keyboard nav, screen reader ready.</p></div>
+    <div class="feature anim-fade"><div class="feature-icon"><i class="fas fa-bolt"></i></div><h4>Blazing Fast</h4><p>Direct P2P — no middleman, maximum speed.</p></div>
+    <div class="feature anim-fade-1"><div class="feature-icon"><i class="fas fa-lock"></i></div><h4>100% Private</h4><p>Files never touch a server. Device to device only.</p></div>
+    <div class="feature anim-fade-2"><div class="feature-icon"><i class="fas fa-qrcode"></i></div><h4>Scan to Join</h4><p>Point your camera — instant connection.</p></div>
+    <div class="feature anim-fade-3"><div class="feature-icon"><i class="fas fa-universal-access"></i></div><h4>Accessible</h4><p>Dark mode, high contrast, keyboard nav, screen reader ready.</p></div>
   </div>
 </section>
 
 <section class="wrap section" id="about" style="text-align:center">
-  <span class="eyebrow"><i class="fas fa-info-circle"></i> About</span>
-  <h2>Made for everyone</h2>
-  <p class="lead" style="margin-top:10px">SHAREx runs entirely in your browser using WebRTC. No account, no server storage. Your files stay between you and the people you choose.</p>
+  <div class="section-head" style="margin-bottom:0">
+    <span class="eyebrow"><i class="fas fa-info-circle"></i> About</span>
+    <h2>Made for everyone</h2>
+    <p class="lead" style="margin-top:10px">SHAREx runs entirely in your browser using WebRTC. No account, no server storage. Your files stay between you and the people you choose.</p>
+  </div>
 </section>
 </main>
 
 <footer class="footer">
   <div class="wrap footer-inner">
-    <span>© 2026 <a href="#">SHAREx Tool</a> · Built by Vikshant Kralta</span>
+    <span>© 2026 <a href="#">SHAREx</a> · Built by Vikshant Kralta</span>
     <div class="socials" aria-label="Social links">
       <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
       <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -564,93 +910,75 @@ h2{font-size:clamp(1.5rem,3.5vw,2.1rem);letter-spacing:-.025em;font-weight:800;m
 
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js" defer></script>
 <script>
-/* ============================================================
-   SHAREx Tool — Optimized P2P + QR
-   ============================================================ */
 (function(){
 'use strict';
 
-/* ---------- UTIL ---------- */
+/* ============ HELPERS ============ */
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-const MAX_FILES = 3;
-const CHUNK = 64*1024;
-const MAX_BUFFER = 4*1024*1024;
-const PING_MS = 25000;
-const store = {
-  get(k,d){try{const v=localStorage.getItem('sharex:'+k);return v?JSON.parse(v):d}catch(e){return d}},
-  set(k,v){try{localStorage.setItem('sharex:'+k,JSON.stringify(v))}catch(e){}}
+const MAX_FILES=3, CHUNK=64*1024, MAX_BUFFER=4*1024*1024, PING_MS=25000;
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS = {
+  get:(k,d)=>{try{const v=localStorage.getItem('sx:'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set:(k,v)=>{try{localStorage.setItem('sx:'+k,JSON.stringify(v))}catch(e){}}
+};
+const SS = {
+  get:(k,d)=>{try{const v=sessionStorage.getItem('sx:'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set:(k,v)=>{try{sessionStorage.setItem('sx:'+k,JSON.stringify(v))}catch(e){}},
+  del:(k)=>{try{sessionStorage.removeItem('sx:'+k)}catch(e){}}
 };
 
-/* ---------- STATE ---------- */
-const state = {
+/* ============ STATE ============ */
+const S = {
   peer:null, conns:[], me:null, host:false, name:'',
   target:'all', users:{}, perms:{}, myPerm:true,
-  rx:[], rxCount:0, sending:false, batches:{}, batchSeq:0,
+  rxCount:0, sending:false, batches:{}, batchSeq:0,
   pendingFiles:null, pendingTarget:null, pendingTitle:'',
-  qrTimer:null, scanStream:null, scanFacing:'environment', scanRAF:null,
-  totalBps:0, lastBytes:0, lastTime:0
+  scanStream:null, scanFacing:'environment', scanRAF:null,
+  totalBps:0, lastBytes:0, lastTime:0,
+  resumeOffer:null, resumeRole:null, resumeCode:null
 };
 
-/* ---------- A11Y / THEME ---------- */
-function applyTheme(t){
-  document.documentElement.dataset.theme = t;
-  $('#themeBtn').setAttribute('aria-pressed', t==='dark');
-  $('#themeBtn').innerHTML = t==='dark'?'<i class="fas fa-sun" aria-hidden="true"></i>':'<i class="fas fa-moon" aria-hidden="true"></i>';
-  store.set('theme',t);
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', t==='dark'?'#0F141C':'#E08A2E');
-}
-function applyA11y(){
-  const a = store.get('a11y',{contrast:false,size:'normal',motion:false,speech:false});
-  document.documentElement.dataset.contrast = a.contrast?'high':'normal';
-  document.documentElement.dataset.textsize = a.size;
-  document.documentElement.dataset.reducedMotion = a.motion?'true':'false';
-  $('#contrastState').textContent = a.contrast?'On':'Off';
-  $('#sizeState').textContent = a.size==='large'?'Large':a.size==='xlarge'?'XL':'Normal';
-  $('#motionState').textContent = a.motion?'On':'Off';
-  $('#speechState').textContent = a.speech?'On':'Off';
-}
-function speak(txt){
-  const a = store.get('a11y',{});
-  if(!a.speech) return;
-  try{ const u=new SpeechSynthesisUtterance(txt); u.rate=1; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){}
-}
-function announce(txt){
-  const lr = $('#liveRegion'); if(lr) lr.textContent = txt;
-  speak(txt);
-}
-
-/* ---------- TOASTS ---------- */
+/* ============ TOAST ============ */
 function toast(msg, type='info', ms=2800){
-  const t = document.createElement('div');
-  t.className = 'toast '+type; t.setAttribute('role','alert');
-  const icons={success:'fa-check-circle',error:'fa-exclamation-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
-  t.innerHTML = `<span class="ti"><i class="fas ${icons[type]||icons.info}"></i></span><span>${escapeHtml(msg)}</span>`;
+  const t=document.createElement('div');
+  t.className='toast '+type; t.setAttribute('role','alert');
+  const I={success:'fa-check-circle',error:'fa-exclamation-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
+  t.innerHTML=`<span class="ti"><i class="fas ${I[type]||I.info}"></i></span><span>${esc(msg)}</span>`;
   $('#toasts').appendChild(t);
   setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),300)},ms);
 }
-const escapeHtml = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const announce = t => { const lr=$('#liveRegion'); if(lr) lr.textContent = t; };
+const speak = t => { try{ const a=LS.get('a11y',{}); if(!a.speech) return; const u=new SpeechSynthesisUtterance(t); speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} };
 
-/* ---------- LOADER ---------- */
+/* ============ LOADER ============ */
 function loader(on, txt){ $('#loader').hidden = !on; if(txt) $('#loaderTxt').textContent = txt; }
 
-/* ---------- STATUS ---------- */
+/* ============ STATUS ============ */
 function setStatus(msg, type=''){
-  const b = $('#statusBar'); b.className = 'status-bar'+(type?' '+type:'');
-  b.querySelector('.si').innerHTML = type==='success'?'<i class="fas fa-check-circle"></i>':type==='error'?'<i class="fas fa-exclamation-circle"></i>':type==='info'?'<i class="fas fa-info-circle"></i>':type==='warning'?'<i class="fas fa-exclamation-triangle"></i>':'<i class="fas fa-lightbulb"></i>';
-  $('#statusTxt').textContent = msg;
-  announce(msg);
+  const b=$('#statusBar'); b.className='status-bar'+(type?' '+type:'');
+  b.querySelector('.si').innerHTML =
+    type==='success'?'<i class="fas fa-check-circle"></i>':
+    type==='error'?'<i class="fas fa-exclamation-circle"></i>':
+    type==='info'?'<i class="fas fa-info-circle"></i>':
+    type==='warning'?'<i class="fas fa-exclamation-triangle"></i>':
+    '<i class="fas fa-lightbulb"></i>';
+  $('#statusTxt').textContent=msg;
+  announce(msg); speak(msg);
 }
 function step(n){
   ['#step1','#step2','#step3'].forEach((id,i)=>{
-    const el=$(id); el.classList.remove('active','done');
-    if(i+1===n) el.classList.add('active'); else if(i+1<n) el.classList.add('done');
+    const el=$(id); if(!el) return;
+    el.classList.remove('active','done');
+    if(i+1===n) el.classList.add('active');
+    else if(i+1<n) el.classList.add('done');
   });
 }
 
-/* ---------- SIZE / ICON ---------- */
+/* ============ FORMAT ============ */
 function fmtSize(b){
-  if(b<1024)return b+' B'; if(b<1048576)return (b/1024).toFixed(1)+' KB';
+  if(b<1024)return b+' B';
+  if(b<1048576)return (b/1024).toFixed(1)+' KB';
   if(b<1073741824)return (b/1048576).toFixed(1)+' MB';
   return (b/1073741824).toFixed(2)+' GB';
 }
@@ -659,329 +987,242 @@ function iconFor(n){
   const m={pdf:'fa-file-pdf',doc:'fa-file-word',docx:'fa-file-word',xls:'fa-file-excel',xlsx:'fa-file-excel',ppt:'fa-file-powerpoint',pptx:'fa-file-powerpoint',jpg:'fa-file-image',jpeg:'fa-file-image',png:'fa-file-image',gif:'fa-file-image',svg:'fa-file-image',mp4:'fa-file-video',mkv:'fa-file-video',avi:'fa-file-video',mp3:'fa-file-audio',wav:'fa-file-audio',zip:'fa-file-archive',rar:'fa-file-archive','7z':'fa-file-archive',js:'fa-file-code',html:'fa-file-code',css:'fa-file-code',json:'fa-file-code',txt:'fa-file-alt'};
   return m[e]||'fa-file';
 }
-
-/* ---------- CODE ---------- */
 const genCode = () => String(Math.floor(100000+Math.random()*900000));
 
-/* ---------- QR GENERATOR (compact, no deps) ---------- */
-/* Based on simple QR v1-4 alphanumeric/numeric generator (public domain pattern) */
+/* ============ QR GENERATOR (compact, no deps) ============ */
 const QR = (function(){
-  // Minimal QR generator (Model 2, versions 1-10, byte mode, L error correction)
-  const EC = {L:1,M:0,Q:3,H:2};
+  function pushBits(a,v,n){for(let i=n-1;i>=0;i--)a.push((v>>i)&1);}
+  function toBytes(t){const a=[];for(let i=0;i<t.length;i++){const c=t.charCodeAt(i);if(c<128)a.push(c);else{const u=encodeURIComponent(t[i]);for(const p of u.split('%'))if(p)a.push(parseInt(p,16));}}return a;}
+  function capFor(v){const c=[0,17,32,53,78,106,134,154,192,230,271];return c[v]||271;}
+  function chooseVer(t){const cap=[0,17,32,53,78,106,134,154,192,230,271];const len=t.length+(t.length<256?2:3);for(let v=1;v<cap.length;v++)if(len<=cap[v])return v;return 10;}
   function makeQR(text){
-    const version = chooseVersion(text);
-    const data = toBytes(text);
-    const bits = [];
-    // Mode 0100 (byte)
-    pushBits(bits, 4, 4);
-    // Length (8 bits for v1-9)
-    pushBits(bits, data.length, version<10?8:16);
-    data.forEach(b=>pushBits(bits, b, 8));
-    const capacityBits = getCapacity(version, 'L')*8;
-    // Terminator
-    const term = Math.min(4, capacityBits-bits.length);
-    pushBits(bits, 0, term);
-    // Pad to byte
-    while(bits.length%8) bits.push(0);
-    // Pad bytes 0xEC 0x11
-    const totalBytes = capacityBits/8;
-    const byteArr = [];
+    const version=chooseVer(text);
+    const data=toBytes(text);
+    const bits=[];
+    pushBits(bits,4,4);
+    pushBits(bits,data.length,version<10?8:16);
+    data.forEach(b=>pushBits(bits,b,8));
+    const capacityBits=capFor(version)*8;
+    const term=Math.min(4,capacityBits-bits.length);
+    pushBits(bits,0,term);
+    while(bits.length%8)bits.push(0);
+    const totalBytes=capacityBits/8;
+    const byteArr=[];
     for(let i=0;i<bits.length;i+=8){let v=0;for(let j=0;j<8;j++)v=(v<<1)|(bits[i+j]||0);byteArr.push(v);}
     let pad=0;
     while(byteArr.length<totalBytes){byteArr.push(pad%2?0x11:0xEC);pad++;}
-    // Split into blocks (single block for v1-10 L? not exactly, but for small text one block works for L up to v4-ish)
-    // For simplicity & reliability on short codes, use version 1-4 single-block scheme where possible
-    return buildMatrix(version, byteArr);
+    return buildMatrix(version,byteArr);
   }
-  function chooseVersion(text){
-    // version 1-L capacity: 17 bytes, v2: 32, v3: 53, v4: 78, v5:106, v6:134
-    const cap = [0,17,32,53,78,106,134,154,192,230,271];
-    const len = text.length+ (text.length<256?2:3);
-    for(let v=1;v<cap.length;v++) if(len<=cap[v]) return v;
-    return 10;
-  }
-  function getCapacity(version){
-    const cap=[0,17,32,53,78,106,134,154,192,230,271];
-    return cap[version]||271;
-  }
-  function toBytes(t){const a=[];for(let i=0;i<t.length;i++){const c=t.charCodeAt(i);if(c<128)a.push(c);else{ // UTF-8
-    const u=encodeURIComponent(t[i]);for(const p of u.split('%'))if(p)a.push(parseInt(p,16));}}return a;}
-  function pushBits(arr,val,n){for(let i=n-1;i>=0;i--)arr.push((val>>i)&1);}
-  function buildMatrix(version, data){
-    const size = 17+version*4;
-    const m = Array.from({length:size},()=>Array(size).fill(null));
-    // Finder patterns
-    const fp=(r,c)=>{
-      for(let i=-1;i<=7;i++)for(let j=-1;j<=7;j++){
-        const rr=r+i,cc=c+j;if(rr<0||rr>=size||cc<0||cc>=size)continue;
-        const inFind=(i>=0&&i<=6&&j>=0&&j<=6);
-        const border=(i===0||i===6||j===0||j===6);
-        const center=(i>=2&&i<=4&&j>=2&&j<=4);
-        m[rr][cc] = (inFind && (border||center))?1:0;
-      }
-    };
+  function buildMatrix(version,data){
+    const size=17+version*4;
+    const m=Array.from({length:size},()=>Array(size).fill(null));
+    const fp=(r,c)=>{for(let i=-1;i<=7;i++)for(let j=-1;j<=7;j++){const rr=r+i,cc=c+j;if(rr<0||rr>=size||cc<0||cc>=size)continue;const inF=(i>=0&&i<=6&&j>=0&&j<=6);const bd=(i===0||i===6||j===0||j===6);const ct=(i>=2&&i<=4&&j>=2&&j<=4);m[rr][cc]=(inF&&(bd||ct))?1:0;}};
     fp(0,0);fp(0,size-7);fp(size-7,0);
-    // Timing
     for(let i=8;i<size-8;i++){m[6][i]=i%2?0:1;m[i][6]=i%2?0:1;}
-    // Alignment for v>=2
     if(version>=2){
-      const pos = version<7?[6,size-7]:[6,size-7];
-      // for v2-6 alignment at size-7
-      if(version>=2){const p=size-7;for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const r=p+i,c=p+j;if(m[r][c]!==null)continue;m[r][c]=(Math.abs(i)===2||Math.abs(j)===2||i===0&&j===0)?1:0;}}
+      const p=size-7;
+      for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const r=p+i,c=p+j;if(m[r][c]!==null)continue;m[r][c]=(Math.abs(i)===2||Math.abs(j)===2||(i===0&&j===0))?1:0;}
     }
-    // Dark module
     m[size-8][8]=1;
-    // Reserve format info areas
     for(let i=0;i<9;i++){if(m[8][i]===null)m[8][i]=0;if(m[i][8]===null)m[i][8]=0;}
     for(let i=0;i<8;i++){if(m[8][size-1-i]===null)m[8][size-1-i]=0;if(m[size-1-i][8]===null)m[size-1-i][8]=0;}
-    // Place data bits (simplified zigzag)
     let bit=0;
     const dataBits=[];
     data.forEach(b=>pushBits(dataBits,b,8));
-    const cap=getCapacity(version);
-    const totalDataBits = cap*8;
-    while(dataBits.length<totalDataBits) dataBits.push(0);
-    const mask = 0; // simple mask
-    const maskFn=(r,c)=>{
-      switch(mask){
-        case 0:return (r+c)%2===0;
-        case 1:return r%2===0;
-        case 2:return c%3===0;
-        case 3:return (r+c)%3===0;
-        case 4:return (Math.floor(r/2)+Math.floor(c/3))%2===0;
-        case 5:return ((r*c)%2+(r*c)%3)===0;
-        case 6:return (((r*c)%2+(r*c)%3)%2)===0;
-        case 7:return (((r+c)%2+(r*c)%3)%2)===0;
-      }
-      return false;
-    };
-    let dir=-1, col=size-1, row=size-1;
+    const cap=capFor(version)*8;
+    while(dataBits.length<cap)dataBits.push(0);
+    const maskFn=(r,c)=>((r+c)%2===0);
+    let dir=-1,col=size-1;
     while(col>0){
-      if(col===6) col--;
+      if(col===6)col--;
       for(let i=0;i<size;i++){
-        const rr = dir===-1 ? size-1-i : i;
+        const rr=dir===-1?size-1-i:i;
         for(let k=0;k<2;k++){
-          const cc = col-k;
+          const cc=col-k;
           if(m[rr][cc]===null){
-            let val = dataBits[bit++]||0;
-            if(maskFn(rr,cc)) val ^= 1;
-            m[rr][cc] = val;
+            let val=dataBits[bit++]||0;
+            if(maskFn(rr,cc))val^=1;
+            m[rr][cc]=val;
           }
         }
       }
-      dir*=-1; col-=2;
-      if(bit>=dataBits.length) break;
+      dir*=-1;col-=2;
+      if(bit>=dataBits.length)break;
     }
-    // Format bits (mask 0, EC L) — simplified fixed pattern
-    const fmt = [1,0,1,0,1,0,0,0,0,1,1,1,1,0,1]; // approx for EC L, mask 0
-    // apply on both format areas
-    const fpos1=[[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
-    const fpos2=[[size-1,8],[size-2,8],[size-3,8],[size-4,8],[size-5,8],[size-6,8],[size-7,8],[8,size-8],[8,size-7],[8,size-6],[8,size-5],[8,size-4],[8,size-3],[8,size-2],[8,size-1]];
-    for(let i=0;i<15;i++){m[fpos1[i][0]][fpos1[i][1]]=fmt[i];m[fpos2[i][0]][fpos2[i][1]]=fmt[i];}
+    const fmt=[1,0,1,0,1,0,0,0,0,1,1,1,1,0,1];
+    const f1=[[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
+    const f2=[[size-1,8],[size-2,8],[size-3,8],[size-4,8],[size-5,8],[size-6,8],[size-7,8],[8,size-8],[8,size-7],[8,size-6],[8,size-5],[8,size-4],[8,size-3],[8,size-2],[8,size-1]];
+    for(let i=0;i<15;i++){m[f1[i][0]][f1[i][1]]=fmt[i];m[f2[i][0]][f2[i][1]]=fmt[i];}
     return m;
   }
-  function draw(canvas, text, size=220){
-    const m = makeQR(text);
-    const n = m.length;
-    const scale = Math.floor(size/n);
-    const dim = scale*n;
-    canvas.width = dim; canvas.height = dim;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,dim,dim);
-    ctx.fillStyle = '#1E2736';
-    for(let r=0;r<n;r++)for(let c=0;c<n;c++) if(m[r][c]) ctx.fillRect(c*scale,r*scale,scale,scale);
+  function draw(canvas,text,size=220){
+    const m=makeQR(text);
+    const n=m.length;
+    const scale=Math.floor(size/n);
+    const dim=scale*n;
+    canvas.width=dim;canvas.height=dim;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,dim,dim);
+    ctx.fillStyle='#1A2230';
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])ctx.fillRect(c*scale,r*scale,scale,scale);
   }
   return {draw};
 })();
 
-/* ---------- URL join detection ---------- */
-function getJoinParam(){
+/* ============ URL JOIN ============ */
+function joinParam(){
   try{
-    const u = new URL(location.href);
-    const j = u.searchParams.get('join') || u.hash.replace('#join=','');
+    const u=new URL(location.href);
+    const j=u.searchParams.get('join') || u.hash.replace('#join=','');
     if(j && /^\d{6}$/.test(j)) return j;
   }catch(e){}
   return null;
 }
 
-/* ---------- PEER ---------- */
+/* ============ PEER ============ */
 function initPeer(id){
   return new Promise((resolve,reject)=>{
-    if(state.peer){try{state.peer.destroy()}catch(e){}}
-    const p = new Peer(id,{debug:0,config:{iceServers:[
+    if(S.peer){try{S.peer.destroy()}catch(e){}}
+    const p=new Peer(id,{debug:0,config:{iceServers:[
       {urls:'stun:stun.l.google.com:19302'},
       {urls:'stun:stun1.l.google.com:19302'},
       {urls:'stun:stun2.l.google.com:19302'}
     ]}});
-    state.peer = p;
-    const t = setTimeout(()=>{ if(!state.me) reject(new Error('Timeout')); }, 15000);
-    p.on('open', id=>{ clearTimeout(t); state.me=id; resolve(id); });
+    S.peer=p;
+    const t=setTimeout(()=>{ if(!S.me) reject(new Error('Timeout')); },15000);
+    p.on('open', id=>{ clearTimeout(t); S.me=id; resolve(id); });
     p.on('error', e=>{ clearTimeout(t); reject(e); });
     p.on('connection', conn=>{
-      if(!state.host){try{conn.close()}catch(e){}return;}
-      if(state.conns.some(c=>c.peer===conn.peer && c.open)){try{conn.close()}catch(e){}return;}
-      state.conns.push(conn); state.perms[conn.peer]=true;
-      wire(conn); setStatus('New device connected','success'); toast('New device connected','success'); renderConns();
+      if(!S.host){try{conn.close()}catch(e){}return;}
+      if(S.conns.some(c=>c.peer===conn.peer && c.open)){try{conn.close()}catch(e){}return;}
+      S.conns.push(conn); S.perms[conn.peer]=true;
+      wire(conn); persistSession();
+      toast('New device connected','success'); renderConns();
     });
     p.on('disconnected', ()=>{ try{p.reconnect()}catch(e){} });
   });
 }
-
 function wire(conn){
   conn.on('open', ()=>{
-    safeSend(conn,{t:'hello',name:state.name,host:state.host});
-    if(state.host) safeSend(conn,{t:'perm',ok:state.perms[conn.peer]!==false});
+    safeSend(conn,{t:'hello',name:S.name,host:S.host});
+    if(S.host) safeSend(conn,{t:'perm',ok:S.perms[conn.peer]!==false});
     setStatus('Connected — ready to share','success');
     renderConns(); startPing();
   });
   conn.on('data', d=>handleData(conn,d));
   conn.on('close', ()=>{
-    const i = state.conns.indexOf(conn); if(i>-1) state.conns.splice(i,1);
-    delete state.users[conn.peer]; delete state.perms[conn.peer];
-    if(state.conns.filter(c=>c.open).length===0){
-      if(!state.host){ setStatus('Disconnected','error'); step(1); toggleIO(false); }
+    const i=S.conns.indexOf(conn); if(i>-1) S.conns.splice(i,1);
+    delete S.users[conn.peer]; delete S.perms[conn.peer];
+    if(S.conns.filter(c=>c.open).length===0 && !S.host){
+      setStatus('Disconnected','error'); step(1); toggleIO(false);
     }
-    renderConns();
+    renderConns(); persistSession();
   });
   conn.on('error', ()=>{});
 }
-function safeSend(conn, obj){ try{ if(conn.open) conn.send(obj); }catch(e){} }
-function broadcast(obj){ state.conns.forEach(c=>safeSend(c,obj)); }
-
+function safeSend(conn,obj){ try{ if(conn.open) conn.send(obj); }catch(e){} }
+function broadcast(obj){ S.conns.forEach(c=>safeSend(c,obj)); }
 function startPing(){
-  clearInterval(state._ping);
-  state._ping = setInterval(()=>{
-    state.conns.forEach(c=>{ if(c.open) safeSend(c,{t:'ping',ts:Date.now()}); });
-  }, PING_MS);
+  clearInterval(S._ping);
+  S._ping=setInterval(()=>{ S.conns.forEach(c=>{ if(c.open) safeSend(c,{t:'ping',ts:Date.now()}); }); }, PING_MS);
 }
 
-/* ---------- DATA HANDLING ---------- */
-function handleData(conn, d){
+/* ============ DATA HANDLING ============ */
+function handleData(conn,d){
   if(!d) return;
   if(d.t==='ping'){ safeSend(conn,{t:'pong',ts:d.ts}); return; }
   if(d.t==='pong') return;
-  if(d.t==='hello'){ state.users[conn.peer]=d.name||conn.peer; renderConns(); return; }
-  if(d.t==='perm'){ if(!state.host){ state.myPerm = !!d.ok; setStatus(d.ok?'Host granted you sharing':'Host revoked your sharing', d.ok?'success':'warning'); renderConns(); } return; }
-  if(d.t==='perm-update'){ state.perms[d.peer]=d.ok; renderConns(); return; }
-  if(d.t==='target'){ state.target=d.target; updateSendTo(); return; }
+  if(d.t==='hello'){ S.users[conn.peer]=d.name||conn.peer; renderConns(); return; }
+  if(d.t==='perm'){ if(!S.host){ S.myPerm=!!d.ok; setStatus(d.ok?'Host granted you sharing':'Host revoked your sharing', d.ok?'success':'warning'); renderConns(); } return; }
+  if(d.t==='perm-update'){ S.perms[d.peer]=d.ok; renderConns(); return; }
+  if(d.t==='target'){ S.target=d.target; updateSendTo(); return; }
   if(d.t==='meta') return onMeta(conn,d);
   if(d.t==='chunk') return onChunk(conn,d);
-  if(d.t==='done') return onDone(conn,d);
 }
-
-function onMeta(conn, d){
-  if(d.target && d.target!=='all' && d.target!==state.me) return;
-  if(state.host && state.perms[conn.peer]===false){ toast('Blocked — no permission','warning'); return; }
-  if(!state.host && !state.myPerm){ toast('No permission','warning'); return; }
-  const key = conn.peer+'::'+d.bid+'::'+d.fidx;
-  state.batches[key] = { meta:d, chunks:[], received:0, started:Date.now(), conn };
-  addQueue({key,name:d.name,size:d.size,dir:'rx',bid:d.bid,fidx:d.fidx});
-  updateTransferUI(true,'rx');
+function onMeta(conn,d){
+  if(d.target && d.target!=='all' && d.target!==S.me) return;
+  if(S.host && S.perms[conn.peer]===false){ toast('Blocked — no permission','warning'); return; }
+  if(!S.host && !S.myPerm){ toast('No permission','warning'); return; }
+  const key=conn.peer+'::'+d.bid+'::'+d.fidx;
+  S.batches[key]={meta:d,chunks:[],received:0,conn};
+  addQueue({key,name:d.name,size:d.size,dir:'rx'});
+  updateTransferUI(true,'rx',{fileName:d.name,fileIndex:d.fidx,fileTotal:d.total});
   setStatus('Receiving '+(d.fidx+1)+'/'+d.total+': '+d.name,'info');
 }
-
-function onChunk(conn, d){
-  const key = conn.peer+'::'+d.bid+'::'+d.fidx;
-  const b = state.batches[key]; if(!b) return;
+function onChunk(conn,d){
+  const key=conn.peer+'::'+d.bid+'::'+d.fidx;
+  const b=S.batches[key]; if(!b) return;
   b.chunks.push(new Blob([d.data]));
-  b.received += d.data.byteLength;
-  const pct = Math.min(100, Math.round(b.received / b.meta.size * 100));
-  updateQueue(key, pct);
-  updateTransferUI(true,'rx',{ pct, bytes:b.received, size:b.meta.size });
-  if(b.received >= b.meta.size){
-    const blob = new Blob(b.chunks, {type:b.meta.ftype||'application/octet-stream'});
-    const url = URL.createObjectURL(blob);
-    addReceived(b.meta.name, url, b.meta.size, b.meta.title, b.meta.sender);
-    delete state.batches[key];
-    updateQueue(key, 100, true);
+  b.received+=d.data.byteLength;
+  const pct=Math.min(100,Math.round(b.received/b.meta.size*100));
+  updateQueue(key,pct);
+  updateTransferUI(true,'rx',{pct,bytes:b.received,size:b.meta.size,fileName:b.meta.name,fileIndex:b.meta.fidx,fileTotal:b.meta.total});
+  if(b.received>=b.meta.size){
+    const blob=new Blob(b.chunks,{type:b.meta.ftype||'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    addReceived(b.meta.name,url,b.meta.size,b.meta.title,b.meta.sender);
+    delete S.batches[key];
+    updateQueue(key,100,true);
     toast('Received: '+b.meta.name,'success');
     step(3);
-    checkAllRxDone();
+    if(Object.keys(S.batches).length===0) updateTransferUI(false,'done');
   }
 }
-function checkAllRxDone(){
-  if(Object.keys(state.batches).length===0){ updateTransferUI(false,'idle'); }
-}
-function onDone(){ /* guest side ack not used */ }
 
-/* ---------- SEND ---------- */
-function sendBatch(files, target, title){
-  const conns = state.conns.filter(c=>c.open).filter(c=>{
-    if(target==='all') return true;
-    return c.peer===target;
-  }).filter(c=>{
-    if(!state.host) return true;
-    return state.perms[c.peer]!==false;
+/* ============ SEND ============ */
+function sendBatch(files,target,title){
+  const conns=S.conns.filter(c=>c.open).filter(c=>target==='all'||c.peer===target).filter(c=>{
+    if(!S.host) return true;
+    return S.perms[c.peer]!==false;
   });
-  if(conns.length===0){ setStatus('No permitted devices','error'); toast('No devices to send to','error'); return; }
-  if(state.sending){ toast('Already sending…','warning'); return; }
-  state.sending = true;
-  const bid = 'b'+(++state.batchSeq)+'-'+Date.now();
-  const totalSize = files.reduce((a,f)=>a+f.size,0);
-  let overallSent = 0;
-  let fileIdx = 0;
-  const t0 = performance.now();
-  state.lastTime = t0; state.lastBytes = 0;
-
+  if(conns.length===0){ setStatus('No connected devices','error'); toast('No devices to send to','error'); return; }
+  if(S.sending){ toast('Already sending…','warning'); return; }
+  S.sending=true;
+  const bid='b'+(++S.batchSeq)+'-'+Date.now();
+  let fileIdx=0;
+  const t0=performance.now();
+  S.lastTime=t0; S.lastBytes=0;
   updateTransferUI(true,'tx');
   setStatus('Sending '+files.length+' file(s)…','info');
-
-  const sendNext = ()=>{
+  const sendNext=()=>{
     if(fileIdx>=files.length){
       setTimeout(()=>{
-        state.sending=false;
+        S.sending=false;
         setStatus('Sent '+files.length+' file(s) successfully','success');
         toast('Sent successfully','success');
-        updateTransferUI(false,'done');
-        step(3);
-      }, 400);
+        updateTransferUI(false,'done'); step(3);
+      },400);
       return;
     }
-    const f = files[fileIdx];
-    const meta = {
-      t:'meta', bid, fidx:fileIdx, total:files.length,
-      name:f.name, size:f.size, ftype:f.type, title:title||'',
-      sender:state.name, target
-    };
+    const f=files[fileIdx];
+    const meta={t:'meta',bid,fidx:fileIdx,total:files.length,name:f.name,size:f.size,ftype:f.type,title:title||'',sender:S.name,target};
     conns.forEach(c=>safeSend(c,meta));
-    addQueue({key:bid+'::'+fileIdx, name:f.name, size:f.size, dir:'tx', bid, fidx:fileIdx});
+    addQueue({key:bid+'::'+fileIdx,name:f.name,size:f.size,dir:'tx'});
     let offset=0;
-    const read = ()=>{
+    const read=()=>{
       if(offset>=f.size){
         conns.forEach(c=>safeSend(c,{t:'done',bid,fidx:fileIdx}));
-        updateQueue(bid+'::'+fileIdx, 100, true);
+        updateQueue(bid+'::'+fileIdx,100,true);
         fileIdx++;
-        setTimeout(sendNext, 80);
+        setTimeout(sendNext,80);
         return;
       }
-      const end = Math.min(offset+CHUNK, f.size);
-      const slice = f.slice(offset, end);
-      const fr = new FileReader();
-      fr.onload = ()=>{
-        const buf = fr.result;
-        const chunkMsg = {t:'chunk', bid, fidx:fileIdx, data:new Uint8Array(buf)};
-        // backpressure wait
-        const wait = ()=>{
-          const high = conns.some(c=>{
-            try{ return c.open && c.dataChannel && c.dataChannel.bufferedAmount > MAX_BUFFER; }catch(e){return false;}
-          });
-          if(high){ setTimeout(wait, 20); return; }
+      const end=Math.min(offset+CHUNK,f.size);
+      const slice=f.slice(offset,end);
+      const fr=new FileReader();
+      fr.onload=()=>{
+        const chunkMsg={t:'chunk',bid,fidx:fileIdx,data:new Uint8Array(fr.result)};
+        const wait=()=>{
+          const high=conns.some(c=>{ try{return c.open && c.dataChannel && c.dataChannel.bufferedAmount>MAX_BUFFER}catch(e){return false} });
+          if(high){ setTimeout(wait,20); return; }
           conns.forEach(c=>safeSend(c,chunkMsg));
-          offset = end;
-          overallSent += (end - (offset - (end-offset))); // fallback
-          const pct = Math.min(100, Math.round((offset / f.size) * 100));
-          updateQueue(bid+'::'+fileIdx, pct);
-          const now = performance.now();
-          const dt = (now - state.lastTime)/1000;
-          if(dt>0.25){
-            const bps = (offset - state.lastBytes)/dt;
-            state.totalBps = bps; state.lastTime=now; state.lastBytes=offset;
-          }
-          updateTransferUI(true,'tx',{
-            pct, filePct:pct, bytes:offset, size:f.size,
-            fileIndex:fileIdx, fileTotal:files.length,
-            fileName:f.name
-          });
+          offset=end;
+          const pct=Math.min(100,Math.round(offset/f.size*100));
+          updateQueue(bid+'::'+fileIdx,pct);
+          const now=performance.now();
+          const dt=(now-S.lastTime)/1000;
+          if(dt>0.25){ S.totalBps=(offset-S.lastBytes)/dt; S.lastTime=now; S.lastBytes=offset; }
+          updateTransferUI(true,'tx',{pct,filePct:pct,bytes:offset,size:f.size,fileIndex:fileIdx,fileTotal:files.length,fileName:f.name});
           requestAnimationFrame(read);
         };
         wait();
@@ -993,509 +1234,544 @@ function sendBatch(files, target, title){
   sendNext();
 }
 
-/* ---------- TRANSFER UI ---------- */
-function updateTransferUI(active, dir, info){
-  const panel = $('#transferPanel');
-  panel.hidden = false;
-  $('#tpDot').className = 'dot'+(active?'':' idle');
-  $('#tpDirection').textContent = active ? (dir==='rx'?'Receiving':'Sending') : (dir==='done'?'Done':'Idle');
+/* ============ TRANSFER UI ============ */
+function updateTransferUI(active,dir,info){
+  const panel=$('#transferPanel'); panel.hidden=false;
+  $('#tpDot').className='tp-dot'+(active?'':' idle');
+  $('#tpDirection').textContent=active?(dir==='rx'?'Receiving':'Sending'):(dir==='done'?'Done':'Idle');
   if(info){
-    const pct = Math.min(100, info.filePct!=null?info.filePct:info.pct||0);
-    $('#tpFill').style.width = pct+'%';
-    $('#tpFilePct').textContent = pct+'%';
-    if(info.fileName) $('#tpFileName').textContent = info.fileName;
-    if(info.bytes!=null && info.size) $('#statPct').textContent = Math.round(info.bytes/info.size*100)+'%';
-    if(info.fileTotal) $('#statFiles').textContent = ((info.fileIndex||0)+1)+'/'+info.fileTotal;
-    if(state.totalBps>0) $('#statSpeed').textContent = fmtSize(state.totalBps)+'/s';
-    if(info.size && info.bytes!=null && state.totalBps>0){
-      const rem = info.size - info.bytes;
-      const eta = Math.max(0, Math.round(rem/state.totalBps));
-      $('#statEta').textContent = eta>60 ? Math.ceil(eta/60)+'m' : eta+'s';
+    const pct=Math.min(100,info.filePct!=null?info.filePct:info.pct||0);
+    $('#tpFill').style.width=pct+'%';
+    $('#tpFilePct').textContent=pct+'%';
+    if(info.fileName) $('#tpFileName').textContent=info.fileName;
+    if(info.bytes!=null&&info.size) $('#statPct').textContent=Math.round(info.bytes/info.size*100)+'%';
+    if(info.fileTotal) $('#statFiles').textContent=((info.fileIndex||0)+1)+'/'+info.fileTotal;
+    if(S.totalBps>0) $('#statSpeed').textContent=fmtSize(S.totalBps)+'/s';
+    if(info.size&&info.bytes!=null&&S.totalBps>0){
+      const eta=Math.max(0,Math.round((info.size-info.bytes)/S.totalBps));
+      $('#statEta').textContent=eta>60?Math.ceil(eta/60)+'m':eta+'s';
     }
   }
 }
 
-/* ---------- QUEUE ---------- */
+/* ============ QUEUE ============ */
 function addQueue(item){
-  const q = $('#queue'); const empty=q.querySelector('.tp-empty'); if(empty) empty.remove();
-  const el = document.createElement('div');
-  el.className = 'q-item '+(item.dir==='rx'?'receiving':'sending');
-  el.id = 'q-'+cssId(item.key);
-  el.innerHTML = `<span class="qi"><i class="fas ${iconFor(item.name)}"></i></span><span class="qn" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span><span class="qs">0%</span>`;
+  const q=$('#queue'); const empty=q.querySelector('.tp-empty'); if(empty) empty.remove();
+  const el=document.createElement('div');
+  el.className='q-item '+(item.dir==='rx'?'receiving':'sending');
+  el.id='q-'+cssId(item.key);
+  el.innerHTML=`<span class="qi"><i class="fas ${iconFor(item.name)}"></i></span><span class="qn" title="${esc(item.name)}">${esc(item.name)}</span><span class="qs">0%</span>`;
   q.prepend(el);
 }
-function updateQueue(key, pct, done){
-  const el = document.getElementById('q-'+cssId(key)); if(!el) return;
-  el.querySelector('.qs').textContent = pct+'%';
+function updateQueue(key,pct,done){
+  const el=document.getElementById('q-'+cssId(key)); if(!el) return;
+  el.querySelector('.qs').textContent=pct+'%';
   if(done) el.classList.add('done');
 }
-function cssId(s){ return 'k'+String(s).replace(/[^a-z0-9]/gi,'_'); }
+function cssId(s){return 'k'+String(s).replace(/[^a-z0-9]/gi,'_');}
 
-/* ---------- RECEIVED ---------- */
-function addReceived(name, url, size, title, sender){
-  const list = $('#rxList'); const empty=list.querySelector('.empty'); if(empty) empty.remove();
-  const el = document.createElement('div'); el.className='file-item';
-  el.innerHTML = `
-    <div class="fi"><i class="fas ${iconFor(name)}"></i></div>
-    <div class="fm">
-      <div class="fname">${escapeHtml(name)}</div>
-      ${title?`<div class="ftitle">${escapeHtml(title)}</div>`:''}
-      <div class="fmeta">${fmtSize(size)} · from ${escapeHtml(sender||'Device')}</div>
+/* ============ RECEIVED ============ */
+function addReceived(name,url,size,title,sender){
+  const list=$('#rxList'); const empty=list.querySelector('.empty-state'); if(empty) empty.remove();
+  const el=document.createElement('div'); el.className='file-item';
+  el.innerHTML=`
+    <div class="file-icon"><i class="fas ${iconFor(name)}"></i></div>
+    <div class="file-meta">
+      <div class="file-name">${esc(name)}</div>
+      ${title?`<div class="file-title">${esc(title)}</div>`:''}
+      <div class="file-sub">${fmtSize(size)} · from ${esc(sender||'Device')}</div>
     </div>
-    <a class="dl" href="${url}" download="${escapeHtml(name)}"><i class="fas fa-download"></i> Save</a>
+    <a class="dl-btn" href="${url}" download="${esc(name)}"><i class="fas fa-download"></i> Save</a>
   `;
   list.prepend(el);
-  state.rxCount++; $('#rxCount').textContent = state.rxCount+' file'+(state.rxCount>1?'s':'');
-  state.rx.push({name,url});
+  S.rxCount++; $('#rxCount').textContent=S.rxCount+' file'+(S.rxCount>1?'s':'');
 }
 
-/* ---------- CONNECTIONS UI ---------- */
+/* ============ CONNECTIONS UI ============ */
 function renderConns(){
-  const body = $('#connBody'); const tag = $('#devTag');
-  const active = state.conns.filter(c=>c.open);
-  tag.textContent = active.length+' device'+(active.length!==1?'s':'');
-  if(active.length===0){ body.innerHTML = `<div class="empty"><span class="ei"><i class="fas fa-user-slash"></i></span>No devices connected yet</div>`; }
-  else {
-    body.innerHTML = active.map(c=>{
-      const name = state.users[c.peer]||c.peer;
-      const isHost = state.host;
-      const canShare = isHost ? (state.perms[c.peer]!==false) : state.myPerm;
+  const body=$('#connBody'); const tag=$('#devTag');
+  const active=S.conns.filter(c=>c.open);
+  tag.textContent=active.length+' device'+(active.length!==1?'s':'');
+  if(active.length===0){
+    body.innerHTML=`<div class="empty-state"><i class="fas fa-user-slash"></i>No devices connected yet</div>`;
+  } else {
+    body.innerHTML=active.map(c=>{
+      const name=S.users[c.peer]||c.peer;
+      const isHost=S.host;
+      const canShare=isHost?(S.perms[c.peer]!==false):S.myPerm;
       return `<div class="conn ${isHost?'guest':''}">
-        <span class="cd"></span>
-        <span class="cn">${escapeHtml(name)}</span>
-        <span class="cs">${isHost?'Guest':'Host'}</span>
+        <span class="conn-dot"></span>
+        <span class="conn-name">${esc(name)}</span>
+        <span class="conn-role">${isHost?'Guest':'Host'}</span>
         <span class="badge ${canShare?'ok':'no'}">${canShare?'Can share':'No share'}</span>
       </div>`;
     }).join('');
   }
-  // host panel
-  if(state.host){
-    $('#hostPanel').hidden = false;
+  if(S.host){
+    $('#hostPanel').hidden=false;
     renderGuestList();
-    $('#shareAllBtn').disabled = active.length===0;
-    $('#shareSelBtn').disabled = active.length===0;
-    $('#permBtn').disabled = active.length===0;
+    $('#shareAllBtn').disabled=active.length===0;
+    $('#shareSelBtn').disabled=active.length===0;
+    $('#permBtn').disabled=active.length===0;
     fillTargets(active);
   } else {
-    $('#hostPanel').hidden = true;
+    $('#hostPanel').hidden=true;
   }
-  const has = active.length>0;
+  const has=active.length>0;
   toggleIO(has);
   if(has) step(2);
 }
 function toggleIO(on){
-  $('#ioSection').hidden = !on;
-  $('#disconnectBtn').hidden = !on;
-  $('#closeBtn').hidden = !on || !state.host;
+  $('#ioSection').hidden=!on;
+  $('#disconnectBtn').hidden=!on;
+  $('#closeBtn').hidden=!on||!S.host;
 }
 function renderGuestList(){
-  const list = $('#guestList'); const active = state.conns.filter(c=>c.open);
-  if(active.length===0){ list.innerHTML = `<div class="empty" style="padding:12px"><i class="fas fa-user-friends"></i> No guests yet</div>`; $('#guestCount').textContent='Total: 0 guests'; return; }
-  list.innerHTML = active.map(c=>{
-    const name = state.users[c.peer]||c.peer;
-    const ok = state.perms[c.peer]!==false;
-    return `<div class="g-item">
-      <span class="gn"><i class="fas fa-user-circle" style="color:var(--info)"></i> ${escapeHtml(name)}</span>
+  const list=$('#guestList');
+  const active=S.conns.filter(c=>c.open);
+  if(active.length===0){
+    list.innerHTML=`<div class="empty-state" style="padding:14px"><i class="fas fa-user-friends"></i>No guests yet</div>`;
+    $('#guestCount').textContent='Total: 0 guests'; return;
+  }
+  list.innerHTML=active.map(c=>{
+    const name=S.users[c.peer]||c.peer;
+    const ok=S.perms[c.peer]!==false;
+    return `<div class="guest-item">
+      <span class="guest-name"><i class="fas fa-user-circle" style="color:var(--info)"></i> ${esc(name)}</span>
       <span class="badge ${ok?'ok':'no'}">${ok?'Can share':'No share'}</span>
-      <div class="actions">
+      <div class="guest-actions">
         <button class="btn btn-soft btn-xs" data-act="share" data-peer="${c.peer}"><i class="fas fa-paper-plane"></i> Share</button>
         <button class="btn btn-warn btn-xs" data-act="perm" data-peer="${c.peer}"><i class="fas fa-key"></i> ${ok?'Revoke':'Allow'}</button>
-        <button class="btn btn-danger btn-xs" data-act="kick" data-peer="${c.peer}"><i class="fas fa-times"></i></button>
+        <button class="btn btn-danger btn-xs" data-act="kick" data-peer="${c.peer}" aria-label="Disconnect ${esc(name)}"><i class="fas fa-times"></i></button>
       </div>
     </div>`;
   }).join('');
-  $('#guestCount').textContent = 'Total: '+active.length+' guest'+(active.length>1?'s':'');
+  $('#guestCount').textContent='Total: '+active.length+' guest'+(active.length>1?'s':'');
 }
 function fillTargets(active){
-  const sel = $('#targetSel'); const cur = sel.value;
-  sel.innerHTML = '<option value="all">All Devices</option>'+active.map(c=>{
-    const n = state.users[c.peer]||c.peer;
-    return `<option value="${c.peer}">${escapeHtml(n)}</option>`;
+  const sel=$('#targetSel'); const cur=sel.value;
+  sel.innerHTML='<option value="all">All Devices</option>'+active.map(c=>{
+    const n=S.users[c.peer]||c.peer;
+    return `<option value="${c.peer}">${esc(n)}</option>`;
   }).join('');
-  if([...sel.options].some(o=>o.value===cur)) sel.value = cur;
+  if([...sel.options].some(o=>o.value===cur)) sel.value=cur;
 }
 function updateSendTo(){
-  if(!state.host){ $('#sendToTxt').textContent = 'Sending to: Host'; return; }
-  if(state.target==='all') $('#sendToTxt').textContent='Sending to: All Devices';
-  else $('#sendToTxt').textContent = 'Sending to: '+(state.users[state.target]||state.target);
+  if(!S.host){ $('#sendToTxt').textContent='Sending to: Host'; return; }
+  if(S.target==='all') $('#sendToTxt').textContent='Sending to: All devices';
+  else $('#sendToTxt').textContent='Sending to: '+(S.users[S.target]||S.target);
 }
 
-/* ---------- QR HOST ---------- */
+/* ============ QR HOST ============ */
 function renderHostQR(code){
-  const wrap = $('#qrCanvasHost');
-  wrap.innerHTML = '';
-  const c = document.createElement('canvas');
-  QR.draw(c, 'https://'+(location.hostname||'sharex.tool')+'/?join='+code, 220);
+  const wrap=$('#qrCanvasHost'); wrap.innerHTML='';
+  const c=document.createElement('canvas'); c.className='qr-canvas';
+  QR.draw(c,'https://'+(location.hostname||'sharex.tool')+'/?join='+code,220);
   wrap.appendChild(c);
 }
-function getShareLink(code){
-  try{ return location.origin + location.pathname + '?join='+code; }catch(e){ return '?join='+code; }
+function shareLink(code){
+  try{ return location.origin+location.pathname+'?join='+code; }catch(e){ return '?join='+code; }
 }
 
-/* ---------- HOST / JOIN ---------- */
+/* ============ SESSION PERSIST ============ */
+function persistSession(){
+  if(!S.me) return;
+  SS.set('session',{
+    name:S.name, me:S.me, host:S.host,
+    code:$('#codeOut').value||null,
+    target:S.target,
+    ts:Date.now()
+  });
+}
+function restoreSession(){
+  const s=SS.get('session',null);
+  if(!s) return false;
+  if(!s.name||!s.me) return false;
+  // Restore name always
+  S.name=s.name;
+  $('#statusTxt').textContent='Welcome back, '+s.name+'!';
+  return s;
+}
+
+/* ============ HOST / JOIN ============ */
 async function startHost(){
-  if(!state.name){ openName(); return; }
-  if(state.host && state.me){ toast('Already hosting','info'); return; }
-  if(!state.host && state.conns.some(c=>c.open)){ toast('Join as guest first. Disconnect to host.','warning'); return; }
+  if(!S.name){ openName(); return; }
+  if(S.host && S.me){ toast('Already hosting','info'); return; }
+  if(!S.host && S.conns.some(c=>c.open)){ toast('Disconnect from guest first','warning'); return; }
   loader(true,'Creating room…');
   try{
-    state.host = true;
-    const code = genCode();
+    S.host=true;
+    const code=genCode();
     await initPeer(code);
-    state.me = code;
-    $('#codeOut').value = code;
-    $('#hostBox').hidden = false;
-    $('#closeBtn').hidden = false;
+    S.me=code;
+    $('#codeOut').value=code;
+    $('#hostBox').hidden=false;
+    $('#closeBtn').hidden=false;
     renderHostQR(code);
     setStatus('Room created: '+code+' — share the code or QR','success');
     toast('Room created: '+code,'success');
     renderConns();
+    persistSession();
   }catch(err){
-    state.host=false;
+    S.host=false;
     setStatus('Failed to create room','error');
     toast('Failed to create room','error');
   }finally{ loader(false); }
 }
 async function joinRoom(code){
-  if(!state.name){ pendingJoin = code; openName(); return; }
+  if(!S.name){ pendingJoin=code; openName(); return; }
   if(!/^\d{6}$/.test(code)){ toast('Enter a 6-digit code','error'); setStatus('Code must be 6 digits','error'); return; }
-  if(state.host){ toast('You are hosting. Close room to join.','warning'); return; }
-  if(state.conns.some(c=>c.open)){ toast('Already connected','warning'); return; }
-  if(code===state.me){ toast("Can't join yourself",'error'); return; }
+  if(S.host){ toast('You are hosting. Close room to join.','warning'); return; }
+  if(S.conns.some(c=>c.open)){ toast('Already connected','warning'); return; }
+  if(code===S.me){ toast("Can't join yourself",'error'); return; }
   loader(true,'Connecting…');
   try{
-    if(!state.peer){
-      const my = genCode();
+    if(!S.peer){
+      const my=genCode();
       await initPeer(my);
-      state.me = my;
-      state.host = false;
+      S.me=my; S.host=false;
     }
-    const conn = state.peer.connect(code,{reliable:true});
-    if(!conn){ setStatus('Could not connect','error'); return; }
-    state.host = false;
-    state.conns.push(conn);
+    const conn=S.peer.connect(code,{reliable:true});
+    if(!conn){ setStatus('Could not connect','error'); loader(false); return; }
+    S.host=false;
+    S.conns.push(conn);
     wire(conn);
     setStatus('Connecting to '+code+'…','info');
     renderConns();
+    persistSession();
   }catch(err){
     setStatus('Connection failed','error'); toast('Connection failed','error');
-  }finally{ setTimeout(()=>loader(false), 600); }
+  }finally{ setTimeout(()=>loader(false),600); }
 }
-let pendingJoin = null;
+let pendingJoin=null;
 
-/* ---------- NAME MODAL ---------- */
+/* ============ NAME ============ */
 function openName(){
-  $('#nameModal').hidden = false;
-  setTimeout(()=>$('#nameInput').focus(), 100);
+  $('#nameModal').hidden=false;
+  setTimeout(()=>$('#nameInput').focus(),100);
 }
-$('#nameSubmit').addEventListener('click', ()=>{
-  const v = $('#nameInput').value.trim();
-  if(v.length<2){ $('#nameErr').style.display='block'; $('#nameInput').focus(); return; }
-  $('#nameErr').style.display='none';
-  state.name = v;
-  store.set('name', v);
-  $('#nameModal').hidden = true;
-  $('#statusTxt').textContent = 'Welcome, '+v+'! Create or join a room.';
-  announce('Welcome '+v);
+$('#nameSubmit').addEventListener('click',()=>{
+  const v=$('#nameInput').value.trim();
+  if(v.length<2){ $('#nameErr').classList.add('show'); $('#nameInput').focus(); return; }
+  $('#nameErr').classList.remove('show');
+  S.name=v; LS.set('name',v);
+  $('#nameModal').hidden=true;
+  setStatus('Welcome, '+v+'! Create or join a room.','success');
   toast('Welcome, '+v,'success');
+  persistSession();
   if(pendingJoin){ const c=pendingJoin; pendingJoin=null; joinRoom(c); }
-  else if(getJoinParam()){ joinRoom(getJoinParam()); }
+  else if(joinParam()){ joinRoom(joinParam()); }
 });
-$('#nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#nameSubmit').click(); });
+$('#nameInput').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#nameSubmit').click(); });
 
-/* ---------- CONFIRM SEND ---------- */
-function openConfirm(files, target, title){
-  state.pendingFiles = files; state.pendingTarget = target; state.pendingTitle = title;
-  $('#confirmTarget').textContent = 'Sending to: '+(target==='all'?'All Devices':(state.users[target]||target));
-  $('#confirmFiles').innerHTML = files.map(f=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-3);border-radius:8px;font-size:.82rem"><i class="fas ${iconFor(f.name)}" style="color:var(--brand)"></i><span style="flex:1;font-weight:600;word-break:break-all">${escapeHtml(f.name)}</span><span style="color:var(--ink-4);font-size:.72rem">${fmtSize(f.size)}</span></div>`).join('');
-  const total = files.reduce((a,f)=>a+f.size,0);
-  $('#confirmSummary').textContent = files.length+' file(s) · Total '+fmtSize(total)+(title?' · Title: "'+title+'"':'');
-  $('#confirmModal').hidden = false;
+/* ============ CONFIRM ============ */
+function openConfirm(files,target,title){
+  S.pendingFiles=files; S.pendingTarget=target; S.pendingTitle=title;
+  $('#confirmTarget').textContent='Sending to: '+(target==='all'?'All devices':(S.users[target]||target));
+  $('#confirmFiles').innerHTML=files.map(f=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-3);border-radius:8px;font-size:.82rem"><i class="fas ${iconFor(f.name)}" style="color:var(--brand)"></i><span style="flex:1;font-weight:600;word-break:break-all">${esc(f.name)}</span><span style="color:var(--ink-4);font-size:.72rem">${fmtSize(f.size)}</span></div>`).join('');
+  const total=files.reduce((a,f)=>a+f.size,0);
+  $('#confirmSummary').textContent=files.length+' file(s) · Total '+fmtSize(total)+(title?' · Title: "'+title+'"':'');
+  $('#confirmModal').hidden=false;
 }
-$('#confirmCancel').onclick = ()=>{ $('#confirmModal').hidden = true; state.pendingFiles=null; setStatus('Send cancelled','info'); };
-$('#confirmSend').onclick = ()=>{
-  const f = state.pendingFiles, t=state.pendingTarget, ti=state.pendingTitle;
-  $('#confirmModal').hidden = true;
-  state.pendingFiles=null;
-  if(f) sendBatch(f, t, ti);
+$('#confirmCancel').onclick=()=>{ $('#confirmModal').hidden=true; S.pendingFiles=null; setStatus('Send cancelled','info'); };
+$('#confirmSend').onclick=()=>{
+  const f=S.pendingFiles,t=S.pendingTarget,ti=S.pendingTitle;
+  $('#confirmModal').hidden=true;
+  S.pendingFiles=null;
+  if(!f) return;
+  // 3-second loader AFTER confirmation, before transfer
+  loader(true,'Preparing transfer…');
+  setTimeout(()=>{
+    loader(false);
+    sendBatch(f,t,ti);
+  },3000);
 };
 
-/* ---------- SCANNER ---------- */
-let jsQRPromise = null;
+/* ============ SCANNER ============ */
+let jsQRPromise=null;
 function loadJsQR(){
   if(window.jsQR) return Promise.resolve();
   if(jsQRPromise) return jsQRPromise;
-  jsQRPromise = new Promise((resolve,reject)=>{
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js';
-    s.onload = ()=>resolve(); s.onerror = ()=>reject(new Error('lib'));
+  jsQRPromise=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js';
+    s.onload=()=>res(); s.onerror=()=>rej(new Error('lib'));
     document.head.appendChild(s);
   });
   return jsQRPromise;
 }
 async function openScanner(){
   if(!navigator.mediaDevices?.getUserMedia){ toast('Camera not supported','error'); return; }
-  $('#scanModal').hidden = false;
-  $('#scanStatus').className = 'scan-status';
-  $('#scanStatus').textContent = 'Requesting camera…';
+  $('#scanModal').hidden=false;
+  $('#scanStatus').className='scan-status';
+  $('#scanStatus').textContent='Requesting camera…';
   try{
     await stopScan();
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode:{ideal:state.scanFacing}, width:{ideal:640}, height:{ideal:640} },
-      audio:false
+    const stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:{ideal:S.scanFacing},width:{ideal:640},height:{ideal:640}},audio:false
     });
-    state.scanStream = stream;
-    const v = $('#scanVideo'); v.srcObject = stream; await v.play().catch(()=>{});
-    $('#scanStatus').textContent = 'Scanning…';
+    S.scanStream=stream;
+    const v=$('#scanVideo'); v.srcObject=stream; await v.play().catch(()=>{});
+    $('#scanStatus').textContent='Scanning…';
     await loadJsQR().catch(()=>{});
     if(window.BarcodeDetector){
       try{
-        const det = new BarcodeDetector({formats:['qr_code']});
-        const loop = async ()=>{
-          if(!state.scanStream) return;
+        const det=new BarcodeDetector({formats:['qr_code']});
+        const loop=async()=>{
+          if(!S.scanStream) return;
           try{
-            const codes = await det.detect(v);
-            if(codes && codes.length){
-              const val = codes[0].rawValue || codes[0].rawValue;
-              handleScanResult(val); return;
-            }
+            const codes=await det.detect(v);
+            if(codes && codes.length){ handleScanResult(codes[0].rawValue); return; }
           }catch(e){}
-          state.scanRAF = requestAnimationFrame(loop);
+          S.scanRAF=requestAnimationFrame(loop);
         };
-        loop();
-        return;
+        loop(); return;
       }catch(e){}
     }
     if(window.jsQR){
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d',{willReadFrequently:true});
-      const loop = ()=>{
-        if(!state.scanStream) return;
+      const canvas=document.createElement('canvas');
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});
+      const loop=()=>{
+        if(!S.scanStream) return;
         if(v.readyState===v.HAVE_ENOUGH_DATA){
-          canvas.width = v.videoWidth; canvas.height = v.videoHeight;
+          canvas.width=v.videoWidth; canvas.height=v.videoHeight;
           ctx.drawImage(v,0,0,canvas.width,canvas.height);
-          const img = ctx.getImageData(0,0,canvas.width,canvas.height);
-          const code = window.jsQR(img.data, img.width, img.height,{inversionAttempts:'dontInvert'});
-          if(code && code.data){ handleScanResult(code.data); return; }
+          const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+          const code=window.jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+          if(code&&code.data){ handleScanResult(code.data); return; }
         }
-        state.scanRAF = requestAnimationFrame(loop);
+        S.scanRAF=requestAnimationFrame(loop);
       };
       loop();
     } else {
-      $('#scanStatus').textContent = 'Scanner unavailable on this browser';
+      $('#scanStatus').textContent='Scanner unavailable';
     }
   }catch(err){
-    $('#scanStatus').className = 'scan-status err';
-    $('#scanStatus').textContent = 'Camera access denied or unavailable';
+    $('#scanStatus').className='scan-status err';
+    $('#scanStatus').textContent='Camera denied or unavailable';
   }
 }
 function handleScanResult(raw){
-  const text = String(raw||'').trim();
-  let code = null;
-  if(/^\d{6}$/.test(text)) code = text;
+  const text=String(raw||'').trim();
+  let code=null;
+  if(/^\d{6}$/.test(text)) code=text;
   else {
     try{
-      const u = new URL(text);
-      const j = u.searchParams.get('join');
-      if(j && /^\d{6}$/.test(j)) code = j;
-      else if(u.hash && /join=(\d{6})/.test(u.hash)) code = u.hash.match(/join=(\d{6})/)[1];
+      const u=new URL(text);
+      const j=u.searchParams.get('join');
+      if(j&&/^\d{6}$/.test(j)) code=j;
+      else if(u.hash&&/join=(\d{6})/.test(u.hash)) code=u.hash.match(/join=(\d{6})/)[1];
     }catch(e){}
   }
-  if(!code){ $('#scanStatus').className='scan-status err'; $('#scanStatus').textContent='Not a valid SHAREx code'; return; }
+  if(!code){ $('#scanStatus').className='scan-status err'; $('#scanStatus').textContent='Not a valid code'; return; }
   $('#scanStatus').className='scan-status ok'; $('#scanStatus').textContent='Found: '+code;
   stopScan();
-  setTimeout(()=>{ $('#scanModal').hidden = true; if(state.name) joinRoom(code); else { pendingJoin=code; openName(); } }, 400);
+  setTimeout(()=>{ $('#scanModal').hidden=true; if(S.name) joinRoom(code); else { pendingJoin=code; openName(); } },400);
 }
 async function stopScan(){
-  cancelAnimationFrame(state.scanRAF);
-  state.scanRAF = null;
-  if(state.scanStream){ try{ state.scanStream.getTracks().forEach(t=>t.stop()); }catch(e){} state.scanStream=null; }
-  const v = $('#scanVideo'); if(v) v.srcObject = null;
+  cancelAnimationFrame(S.scanRAF); S.scanRAF=null;
+  if(S.scanStream){ try{S.scanStream.getTracks().forEach(t=>t.stop())}catch(e){} S.scanStream=null; }
+  const v=$('#scanVideo'); if(v) v.srcObject=null;
 }
 
-/* ---------- EVENT BINDINGS ---------- */
+/* ============ EVENTS ============ */
 // Theme
-$('#themeBtn').addEventListener('click', ()=>{
-  const cur = document.documentElement.dataset.theme;
+$('#themeBtn').addEventListener('click',()=>{
+  const cur=document.documentElement.dataset.theme;
   applyTheme(cur==='dark'?'light':'dark');
 });
-// A11Y panel
-$('#a11yBtn').addEventListener('click', ()=>{ $('#a11yModal').hidden=false; applyA11y(); });
-$('#a11yClose').onclick = ()=> $('#a11yModal').hidden = true;
-$('#toggleContrast').onclick = ()=>{
-  const a = store.get('a11y',{contrast:false,size:'normal',motion:false,speech:false});
-  a.contrast = !a.contrast; store.set('a11y',a); applyA11y();
-};
-$('#toggleTextSize').onclick = ()=>{
-  const a = store.get('a11y',{contrast:false,size:'normal',motion:false,speech:false});
-  a.size = a.size==='normal'?'large':a.size==='large'?'xlarge':'normal';
-  store.set('a11y',a); applyA11y();
-};
-$('#toggleMotion').onclick = ()=>{
-  const a = store.get('a11y',{contrast:false,size:'normal',motion:false,speech:false});
-  a.motion = !a.motion; store.set('a11y',a); applyA11y();
-};
-$('#toggleSpeech').onclick = ()=>{
-  const a = store.get('a11y',{contrast:false,size:'normal',motion:false,speech:false});
-  a.speech = !a.speech; store.set('a11y',a); applyA11y(); speak('Speech '+(a.speech?'on':'off'));
-};
+// A11Y
+const a11yOpen=()=>{ $('#a11yModal').hidden=false; applyA11y(); };
+$('#a11yBtn').addEventListener('click',a11yOpen);
+$('#a11yMobileBtn').addEventListener('click',()=>{ a11yOpen(); closeMobileNav(); });
+$('#a11yClose').onclick=()=>$('#a11yModal').hidden=true;
+$('#toggleContrast').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false}); a.contrast=!a.contrast; LS.set('a11y',a); applyA11y(); };
+$('#toggleTextSize').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false}); a.size=a.size==='normal'?'large':a.size==='large'?'xlarge':'normal'; LS.set('a11y',a); applyA11y(); };
+$('#toggleMotion').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false}); a.motion=!a.motion; LS.set('a11y',a); applyA11y(); };
+$('#toggleSpeech').onclick=()=>{ const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false}); a.speech=!a.speech; LS.set('a11y',a); applyA11y(); speak('Speech '+(a.speech?'on':'off')); };
+
+function applyTheme(t){
+  document.documentElement.dataset.theme=t;
+  $('#themeBtn').setAttribute('aria-pressed',t==='dark');
+  $('#themeBtn').innerHTML=t==='dark'?'<i class="fas fa-sun" aria-hidden="true"></i>':'<i class="fas fa-moon" aria-hidden="true"></i>';
+  LS.set('theme',t);
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content',t==='dark'?'#0F141C':'#E08A2E');
+}
+function applyA11y(){
+  const a=LS.get('a11y',{contrast:false,size:'normal',motion:false,speech:false});
+  document.documentElement.dataset.contrast=a.contrast?'high':'normal';
+  document.documentElement.dataset.textsize=a.size;
+  document.documentElement.dataset.reducedMotion=a.motion?'true':'false';
+  $('#contrastState').textContent=a.contrast?'On':'Off';
+  $('#sizeState').textContent=a.size==='large'?'Large':a.size==='xlarge'?'XL':'Normal';
+  $('#motionState').textContent=a.motion?'On':'Off';
+  $('#speechState').textContent=a.speech?'On':'Off';
+  $('#toggleContrast').dataset.on=a.contrast;
+  $('#toggleTextSize').dataset.on=a.size!=='normal';
+  $('#toggleMotion').dataset.on=a.motion;
+  $('#toggleSpeech').dataset.on=a.speech;
+}
+
 // Menu
-$('#menuBtn').addEventListener('click', ()=>{
-  const nav = $('#navMenu'); const open = nav.classList.toggle('open');
-  $('#menuBtn').setAttribute('aria-expanded', open);
+function closeMobileNav(){
+  $('#navMenu').classList.remove('open');
+  $('#menuBtn').setAttribute('aria-expanded','false');
+}
+$('#menuBtn').addEventListener('click',()=>{
+  const open=$('#navMenu').classList.toggle('open');
+  $('#menuBtn').setAttribute('aria-expanded',open);
 });
-// Host / Join
-$('#hostBtn').onclick = startHost;
-$('#joinBtn').onclick = ()=> joinRoom($('#joinCode').value.trim());
-$('#joinCode').addEventListener('input', e=>{ e.target.value = e.target.value.replace(/\D/g,'').slice(0,6); });
-$('#joinCode').addEventListener('keydown', e=>{ if(e.key==='Enter') joinRoom($('#joinCode').value.trim()); });
-$('#scanBtn').onclick = openScanner;
-$('#scanQuickBtn').onclick = openScanner;
-$('#scanCancel').onclick = ()=>{ stopScan(); $('#scanModal').hidden = true; };
-$('#scanSwitch').onclick = ()=>{ state.scanFacing = state.scanFacing==='environment'?'user':'environment'; openScanner(); };
+$$('#navMenu a').forEach(a=>a.addEventListener('click',closeMobileNav));
+
+// Host/Join
+$('#hostBtn').onclick=startHost;
+$('#joinBtn').onclick=()=>joinRoom($('#joinCode').value.trim());
+$('#joinCode').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/\D/g,'').slice(0,6); });
+$('#joinCode').addEventListener('keydown',e=>{ if(e.key==='Enter') joinRoom($('#joinCode').value.trim()); });
+$('#scanBtn').onclick=openScanner;
+$('#scanQuickBtn').onclick=openScanner;
+$('#scanCancel').onclick=()=>{ stopScan(); $('#scanModal').hidden=true; };
+$('#scanSwitch').onclick=()=>{ S.scanFacing=S.scanFacing==='environment'?'user':'environment'; openScanner(); };
+
 // Copy
-$('#copyCodeBtn').onclick = ()=>{
-  const v = $('#codeOut').value;
-  copyText(v).then(()=>{ toast('Code copied: '+v,'success'); }).catch(()=>{});
-};
-$('#copyLinkBtn').onclick = ()=>{
-  const v = getShareLink($('#codeOut').value);
-  copyText(v).then(()=>{ toast('Link copied','success'); }).catch(()=>{});
-};
-$('#resetHostBtn').onclick = ()=>{
-  resetAll();
-  toast('Click Create Room for a new code','info');
-};
+$('#copyCodeBtn').onclick=()=>{ const v=$('#codeOut').value; copyText(v).then(()=>toast('Code copied: '+v,'success')); };
+$('#copyLinkBtn').onclick=()=>{ const v=shareLink($('#codeOut').value); copyText(v).then(()=>toast('Link copied','success')); };
+$('#resetHostBtn').onclick=()=>{ resetAll(); toast('Click Create Room for a new code','info'); };
 function copyText(t){
   if(navigator.clipboard?.writeText) return navigator.clipboard.writeText(t);
   return new Promise((res,rej)=>{ try{ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); res(); }catch(e){ rej(e); } });
 }
+
 // Host controls
-$('#shareAllBtn').onclick = ()=>{
-  state.target='all'; updateSendTo();
-  broadcast({t:'target',target:'all'});
-  toast('Sending to: All','info');
-  $('#shareTargetBox').hidden = true;
-};
-$('#shareSelBtn').onclick = ()=>{ $('#shareTargetBox').hidden = !$('#shareTargetBox').hidden; };
-$('#targetGoBtn').onclick = ()=>{
-  const v = $('#targetSel').value; state.target = v; updateSendTo();
-  broadcast({t:'target',target:v});
-  toast('Sending to: '+(v==='all'?'All':(state.users[v]||v)),'info');
-  $('#shareTargetBox').hidden = true;
-};
-$('#permBtn').onclick = ()=>{ $('#guestList').scrollIntoView({behavior:'smooth',block:'center'}); };
-$('#guestList').addEventListener('click', e=>{
-  const btn = e.target.closest('button[data-act]'); if(!btn) return;
-  const peer = btn.dataset.peer; const act = btn.dataset.act;
+$('#shareAllBtn').onclick=()=>{ S.target='all'; updateSendTo(); broadcast({t:'target',target:'all'}); toast('Sending to: All','info'); $('#shareTargetBox').hidden=true; };
+$('#shareSelBtn').onclick=()=>{ $('#shareTargetBox').hidden=!$('#shareTargetBox').hidden; };
+$('#targetGoBtn').onclick=()=>{ const v=$('#targetSel').value; S.target=v; updateSendTo(); broadcast({t:'target',target:v}); toast('Sending to: '+(v==='all'?'All':(S.users[v]||v)),'info'); $('#shareTargetBox').hidden=true; };
+$('#permBtn').onclick=()=>{ $('#guestList').scrollIntoView({behavior:'smooth',block:'center'}); };
+
+$('#guestList').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-act]'); if(!btn) return;
+  const peer=btn.dataset.peer; const act=btn.dataset.act;
   if(act==='share'){
-    state.target = peer; updateSendTo(); broadcast({t:'target',target:peer});
-    toast('Target: '+(state.users[peer]||peer),'info');
-    if(state.pendingFiles){ const f=state.pendingFiles; const t=state.pendingTarget==='all'?peer:state.pendingTarget; openConfirm(f,t,state.pendingTitle); }
+    S.target=peer; updateSendTo(); broadcast({t:'target',target:peer});
+    toast('Target: '+(S.users[peer]||peer),'info');
+    if(S.pendingFiles){ const f=S.pendingFiles; const t=S.pendingTarget==='all'?peer:S.pendingTarget; openConfirm(f,t,S.pendingTitle); }
   } else if(act==='perm'){
-    const ok = !(state.perms[peer]!==false);
-    state.perms[peer] = ok;
+    const ok=!(S.perms[peer]!==false);
+    S.perms[peer]=ok;
     broadcast({t:'perm-update',peer,ok});
-    const c = state.conns.find(c=>c.peer===peer);
+    const c=S.conns.find(c=>c.peer===peer);
     if(c) safeSend(c,{t:'perm',ok});
-    toast('Permission '+(ok?'granted':'revoked'), ok?'success':'warning');
+    toast('Permission '+(ok?'granted':'revoked'),ok?'success':'warning');
     renderConns();
   } else if(act==='kick'){
-    const c = state.conns.find(c=>c.peer===peer);
-    if(c){ try{c.close()}catch(e){} const i=state.conns.indexOf(c); if(i>-1) state.conns.splice(i,1); }
-    delete state.users[peer]; delete state.perms[peer];
+    const c=S.conns.find(c=>c.peer===peer);
+    if(c){ try{c.close()}catch(e){} const i=S.conns.indexOf(c); if(i>-1) S.conns.splice(i,1); }
+    delete S.users[peer]; delete S.perms[peer];
     toast('Guest disconnected','warning'); renderConns();
   }
 });
+
 // Send
-$('#sendBtn').onclick = ()=>{
-  const files = Array.from($('#fileIn').files||[]);
+$('#sendBtn').onclick=()=>{
+  // BLOCK when no guest connected
+  const active=S.conns.filter(c=>c.open);
+  if(active.length===0){ toast('No devices connected','error'); setStatus('Connect a device first','error'); return; }
+  const files=Array.from($('#fileIn').files||[]);
   if(files.length===0){ toast('Select at least one file','error'); return; }
   if(files.length>MAX_FILES){ toast('Max '+MAX_FILES+' files','warning'); return; }
-  if(!state.host && !state.myPerm){ toast('No permission from host','error'); return; }
-  if(state.host && state.target!=='all' && !state.conns.find(c=>c.peer===state.target&&c.open)){ state.target='all'; }
-  const title = $('#titleIn').value.trim();
-  openConfirm(files.slice(0,MAX_FILES), state.host?state.target:'all', title);
+  if(!S.host && !S.myPerm){ toast('No permission from host','error'); return; }
+  if(S.host && S.target!=='all' && !S.conns.find(c=>c.peer===S.target&&c.open)){ S.target='all'; }
+  const title=$('#titleIn').value.trim();
+  openConfirm(files.slice(0,MAX_FILES), S.host?S.target:'all', title);
 };
-$('#fileIn').addEventListener('change', function(){
+$('#fileIn').addEventListener('change',function(){
   if(this.files.length>MAX_FILES){
     toast('Max '+MAX_FILES+' files','warning');
-    const dt = new DataTransfer();
+    const dt=new DataTransfer();
     for(let i=0;i<MAX_FILES;i++) if(this.files[i]) dt.items.add(this.files[i]);
-    this.files = dt.files;
+    this.files=dt.files;
   }
   if(this.files.length) step(3);
 });
+
 // Disconnect / close
-$('#disconnectBtn').onclick = ()=>{ disconnectAll(); toast('Disconnected','info'); };
-$('#closeBtn').onclick = ()=>{ resetAll(); toast('Room closed','info'); };
+$('#disconnectBtn').onclick=()=>{ disconnectAll(); toast('Disconnected','info'); };
+$('#closeBtn').onclick=()=>{ resetAll(); toast('Room closed','info'); };
 
 function disconnectAll(){
-  state.conns.forEach(c=>{ try{c.close()}catch(e){} });
-  state.conns=[]; state.users={}; state.perms={};
-  renderConns(); step(1);
+  S.conns.forEach(c=>{ try{c.close()}catch(e){} });
+  S.conns=[]; S.users={}; S.perms={};
+  renderConns(); step(1); persistSession();
 }
 function resetAll(){
   disconnectAll();
-  if(state.peer){ try{state.peer.destroy()}catch(e){} state.peer=null; }
-  state.me=null; state.host=false; state.target='all'; state.sending=false;
-  $('#hostBox').hidden = true; $('#codeOut').value='';
-  $('#closeBtn').hidden = true;
-  $('#transferPanel').hidden = true;
-  $('#queue').innerHTML = '<div class="tp-empty">Transfers will appear here</div>';
+  if(S.peer){ try{S.peer.destroy()}catch(e){} S.peer=null; }
+  S.me=null; S.host=false; S.target='all'; S.sending=false;
+  $('#hostBox').hidden=true; $('#codeOut').value='';
+  $('#closeBtn').hidden=true;
+  $('#transferPanel').hidden=true;
+  $('#queue').innerHTML='<div class="tp-empty">Transfers will appear here</div>';
   toggleIO(false); renderConns();
+  SS.del('session');
 }
 
-/* ---------- KEYBOARD SHORTCUTS ---------- */
-document.addEventListener('keydown', e=>{
-  if(e.altKey){
-    if(e.key.toLowerCase()==='n'){ e.preventDefault(); openName(); }
-    if(e.key.toLowerCase()==='c'){ e.preventDefault(); $('#joinCode').focus(); }
-    if(e.key.toLowerCase()==='s'){ e.preventDefault(); $('#fileIn').click(); }
-    if(e.key.toLowerCase()==='d'){ e.preventDefault(); $('#themeBtn').click(); }
-  }
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(!e.altKey) return;
+  const k=e.key.toLowerCase();
+  if(k==='n'){ e.preventDefault(); openName(); }
+  else if(k==='c'){ e.preventDefault(); $('#joinCode').focus(); }
+  else if(k==='s'){ e.preventDefault(); $('#fileIn').click(); }
+  else if(k==='d'){ e.preventDefault(); $('#themeBtn').click(); }
 });
 
-/* ---------- OFFLINE ---------- */
-window.addEventListener('online', ()=> { $('#offlineBanner').hidden = true; });
-window.addEventListener('offline', ()=> { $('#offlineBanner').hidden = false; });
+// Offline
+window.addEventListener('online',()=>{ $('#offlineBanner').hidden=true; });
+window.addEventListener('offline',()=>{ $('#offlineBanner').hidden=false; });
 
-/* ---------- MOBILE MENU NAV CLOSE ---------- */
-$$('#navMenu .nav-link').forEach(a=> a.addEventListener('click', ()=>{
-  $('#navMenu').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded','false');
-}));
+// Prevent unload damage — keep session
+window.addEventListener('beforeunload', ()=>{ persistSession(); });
 
-/* ---------- RIPPLE ---------- */
-document.addEventListener('pointerdown', e=>{
-  const b = e.target.closest('.btn'); if(!b || b.disabled) return;
-  const r = document.createElement('span'); r.className='rp';
-  const rect = b.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height);
-  r.style.width = r.style.height = size+'px';
-  r.style.left = (e.clientX - rect.left - size/2)+'px';
-  r.style.top = (e.clientY - rect.top - size/2)+'px';
-  b.classList.add('ripple'); b.appendChild(r);
-  setTimeout(()=>r.remove(), 600);
-}, {passive:true});
-
-/* ---------- INIT ---------- */
+/* ============ INIT ============ */
 (function init(){
-  applyTheme(store.get('theme', matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+  // Default LIGHT mode (only dark if user chose it before)
+  applyTheme(LS.get('theme','light'));
   applyA11y();
-  const saved = store.get('name','');
-  if(saved){ state.name = saved; }
-  else { openName(); }
+  // Restore session
+  const saved=LS.get('name','');
+  if(saved) S.name=saved;
+  const sess=restoreSession();
+  if(!S.name){ openName(); }
   renderConns();
-  const jc = getJoinParam();
-  if(jc){
-    if(state.name) setTimeout(()=>joinRoom(jc), 400);
-    else pendingJoin = jc;
+  // If returning to a room as host, offer to keep offering (do NOT auto destroy)
+  if(sess && sess.host && sess.code){
+    $('#codeOut').value=sess.code;
+    $('#hostBox').hidden=false;
+    renderHostQR(sess.code);
+    setStatus('Room '+sess.code+' still open — reconnect if needed','info');
+    // Auto re-init peer with same code so offer stays live
+    (async()=>{
+      try{
+        await initPeer(sess.code);
+        S.me=sess.code; S.host=true;
+        renderConns();
+      }catch(e){
+        setStatus('Please click Create Room to reopen your room','warning');
+      }
+    })();
   }
-  if(!navigator.onLine) $('#offlineBanner').hidden = false;
+  // URL join param
+  const jc=joinParam();
+  if(jc){
+    if(S.name) setTimeout(()=>joinRoom(jc),400);
+    else pendingJoin=jc;
+  }
+  if(!navigator.onLine) $('#offlineBanner').hidden=false;
   step(1);
 })();
 
-console.log('%cSHAREx Tool','font-weight:800;color:#E08A2E;font-size:14px','ready • QR + P2P');
+console.log('%cSHAREx','font-weight:800;color:#E08A2E;font-size:14px','ready — P2P + QR + persistent session');
 })();
 </script>
 </body>
