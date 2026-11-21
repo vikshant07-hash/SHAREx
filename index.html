@@ -41,7 +41,14 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease)}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--ink);
+  min-height:100vh;line-height:1.55;font-size:16px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  padding:32px 0 40px;
+  transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease);
+}
+@media (max-width:640px){body{padding:20px 0 28px}}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 a{color:inherit;text-decoration:none}
@@ -156,6 +163,7 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .field{width:100%;padding:12px 16px;border:1.5px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--bg-3);color:var(--ink);font-size:.92rem;transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background-color var(--dur) var(--ease);-webkit-appearance:none}
 .field:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-glow);background:var(--bg-2)}
 .field::placeholder{color:var(--ink-4)}
+.field:disabled{opacity:.55;cursor:not-allowed}
 .code-input{font-family:var(--mono);font-size:1.5rem!important;letter-spacing:.35em;text-align:center;font-weight:600;padding:14px!important}
 .input-row{display:flex;gap:10px;flex-wrap:wrap}
 .input-row .field{flex:1;min-width:140px}
@@ -309,8 +317,8 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .loader-txt i{color:var(--brand)}
 
 /* ===== SCANNER ===== */
-.scan-area{position:relative;width:100%;aspect-ratio:1/1;max-width:420px;margin:0 auto;background:#000;border-radius:16px;overflow:hidden;border:3px solid var(--brand)}
-.scan-area video{width:100%;height:100%;object-fit:cover;display:block}
+.scan-area{position:relative;width:100%;aspect-ratio:1/1;max-width:420px;margin:0 auto;background:#000;border-radius:16px;overflow:hidden;border:3px solid var(--brand);display:grid;place-items:center}
+.scan-area video{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
 .scan-overlay{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center}
 .scan-frame{width:65%;aspect-ratio:1/1;border:3px solid rgba(255,255,255,.85);border-radius:16px;position:relative;box-shadow:0 0 0 100vmax rgba(0,0,0,.35)}
 .scan-frame::before,.scan-frame::after{content:"";position:absolute;width:30px;height:30px;border:4px solid var(--brand)}
@@ -320,6 +328,13 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 .scan-status{text-align:center;font-size:.82rem;color:var(--ink-3);margin-top:12px;min-height:20px}
 .scan-status.ok{color:var(--ok);font-weight:700}
 .scan-status.err{color:var(--err);font-weight:700}
+
+/* Camera prompt inside scan area */
+.cam-prompt{display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#fff;width:100%}
+.cam-prompt i{font-size:42px;margin-bottom:14px;display:block}
+.cam-prompt .cam-title{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.cam-prompt .cam-msg{font-size:.82rem;line-height:1.55;opacity:.9;margin-bottom:16px}
+.cam-prompt .cam-hint{font-size:.72rem;opacity:.7;margin-top:12px}
 
 /* ===== OFFLINE ===== */
 .offline-banner{position:fixed;bottom:16px;left:16px;z-index:9998;background:var(--err);color:#fff;padding:10px 18px;border-radius:11px;font-size:.82rem;font-weight:700;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:8px;animation:fadeUp .3s var(--ease-out)}
@@ -426,11 +441,20 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     <div class="modal-icon"><i class="fas fa-qrcode"></i></div>
     <h2>Scan QR to Connect</h2>
     <p class="sub">Point your camera at the host's QR code</p>
-    <div class="scan-area">
-      <video id="scanVideo" playsinline muted aria-label="Camera preview"></video>
-      <div class="scan-overlay" aria-hidden="true"><div class="scan-frame"><div class="scan-line"></div></div></div>
+    <div class="scan-area" id="scanArea">
+      <video id="scanVideo" playsinline muted aria-label="Camera preview" style="display:none"></video>
+      <div class="cam-prompt" id="camPrompt">
+        <div>
+          <i class="fas fa-camera" style="color:#E08A2E"></i>
+          <div class="cam-title">Allow camera access</div>
+          <div class="cam-msg">Tap <b>Enable Camera</b> to let the browser ask for permission.</div>
+          <button class="btn btn-primary" id="enableCamBtn" style="padding:12px 26px"><i class="fas fa-camera"></i> Enable Camera</button>
+          <div class="cam-hint">If you denied before, reset in browser site settings.</div>
+        </div>
+      </div>
+      <div class="scan-overlay" id="scanOverlay" aria-hidden="true" style="display:none"><div class="scan-frame"><div class="scan-line"></div></div></div>
     </div>
-    <p class="scan-status" id="scanStatus">Requesting camera…</p>
+    <p class="scan-status" id="scanStatus"></p>
     <div class="modal-actions">
       <button class="btn btn-ghost" id="scanCancel"><i class="fas fa-times"></i> Cancel</button>
       <button class="btn btn-soft" id="scanSwitch" title="Switch camera"><i class="fas fa-camera-rotate"></i> Switch</button>
@@ -483,7 +507,6 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     <div class="step" id="step3"><span class="n">3</span> Share</div>
   </div>
 
-  <!-- SETUP -->
   <div id="setupSection">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
       <div class="card anim-fade" id="hostCard">
@@ -502,7 +525,6 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     </div>
   </div>
 
-  <!-- ROOM HEADER -->
   <div class="room-header" id="roomHeader" hidden>
     <div class="rh-top">
       <div class="rh-title" id="rhTitle"><i class="fas fa-crown" style="color:var(--brand)"></i> <span id="rhTitleTxt">Room</span></div>
@@ -517,9 +539,7 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     <span id="statusTxt">Create a room or join one to get started.</span>
   </div>
 
-  <!-- IO GRID -->
   <div class="io-grid" id="ioGrid" hidden>
-    <!-- SEND -->
     <div class="card io-box" id="sendBox">
       <div class="card-head"><div class="card-icon"><i class="fas fa-upload"></i></div><div><h3>Send Files</h3><p>Max 3 files · 10 MB each</p></div></div>
       <p style="font-size:.76rem;color:var(--ink-4);margin-bottom:10px" id="sendToTxt">Sending to: All devices</p>
@@ -544,14 +564,12 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
         <div class="track"><div class="fill" id="tpMiniFill"></div></div>
       </div>
     </div>
-    <!-- RECEIVE -->
     <div class="card io-box" id="rxBox">
       <div class="card-head"><div class="card-icon"><i class="fas fa-download"></i></div><div><h3>Received Files</h3><p id="rxCount">0 files</p></div></div>
       <div class="io-files" id="rxList"><div class="io-empty"><i class="fas fa-inbox"></i>No files yet</div></div>
     </div>
   </div>
 
-  <!-- CONNECTIONS -->
   <div class="conn-panel" id="connPanel" hidden>
     <div class="panel-head"><i class="fas fa-users"></i> Connected Devices <span class="tag" id="devTag">0 devices</span></div>
     <div class="panel-body" id="connBody">
@@ -559,7 +577,6 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
     </div>
   </div>
 
-  <!-- SENT -->
   <div class="card" id="sentCard" hidden style="margin-top:16px">
     <div class="card-head"><div class="card-icon"><i class="fas fa-paper-plane"></i></div><div><h3>Sent Files</h3><p id="sentSummary">0 files</p></div></div>
     <div class="sent-tabs" role="tablist">
@@ -601,7 +618,7 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 
 <footer class="footer" id="footer">
   <div class="wrap footer-inner">
-    <span>© 2026 <a href="#">SHAREx</a> · Built by Vikshant Kralta</span>
+    <span>© 2026 <a href="#">SHAREx</a> · Developer Vikshant Kralta V21.1126-2.0</span>
     <div class="socials">
       <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
       <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -865,13 +882,11 @@ function handleData(conn,d){
   }
   if(d.t==='target'){
     if(S.host) return;
-    // Guest only accepts target updates from host
     S.target = d.target;
     updateSendTo();
     return;
   }
   if(d.t==='history'){
-    // Late-joiner history from host
     if(Array.isArray(d.files)) {
       d.files.forEach(f => {
         if(!S.rxFiles.some(r=>r.ts===f.ts && r.name===f.name)){
@@ -986,7 +1001,7 @@ function sendBatch(files,target,title){
   sendNext();
 }
 
-/* ===== UI: MINI PROGRESS ===== */
+/* ===== MINI PROGRESS ===== */
 function updateTpMini(name,pct){
   const el=$('#tpMini'); el.hidden=false;
   $('#tpMiniName').textContent=name;
@@ -1218,7 +1233,6 @@ function renderConns(){
   }
 }
 
-/* Persistent delegation for conn-body actions */
 $('#connBody').addEventListener('click', e=>{
   const permBtn = e.target.closest('[data-perm]');
   if(permBtn){
@@ -1236,7 +1250,6 @@ $('#connBody').addEventListener('click', e=>{
   const btn = e.target.closest('button[data-act]'); if(!btn) return;
   const peer = btn.dataset.peer; const act = btn.dataset.act;
   if(act==='toggle-target'){
-    // Toggle target: same peer → all, else set
     if(S.target === peer){
       S.target = 'all';
       broadcast({t:'target', target:'all'});
@@ -1248,7 +1261,6 @@ $('#connBody').addEventListener('click', e=>{
     }
     updateSendTo(); renderAll();
   } else if(act==='share-history'){
-    // Send host's sentFiles list ONLY to this guest
     const c = S.conns.find(c=>c.peer===peer);
     if(c){
       const history = S.sentFiles.map(f=>({
@@ -1280,11 +1292,13 @@ function updateSendTo(){
   if(S.target==='all') $('#sendToTxt').textContent='Sending to: All devices';
   else $('#sendToTxt').textContent='Sending to: '+(S.users[S.target]||S.target);
 }
+
 function fillTargets(){
   const sel=$('#targetSel'); if(!sel) return;
   const active=S.conns.filter(c=>c.open);
-  const canSend = S.host || S.myPerms.canSend;
-  if(!canSend){
+  // Guest can only pick target if host granted canSend
+  const canTarget = S.host || S.myPerms.canSend;
+  if(!canTarget){
     sel.innerHTML='<option value="all">All Devices</option>';
     sel.disabled=true;
     return;
@@ -1310,11 +1324,26 @@ function renderAll(){
     renderConns();
     updateSendTo();
     fillTargets();
-    // guest send-permission gating
-    const canSend = S.host || S.myPerms.canSend;
-    $('#sendAllBtn').disabled = !canSend;
-    $('#sendPickBtn').disabled = !canSend;
-    $('#sendBtn').disabled = !canSend;
+    // Guest gating
+    const canTarget = S.host || S.myPerms.canSend;
+    $('#sendAllBtn').disabled = !canTarget;
+    $('#sendPickBtn').disabled = !canTarget;
+    $('#sendBtn').disabled = !canTarget;
+    // Visual lock indicator on Pick Device
+    if(!canTarget){
+      $('#sendPickBtn').innerHTML = '<i class="fas fa-lock"></i> Pick Device';
+      $('#sendPickBtn').title = 'Host has not granted send permission';
+    } else {
+      $('#sendPickBtn').innerHTML = '<i class="fas fa-user-plus"></i> Pick Device';
+      $('#sendPickBtn').title = '';
+    }
+    if(!canTarget){
+      $('#sendAllBtn').innerHTML = '<i class="fas fa-lock"></i> All';
+      $('#sendAllBtn').title = 'Host has not granted send permission';
+    } else {
+      $('#sendAllBtn').innerHTML = '<i class="fas fa-broadcast-tower"></i> All';
+      $('#sendAllBtn').title = '';
+    }
     step(2);
   } else {
     step(1);
@@ -1444,32 +1473,98 @@ function loadJsQR(){
   });
   return jsQRPromise;
 }
-async function openScanner(){
-  if(!navigator.mediaDevices?.getUserMedia){ toast('Camera not supported','error'); return; }
+
+function cameraReadiness(){
+  if(!window.isSecureContext){
+    return { ok:false, reason:'insecure', msg:'Camera needs HTTPS or localhost. Current: '+location.origin };
+  }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    return { ok:false, reason:'no-api', msg:'This browser does not support camera access.' };
+  }
+  return { ok:true };
+}
+
+function openScanner(){
   $('#scanModal').hidden=false;
+  const ready = cameraReadiness();
+  const promptEl = $('#camPrompt');
+  const videoEl = $('#scanVideo');
+  const overlay = $('#scanOverlay');
+  if(!ready.ok){
+    $('#scanStatus').className='scan-status err';
+    $('#scanStatus').textContent = ready.msg;
+    promptEl.style.display='grid';
+    promptEl.innerHTML = `
+      <div>
+        <i class="fas fa-triangle-exclamation" style="color:#F2B84B"></i>
+        <div class="cam-title">Camera unavailable</div>
+        <div class="cam-msg">${esc(ready.msg)}</div>
+        <div class="cam-hint">Open this page over <b>https://</b> or <b>http://localhost</b> and try again.</div>
+      </div>
+    `;
+    return;
+  }
+  // Fresh prompt asking user to press button (real gesture needed for permission)
+  promptEl.style.display='grid';
+  promptEl.innerHTML = `
+    <div>
+      <i class="fas fa-camera" style="color:#E08A2E"></i>
+      <div class="cam-title">Allow camera access</div>
+      <div class="cam-msg">Tap <b>Enable Camera</b> so the browser can ask for permission.</div>
+      <button class="btn btn-primary" id="enableCamBtn" style="padding:12px 26px"><i class="fas fa-camera"></i> Enable Camera</button>
+      <div class="cam-hint">If you denied before, reset in browser site settings.</div>
+    </div>
+  `;
+  videoEl.style.display='none';
+  overlay.style.display='none';
   $('#scanStatus').className='scan-status';
-  $('#scanStatus').textContent='Requesting camera…';
+  $('#scanStatus').textContent='';
+  $('#enableCamBtn').addEventListener('click', ()=>{
+    $('#enableCamBtn').disabled=true;
+    $('#enableCamBtn').innerHTML='<i class="fas fa-circle-notch fa-spin"></i> Starting…';
+    actuallyStartCamera();
+  });
+}
+
+async function actuallyStartCamera(){
+  const v = $('#scanVideo');
+  const prompt = $('#camPrompt');
+  const overlay = $('#scanOverlay');
   try{
     await stopScan();
-    const stream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:{ideal:S.scanFacing},width:{ideal:640},height:{ideal:640}},audio:false
-    });
-    S.scanStream=stream;
-    const v=$('#scanVideo'); v.srcObject=stream; await v.play().catch(()=>{});
-    $('#scanStatus').textContent='Scanning…';
+    let stream;
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({
+        video:{ facingMode:{ideal:S.scanFacing}, width:{ideal:1280}, height:{ideal:1280} },
+        audio:false
+      });
+    }catch(e1){
+      stream = await navigator.mediaDevices.getUserMedia({video:true,audio:false});
+    }
+    S.scanStream = stream;
+    v.srcObject = stream;
+    v.style.display = 'block';
+    prompt.style.display = 'none';
+    overlay.style.display = 'grid';
+    await v.play().catch(()=>{});
+    $('#scanStatus').className='scan-status';
+    $('#scanStatus').textContent='Scanning… point at the QR code';
+
     await loadJsQR().catch(()=>{});
+
     if(window.BarcodeDetector){
       try{
-        const det=new BarcodeDetector({formats:['qr_code']});
-        const loop=async()=>{
+        const det = new BarcodeDetector({formats:['qr_code']});
+        const loop = async ()=>{
           if(!S.scanStream) return;
           try{
-            const codes=await det.detect(v);
+            const codes = await det.detect(v);
             if(codes && codes.length){ handleScanResult(codes[0].rawValue); return; }
           }catch(e){}
-          S.scanRAF=requestAnimationFrame(loop);
+          S.scanRAF = requestAnimationFrame(loop);
         };
-        loop(); return;
+        loop();
+        return;
       }catch(e){}
     }
     if(window.jsQR){
@@ -1488,13 +1583,32 @@ async function openScanner(){
       };
       loop();
     } else {
-      $('#scanStatus').textContent='Scanner unavailable';
+      $('#scanStatus').className='scan-status err';
+      $('#scanStatus').textContent='QR decoder unavailable — try another browser';
     }
   }catch(err){
+    const name = err && err.name ? err.name : '';
+    let msg = 'Camera unavailable.';
+    if(name==='NotAllowedError' || name==='SecurityError') msg='Camera permission was denied. Enable it in your browser site settings, then try again.';
+    else if(name==='NotFoundError' || name==='OverconstrainedError') msg='No camera found on this device.';
+    else if(name==='NotReadableError') msg='Camera is in use by another app. Close it and retry.';
+    else if(name==='AbortError') msg='Camera start was aborted. Please retry.';
     $('#scanStatus').className='scan-status err';
-    $('#scanStatus').textContent='Camera denied or unavailable';
+    $('#scanStatus').textContent = msg;
+    prompt.style.display='grid';
+    prompt.innerHTML = `
+      <div>
+        <i class="fas fa-circle-exclamation" style="color:#F26B6B"></i>
+        <div class="cam-title">Camera error</div>
+        <div class="cam-msg">${esc(msg)}</div>
+        <button class="btn btn-primary" id="enableCamBtn" style="padding:12px 26px;margin-top:8px"><i class="fas fa-rotate"></i> Retry</button>
+      </div>
+    `;
+    $('#enableCamBtn').onclick = ()=>{ $('#enableCamBtn').disabled=true; actuallyStartCamera(); };
+    console.warn('Camera error:', err);
   }
 }
+
 function handleScanResult(raw){
   const text=String(raw||'').trim();
   let code=null;
@@ -1560,9 +1674,11 @@ $('#joinCode').addEventListener('keydown',e=>{ if(e.key==='Enter') joinRoom($('#
 $('#scanBtn').onclick=openScanner;
 $('#scanQuickBtn').onclick=openScanner;
 $('#scanCancel').onclick=()=>{ stopScan(); $('#scanModal').hidden=true; };
-$('#scanSwitch').onclick=()=>{ S.scanFacing=S.scanFacing==='environment'?'user':'environment'; openScanner(); };
+$('#scanSwitch').onclick=()=>{
+  S.scanFacing = S.scanFacing==='environment' ? 'user' : 'environment';
+  if(S.scanStream){ actuallyStartCamera(); } else { openScanner(); }
+};
 
-// Menu
 $('#menuBtn').addEventListener('click',()=>{
   const open=$('#navLinks').classList.toggle('open');
   $('#menuBtn').setAttribute('aria-expanded',open);
@@ -1572,13 +1688,18 @@ $$('#navLinks .nav-link').forEach(a=>a.addEventListener('click',()=>{
   $('#menuBtn').setAttribute('aria-expanded','false');
 }));
 
-// Send target
-$('#sendAllBtn').onclick=()=>{ S.target='all'; updateSendTo(); broadcast({t:'target',target:'all'}); toast('Sending to: All','info'); $('#sendTargetBox').hidden=true; };
-$('#sendPickBtn').onclick=()=>{ fillTargets(); $('#sendTargetBox').hidden=!$('#sendTargetBox').hidden; };
+$('#sendAllBtn').onclick=()=>{
+  if(!S.host && !S.myPerms.canSend){ toast('Host has not granted send permission','error'); return; }
+  S.target='all'; updateSendTo(); broadcast({t:'target',target:'all'}); toast('Sending to: All','info'); $('#sendTargetBox').hidden=true;
+};
+$('#sendPickBtn').onclick=()=>{
+  if(!S.host && !S.myPerms.canSend){ toast('Host has not granted send permission','error'); return; }
+  fillTargets(); $('#sendTargetBox').hidden=!$('#sendTargetBox').hidden;
+};
 $('#targetGoBtn').onclick=()=>{
+  if(!S.host && !S.myPerms.canSend){ toast('Host has not granted send permission','error'); return; }
   const v=$('#targetSel').value;
   if(v===S.target && v!=='all'){
-    // Toggle off → all
     S.target='all';
     broadcast({t:'target',target:'all'});
     toast('Target revoked — back to All','info');
@@ -1591,7 +1712,6 @@ $('#targetGoBtn').onclick=()=>{
   updateSendTo(); renderAll();
 };
 
-// Send
 $('#sendBtn').onclick=()=>{
   const active=S.conns.filter(c=>c.open);
   if(active.length===0){ toast('No devices connected','error'); setStatus('Connect a device first','error'); return; }
@@ -1632,7 +1752,6 @@ function resetAll(){
   renderAll();
 }
 
-// Keyboard
 document.addEventListener('keydown',e=>{
   if(!e.altKey) return;
   const k=e.key.toLowerCase();
@@ -1642,13 +1761,12 @@ document.addEventListener('keydown',e=>{
   else if(k==='d'){ e.preventDefault(); $('#themeBtn').click(); }
 });
 
-// Net
 window.addEventListener('online', updateNetStatus);
 window.addEventListener('offline', updateNetStatus);
 
 /* ===== INIT ===== */
 (function init(){
-  applyTheme(LS.get('theme','light'));  // DEFAULT LIGHT
+  applyTheme(LS.get('theme','light'));
   applyA11y();
   const saved=LS.get('name','');
   if(saved) S.name=saved;
@@ -1664,7 +1782,7 @@ window.addEventListener('offline', updateNetStatus);
   setInterval(updateNetStatus, 10000);
 })();
 
-console.log('%cSHAREx','font-weight:800;color:#E08A2E;font-size:14px','ready — copy + nav + toggle-target + history');
+console.log('%cSHAREx','font-weight:800;color:#E08A2E;font-size:14px','ready — body padding + locked target + camera permission UX');
 })();
 </script>
 </body>
