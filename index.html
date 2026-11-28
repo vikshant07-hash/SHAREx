@@ -362,6 +362,74 @@ h2{font-size:clamp(1.55rem,3.5vw,2.15rem);letter-spacing:-.025em;font-weight:800
 </style>
 </head>
 <body>
+
+<!-- ===== PIN LOCK SCREEN ===== -->
+<div id="pinGate" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#F8F9FC;font-family:'Plus Jakarta Sans',sans-serif;padding:20px">
+  <div style="background:#fff;border:1px solid #E6EAF1;border-radius:20px;padding:40px 28px;max-width:400px;width:100%;box-shadow:0 14px 40px rgba(26,34,48,.12);text-align:center">
+
+    <div style="width:64px;height:64px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:#FFF6EC;color:#B86A14;font-size:26px;border:2px solid rgba(224,138,46,.18)">
+      <i class="fas fa-lock"></i>
+    </div>
+
+    <h2 style="font-size:1.4rem;font-weight:800;color:#1A2230;margin-bottom:6px">PIN Required</h2>
+    <p style="font-size:.85rem;color:#6B7688;margin-bottom:22px">Enter the PIN to access SHAREx</p>
+
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="6" autocomplete="off"
+      placeholder="••••"
+      style="width:100%;padding:14px 16px;border:1.5px solid #D4DAE5;border-radius:11px;background:#F1F4F9;font-family:'JetBrains Mono',monospace;font-size:1.5rem;letter-spacing:.35em;text-align:center;font-weight:600;color:#1A2230;outline:none"
+      onfocus="this.style.borderColor='#E08A2E';this.style.background='#fff';this.style.boxShadow='0 0 0 4px rgba(224,138,46,.18)'"
+      onblur="this.style.borderColor='#D4DAE5';this.style.background='#F1F4F9';this.style.boxShadow='none'">
+
+    <p id="pinErr" style="color:#D64545;font-size:.82rem;font-weight:600;margin-top:12px;display:none">
+      <i class="fas fa-exclamation-circle"></i> Invalid entry, Contact Mr. Vikshant
+    </p>
+
+    <button id="pinSubmit"
+      style="width:100%;margin-top:18px;padding:13px;border:none;border-radius:11px;background:linear-gradient(135deg,#E08A2E,#B86A14);color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;box-shadow:0 8px 24px rgba(224,138,46,.25)">
+      <i class="fas fa-arrow-right"></i> Unlock
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ===== APNA PIN YAHAN SET KARO =====
+  const SET_PIN = "382400";
+
+  const gate = document.getElementById('pinGate');
+  const input = document.getElementById('pinInput');
+  const err = document.getElementById('pinErr');
+  const btn = document.getElementById('pinSubmit');
+
+  // Page hide karo jab tak PIN sahi na ho
+  document.body.style.overflow = 'hidden';
+
+  function verify(){
+    const val = input.value.trim();
+    if(val === SET_PIN){
+      gate.style.display = 'none';
+      document.body.style.overflow = '';
+    } else {
+      err.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', verify);
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Enter') verify();
+  });
+  input.addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g,'').slice(0,6);
+    err.style.display = 'none';
+  });
+
+  setTimeout(()=>input.focus(), 100);
+})();
+</script>
+<!-- ===== END PIN LOCK ===== -->
+  
 <a href="#main" class="skip" style="position:absolute;left:12px;top:-60px;z-index:10000;background:var(--brand);color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;transition:top var(--dur)">Skip to main</a>
 <div class="page-bg" aria-hidden="true"></div>
 <div class="sr-only" aria-live="polite" id="liveRegion"></div>
